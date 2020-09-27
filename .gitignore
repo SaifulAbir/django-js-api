@@ -1,9 +1,14 @@
 /venv/
+venv/
+/venva/
+venva/
+/venvw/
+venvw/
+
 .idea/
  __pycache__/
 *.pyo
 *.pyc
-venv/
 media_cdn/
 env/
 media/
