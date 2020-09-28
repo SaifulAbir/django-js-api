@@ -6,6 +6,7 @@ from django.db.models.signals import pre_save
 from django.utils import timezone
 
 from job.models import Industry, Gender, JobType, Experience, Qualification, Company, Skill, City
+from job.models import Industry, Gender, JobType, Experience, Qualification, Company, Skill, Job
 from p7.models import P7Model, populate_time_info
 from p7.utils import uuid_slug_generator
 from p7.validators import check_valid_password, MinLengthValidator, \
@@ -248,6 +249,10 @@ class RecentActivity(P7Model):
     description = models.TextField(blank=False, null=False)
     time = models.DateTimeField(default=timezone.now)
     type = models.CharField(max_length=255, null=True, blank=True)
+    releted_job = models.ForeignKey(Job, on_delete=models.PROTECT, null=True, blank=True)
+    releted_professional = models.ForeignKey(Professional, on_delete=models.PROTECT, null=True, blank=True)
+    releted_company = models.ForeignKey(Company, on_delete=models.PROTECT, null=True, blank=True)
+    updated_section = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         db_table = 'recent_activities'
