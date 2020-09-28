@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 cd /var/jobxprss-api
 git pull
-source venv/bin/activate
+source venva/bin/activate
 pip3 install -r requirements/req-prod.txt
 export DJANGO_SETTINGS_MODULE="p7.settings_prod"
 python manage.py migrate
