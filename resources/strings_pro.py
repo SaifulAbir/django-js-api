@@ -46,3 +46,6 @@ SEARCH_PREFERENCE_OPTION = (
 
 )
 DEFAULT_SEARCH_PREFERENCE_OPTION = "LOOKING_FOR_OPPORTUNITIES"
+
+Account_Activation_Request_MAIL_STR = "Account Activation Request"
+Contact_US_MAIL_SUBJECT_STR  = "Contact Us"
