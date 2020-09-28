@@ -383,7 +383,7 @@ class ProfessionalUpdatePartial(GenericAPIView, UpdateModelMixin):
                 request.data['image'] = uploaded_file_url
         populate_user_info_request(request, True, request.data.get('is_archived'))
         prof_obj = self.partial_update(request, *args, **kwargs).data
-        save_recent_activity(request.user.id, 'profile_pro')
+        save_recent_activity(request.user.id, 'update_pro', updated_section='Basic Info')
         if prof_obj['religion']:
             prof_obj['religion_obj'] = ReligionSerializer(Religion.objects.get(pk = prof_obj['religion'])).data
         if prof_obj['nationality']:
