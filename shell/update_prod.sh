@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-cd /var/p7
+cd /var/jobxprss-api
 git pull
 source venv/bin/activate
 pip3 install -r requirements/req-prod.txt
