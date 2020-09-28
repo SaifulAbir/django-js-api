@@ -11,6 +11,7 @@ from django.utils import timezone
 from job.utils import job_slug_generator
 from p7.models import P7Model, populate_time_info
 from resources import strings_job
+from settings.models import Settings
 
 
 class Industry(P7Model):
@@ -375,18 +376,27 @@ def before_job_save(sender, instance:Job, *args, **kwargs):
 
 
 def after_job_save(sender, instance:Job, *args, **kwargs):
-    pass
-    # queryset = Job.objects.filter(
-    #         is_archived=False,
-    #         status='Published',
-    #     ).aggregate(
-    #         Max('salary_max')
-    #     ).aggregate(
-    #         Max('salary_min')
-    #     )
-    #
-    #
-    # print(queryset['salary_max__max'])
+    maxSalaryObj = Job.objects.filter(
+            is_archived=False,
+            status='Published',
+        ).aggregate(
+            Max('salary_max')
+        )
+
+    minSalaryObj = Job.objects.filter(
+            is_archived=False,
+            status='Published',
+        ).aggregate(
+            Min('salary_min')
+        )
+
+    maxSalary = maxSalaryObj['salary_max__max']
+    minSalary = minSalaryObj['salary_min__min']
+
+    setting_obj = Settings.objects.first()
+    setting_obj.job_min_salary = minSalary
+    setting_obj.job_max_salary = maxSalary
+    setting_obj.save()
 
 
 def applied_job_counter(sender, instance:JobApplication, *args, **kwargs):
