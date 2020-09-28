@@ -5,8 +5,7 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.utils import timezone
 
-from job.models import Industry, Gender, JobType, Experience, Qualification, Company, Skill, City
-from job.models import Industry, Gender, JobType, Experience, Qualification, Company, Skill, Job
+from job.models import Industry, Gender, JobType, Experience, Qualification, Company, Skill, City, Job
 from p7.models import P7Model, populate_time_info
 from p7.utils import uuid_slug_generator
 from p7.validators import check_valid_password, MinLengthValidator, \
