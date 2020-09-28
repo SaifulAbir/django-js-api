@@ -70,7 +70,6 @@ MIDDLEWARE = [
 
 USER_AGENTS_CACHE = 'default'
 
-
 ROOT_URLCONF = 'p7.urls'
 
 TEMPLATES = [
