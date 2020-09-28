@@ -11,7 +11,7 @@ from job.api_job_list import similar_jobs, applied_jobs, favourite_jobs, recent_
 from job.api_job_related import get_job_site_list, JobSourceList, get_job_nature_list, get_job_type_list, \
     get_job_status_list, get_job_creator_type_list, JobCategoryList, JobGenderList, IndustryList, JobTypeList, \
     ExperienceList, CurrencyList, QualificationList, GenderList, SkillList, get_salary_range, \
-    ApplicationStatusList, CityList, SkillSearch
+    ApplicationStatusList, CityList, SkillSearch, CitySearch
 from job.api_misc import apply_online, save_trending_keywords, \
     toggle_favourite, MarkShortlistUpdateView, JobApplicationQuickApply, get_all_applicants, get_shortlisted_applicants, \
     JobApply, request_for_access, JobApplicationAPI, DownloadAttachmentAPIView, DownloadResumeAPIView
@@ -36,6 +36,7 @@ urlpatterns = [
     path('job-status/list/', get_job_status_list),
     path('job-creator-type/list', get_job_creator_type_list),
     path('city/list/', CityList.as_view()), # Public API
+    path('city/search/', CitySearch.as_view()),
     path('company-shortlist/mark/<str:pk>/', MarkShortlistUpdateView.as_view()),
     path('application_status/list/', ApplicationStatusList.as_view()),
     path('application/list/<str:job_id>/', get_all_applicants),

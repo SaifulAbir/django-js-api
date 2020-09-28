@@ -9,7 +9,8 @@ from pro.api_pro_core import change_password, profile_completeness, check_profes
 from pro.api_pro_details import professional_education_save, EducationUpdateDelete, professional_skill_save, \
     SkillUpdateDelete, professional_workexperience_save, WorkExperienceUpdateDelete, professional_portfolio_save, \
     PortfolioUpdateDelete, professional_membership_save, MembershipUpdateDelete, professional_certification_save, \
-    CertificationUpdateDelete, professional_reference_save, ReferenceUpdateDelete, SkillObject
+    CertificationUpdateDelete, professional_reference_save, ReferenceUpdateDelete, SkillObject, \
+    ProfessionalLocationPreferenceCreateUpdateAPI
 from pro.api_pro_related import EmailSubscriptionUpdateView, ReligionList, NationalityList, OrganizationList, MajorList, \
     InstituteList, CertificateNameList, InstituteSearch, EducationLevelList, MembershipOrganizationList, \
     CertifyingOrganizationList, MembershipOrganizationSearch, CertifyingOrganizationSearch
@@ -49,6 +50,7 @@ urlpatterns = [
     path('professional/professional_reference/<str:pk>/', ReferenceUpdateDelete.as_view()),
     path('professional/professional_education_object/<str:pk>/', EducationObject.as_view()),
     path('professional/religion/', ReligionList.as_view()),
+    path('professional/professional_location_preference/', ProfessionalLocationPreferenceCreateUpdateAPI.as_view()),
     path('professional/nationality/', NationalityList.as_view()),
     path('professional/organization/', OrganizationList.as_view()),
     path('professional/membership-organization/', MembershipOrganizationList.as_view()),
