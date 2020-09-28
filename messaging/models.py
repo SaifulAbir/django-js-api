@@ -92,8 +92,8 @@ def after_employer_message_save(sender, instance: EmployerMessage, *args, **kwar
     SocketClient.send({
         "type": "message",
         "text": json.dumps(EmployerMessageListSerializer(instance, many=False).data),
-        "from": instance.sender,
-        "to": instance.receiver
+        "from": instance.sender.id,
+        "to": str(instance.receiver.id)
     })
 
 
