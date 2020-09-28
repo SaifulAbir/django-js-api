@@ -83,7 +83,7 @@ def save_recent_activity(user_id, activity_type,releted_professional = None,rele
     obj = RecentActivity()
     obj.user_id = user_id
     description = {'profile_pro':'Profile Updated', 'apply_pro':'Applied job', 'apply_com':'Professional apply for this job',
-                   'favorite_pro':'professional favorite this job','update_pro':'profile updated',
+                   'favorite_pro':'professional favorite this job','update_pro':'profile updated','favorite_com':"professional favorite this job",
                    'job-posted_com':'Job was posted','job-updated_com':'Job was updated','shortlist_com':'Professional was shortlisted'}
     obj.description = description[activity_type]
     obj.type = activity_type
