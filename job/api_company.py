@@ -129,7 +129,7 @@ def company_info_box_api(request):
     user = request.user.id
     company = Company.objects.filter(user_id=user).first()
     company_number_of_job = Job.objects.filter(company = company).count()
-    company_appilcation_count = JobApplication.objects.filter(job__company = company).count()
+    company_appilcation_count = JobApplication.objects.filter(job__company = company, is_approved = True).count()
     company_application_shortlist_count = JobApplication.objects.filter(job__company=company, is_shortlisted=True).count()
 
     data ={
