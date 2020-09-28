@@ -21,6 +21,7 @@ from p7.models import populate_user_info, is_professional, populate_user_info_re
 
 # TODO Handle try catch
 from p7.permissions import StaffPermission, CompanyPermission
+from pro.utils import save_recent_activity
 
 
 class JobAPI(APIView):
@@ -115,6 +116,8 @@ class CompanyJobCreateAPI(CreateAPIView):
                     skill_obj = None
                 if skill_obj:
                     job_obj.job_skills.add(skill_obj)
+
+        save_recent_activity(request.user.id, 'job-posted_com', releted_job=job_obj.job_id)
         return Response(HTTP_200_OK)
 
 
@@ -167,6 +170,8 @@ class CompanyJobUpdateView(GenericAPIView, UpdateModelMixin):
         serializer = self.get_serializer(instance, data=req_data, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
+
+        save_recent_activity(request.user.id, 'job-updated_com', releted_job=instance.job_id)
         return Response(HTTP_200_OK)
 
 class CompanyJobUnpublishAPI(GenericAPIView, UpdateModelMixin):
@@ -183,6 +188,8 @@ class CompanyJobUnpublishAPI(GenericAPIView, UpdateModelMixin):
         serializer = self.get_serializer(instance, data=req_data, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
+
+        save_recent_activity(request.user.id, 'job-updated_com', releted_job=instance.job_id)
         return Response(HTTP_200_OK)
 
 class CompanyJobPublishAPI(GenericAPIView, UpdateModelMixin):
@@ -199,6 +206,8 @@ class CompanyJobPublishAPI(GenericAPIView, UpdateModelMixin):
         serializer = self.get_serializer(instance, data=req_data, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
+
+        save_recent_activity(request.user.id, 'job-updated_com', releted_job=instance.job_id)
         return Response(HTTP_200_OK)
 
 class CompanyJobPostAPI(GenericAPIView, UpdateModelMixin):
@@ -215,6 +224,8 @@ class CompanyJobPostAPI(GenericAPIView, UpdateModelMixin):
         serializer = self.get_serializer(instance, data=req_data, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
+
+        save_recent_activity(request.user.id, 'job-updated_com', releted_job=instance.job_id)
         return Response(HTTP_200_OK)
 
 

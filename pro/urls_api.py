@@ -1,7 +1,7 @@
 from django.urls import path, include
 
 from pro.api import job_alert, job_alert_notification, EducationObject, \
-    recent_activity
+    RecentActivityAPI
 from pro.api_dashboard import skill_job_chart, info_box_api
 from pro.api_pro_core import change_password, profile_completeness, check_professional_exist, \
     profile_create_with_user_create, ProfessionalDetail, ProfessionalPublicRetrieve, ProfessionalUpdateView, \
@@ -9,7 +9,8 @@ from pro.api_pro_core import change_password, profile_completeness, check_profes
 from pro.api_pro_details import professional_education_save, EducationUpdateDelete, professional_skill_save, \
     SkillUpdateDelete, professional_workexperience_save, WorkExperienceUpdateDelete, professional_portfolio_save, \
     PortfolioUpdateDelete, professional_membership_save, MembershipUpdateDelete, professional_certification_save, \
-    CertificationUpdateDelete, professional_reference_save, ReferenceUpdateDelete, SkillObject
+    CertificationUpdateDelete, professional_reference_save, ReferenceUpdateDelete, SkillObject, \
+    ProfessionalLocationPreferenceCreateUpdateAPI
 from pro.api_pro_related import EmailSubscriptionUpdateView, ReligionList, NationalityList, OrganizationList, MajorList, \
     InstituteList, CertificateNameList, InstituteSearch, EducationLevelList, MembershipOrganizationList, \
     CertifyingOrganizationList, MembershipOrganizationSearch, CertifyingOrganizationSearch
@@ -49,6 +50,7 @@ urlpatterns = [
     path('professional/professional_reference/<str:pk>/', ReferenceUpdateDelete.as_view()),
     path('professional/professional_education_object/<str:pk>/', EducationObject.as_view()),
     path('professional/religion/', ReligionList.as_view()),
+    path('professional/professional_location_preference/', ProfessionalLocationPreferenceCreateUpdateAPI.as_view()),
     path('professional/nationality/', NationalityList.as_view()),
     path('professional/organization/', OrganizationList.as_view()),
     path('professional/membership-organization/', MembershipOrganizationList.as_view()),
@@ -61,7 +63,7 @@ urlpatterns = [
     path('professional/certifying_organization/search/', CertifyingOrganizationSearch.as_view()),
     path('professional/certificate_name/', CertificateNameList.as_view()),
     path('professional/professional_skill_object/<str:pk>/', SkillObject.as_view()),
-    path('professional/pro_recent_activity/', recent_activity),
+    path('professional/pro_recent_activity/', RecentActivityAPI.as_view()),
     path('professional/email-subscription-on-off/', EmailSubscriptionUpdateView.as_view()),
     path('professional/signup-email-verification/<str:token>', professional_signup_email_verification,
          name='code-verify'),

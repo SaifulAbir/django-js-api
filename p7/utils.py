@@ -20,6 +20,7 @@ from django.template import loader
 from rest_framework.utils import json
 
 from p7.settings_dev import *
+from resources.strings_pro import Contact_US_MAIL_SUBJECT_STR
 from settings.models import Settings
 
 
@@ -35,7 +36,7 @@ def sendContactUsEmail(name, email, subject, phone, message):
             'message': message
         }
     )
-    subject_text = loader.render_to_string('contact_us_email_subject.txt')
+    subject_text = Contact_US_MAIL_SUBJECT_STR
 
     settingsObj = Settings.objects.all().first()
     admin_email = settingsObj.admin_email

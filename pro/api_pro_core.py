@@ -35,10 +35,11 @@ from resources.strings_pro import EMAIL_EXIST_ERROR_MSG, USER_ID_NOT_EXIST, WRON
     PASSWORD_BLANK_ERROR_MSG, FULL_NAME_BLANK_ERROR_MSG, TAC_BLANK_ERROR_MSG
 from settings.models import Settings
 from .models import ProfessionalEducation, ProfessionalSkill, WorkExperience, Portfolio, Membership, Certification, \
-    Reference, Religion, Nationality, Professional
+    Reference, Religion, Nationality, Professional, ProfessionalLocationPreference
 from .serializers import ProfessionalSerializer, ReligionSerializer, NationalitySerializer, \
     WorkExperienceDetailSerializer, InstituteNameSerializer, MajorSerializer, ProfessionalPublicSerializer, \
-    EducationLevelSerializer,MembershipOrganizationNameSerializer, CertifyingOrganizationNameSerializer
+    EducationLevelSerializer, MembershipOrganizationNameSerializer, CertifyingOrganizationNameSerializer, \
+    ProfessionalLocationPreferenceSerializer
 from .utils import sendSignupEmail, save_recent_activity
 
 
@@ -125,6 +126,7 @@ class ProfessionalDetail(generics.ListAPIView):
         pk = profile.id
         education = ProfessionalEducation.objects.filter(professional=pk ,is_archived=False).order_by('-enrolled_date')
         skills = ProfessionalSkill.objects.filter(professional=pk, is_archived=False)
+        location_preferences = ProfessionalLocationPreference.objects.filter(professional=pk, is_archived=False)
         experience = WorkExperience.objects.filter(professional=pk, is_archived=False).order_by("-start_date")
         portfolio = Portfolio.objects.filter(professional=pk, is_archived=False)
         membership = Membership.objects.filter(professional_id=pk, is_archived=False)
@@ -134,7 +136,7 @@ class ProfessionalDetail(generics.ListAPIView):
         info_data = ProfessionalSerializer(profile).data
         info_data['religion_obj'] = ReligionSerializer(profile.religion).data
         info_data['nationality_obj'] = NationalitySerializer(profile.nationality).data
-
+        location_preference_data = ProfessionalLocationPreferenceSerializer(location_preferences, many=True).data
         work_experience_data = WorkExperienceDetailSerializer(experience, many=True).data
 
         edu_data = [{
@@ -156,6 +158,7 @@ class ProfessionalDetail(generics.ListAPIView):
             'id':skill.id,
             'skill_obj': SkillSerializer(skill.skill_name).data,
             'rating': skill.rating,
+            'is_top_skill': skill.is_top_skill,
             'verified_by_skillcheck': skill.verified_by_skillcheck,
         } for skill in skills]
 
@@ -202,7 +205,8 @@ class ProfessionalDetail(generics.ListAPIView):
             'portfolio_info': portfolio_data,
             'membership_info': membership_data,
             'certification_info': certification_data,
-            'reference_data': reference_data
+            'reference_data': reference_data,
+            'location_preference_data': location_preference_data
         }
         return Response(prof_data)
 
@@ -379,7 +383,7 @@ class ProfessionalUpdatePartial(GenericAPIView, UpdateModelMixin):
                 request.data['image'] = uploaded_file_url
         populate_user_info_request(request, True, request.data.get('is_archived'))
         prof_obj = self.partial_update(request, *args, **kwargs).data
-        save_recent_activity(request.user.id, 'profile_pro')
+        save_recent_activity(request.user.id, 'update_pro', updated_section='Basic Info')
         if prof_obj['religion']:
             prof_obj['religion_obj'] = ReligionSerializer(Religion.objects.get(pk = prof_obj['religion'])).data
         if prof_obj['nationality']:

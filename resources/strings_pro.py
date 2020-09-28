@@ -39,3 +39,13 @@ NO_SUCH_COMPANY = "This company doesn't exist"
 # JOB_ALERT_STRINGS
 ARCHIVED_TRUE = 1
 ARCHIVED_FALSE = 0
+SEARCH_PREFERENCE_OPTION = (
+    ('LOOKING_FOR_OPPORTUNITIES', 'Looking'),
+    ('OPEN_TO_BETTER_OPPORTUNITIES', 'Not looking but open'),
+    ('NOT_INTERESTED', 'Not interested'),
+
+)
+DEFAULT_SEARCH_PREFERENCE_OPTION = "LOOKING_FOR_OPPORTUNITIES"
+
+Account_Activation_Request_MAIL_STR = "Account Activation Request"
+Contact_US_MAIL_SUBJECT_STR  = "Contact Us"

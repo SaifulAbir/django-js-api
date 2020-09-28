@@ -25,6 +25,10 @@ class ProfessionalSerializer(serializers.ModelSerializer):
         model = Professional
         exclude = ('password','terms_and_condition_status','signup_verification_code',)
 
+class ProfessionalLocationPreferenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProfessionalLocationPreference
+        fields = '__all__'
 
 class ProfessionalEducationSerializer(serializers.ModelSerializer):
     class Meta:

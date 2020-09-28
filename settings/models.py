@@ -23,6 +23,8 @@ class Settings(P7Model):
     address = models.TextField()
     phone = models.CharField(max_length=50)
     zoom = models.IntegerField(blank=True, null=True)
+    job_min_salary = models.IntegerField(default=5000)
+    job_max_salary = models.IntegerField(default=1000000)
     latitude = models.DecimalField(max_digits=10, decimal_places=6, blank=True, null=True)
     longitude = models.DecimalField(max_digits=10, decimal_places=6, blank=True, null=True)
     minimum_profile_completeness = models.IntegerField(blank=True,null=True,default=0)

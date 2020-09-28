@@ -9,6 +9,7 @@ from rest_framework.status import (
 from rest_framework.utils import json
 from rest_framework.views import APIView
 
+from job.serializers import JobSerializer
 from pro.serializers import *
 from pro.utils import job_alert_save
 from resources.strings_pro import *
@@ -153,25 +154,29 @@ def StaticUrl(self):
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
-@api_view(["GET"])
-def recent_activity(request):
-    user = request.user
-    activity = RecentActivity.objects.filter(user = user).order_by('-time')
-    for obj in activity:
-        if (timezone.now() - obj.time).days >=1:
-            obj.activity_time = '{} days ago'.format((timezone.now() - obj.time).days)
-        elif (((timezone.now() - obj.time).seconds)//3600) >=1:
-            obj.activity_time = '{} hour ago'.format(((timezone.now() - obj.time).seconds) //3600)
-        elif (((timezone.now() - obj.time).seconds)//60) >=1:
-            obj.activity_time = '{} min ago'.format(((timezone.now() - obj.time).seconds) //60)
-        else:
-            obj.activity_time = '{} sec ago'.format(((timezone.now() - obj.time).seconds))
-    activity_list =[{
-        'description': act.description,
-        'time': act.activity_time,
-        'type': act.type
-    } for act in activity]
-    return Response(activity_list)
+class RecentActivityAPI(APIView):
+
+    def get(self, request):
+        user = request.user
+        activity = RecentActivity.objects.filter(user = user).order_by('-time')[:20]
+        for obj in activity:
+            if (timezone.now() - obj.time).days >=1:
+                obj.activity_time = '{} days ago'.format((timezone.now() - obj.time).days)
+            elif (((timezone.now() - obj.time).seconds)//3600) >=1:
+                obj.activity_time = '{} hour ago'.format(((timezone.now() - obj.time).seconds) //3600)
+            elif (((timezone.now() - obj.time).seconds)//60) >=1:
+                obj.activity_time = '{} min ago'.format(((timezone.now() - obj.time).seconds) //60)
+            else:
+                obj.activity_time = '{} sec ago'.format(((timezone.now() - obj.time).seconds))
+        activity_list =[{
+            'description': act.description,
+            'time': act.activity_time,
+            'type': act.type,
+            'releted_job': JobSerializer(act.releted_job).data,
+            'updated_section': act.updated_section
+        } for act in activity]
+
+        return Response(activity_list)
 
 
 class EducationObject(APIView):

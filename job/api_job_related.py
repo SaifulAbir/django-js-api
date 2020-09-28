@@ -9,6 +9,7 @@ from job.serializers import JobSourceSerializer, CurrencySerializer, JobTypeSeri
     QualificationSerializer, GenderSerializer, ExperienceSerializer, SkillSerializer, ApplicationStatusSerializer, \
     CitySerializer
 from job.utils import sendAccessRequestToEmail
+from p7.permissions import CompanyPermission
 from resources import strings_job
 from resources.strings_location import CITY_COUNTRIES
 
@@ -67,6 +68,16 @@ class CityList(generics.ListAPIView):
         is_archived=False
     ).order_by('name')
     serializer_class = CitySerializer
+
+
+class CitySearch(generics.ListAPIView):
+    permission_classes = [CompanyPermission]
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+    def get_queryset(self):
+        name = self.request.GET.get('name')
+        if name:
+            return City.objects.filter(name__icontains=name).order_by('name')
 
 
 @api_view(["GET"])

@@ -52,13 +52,8 @@ def sendSignupEmail(email,id, date):
             'subject': 'Thank you from' + data,
         }
     )
-    subject_text = loader.render_to_string(
-        'account_activation_email_subject.txt',
-        {
-            'user_name': email,
-            'subject': 'Thank you from' + data,
-        }
-    )
+    subject_text = Account_Activation_Request_MAIL_STR
+
 
     recipient_list = email
     send_email(recipient_list, subject_text, html_message, settingsObj.sender_email_host, settingsObj.sender_email_port,
@@ -78,10 +73,17 @@ def job_alert_save(email):
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
-def save_recent_activity(user_id, activity_type):
+def save_recent_activity(user_id, activity_type,releted_professional = None,releted_job = None,
+                         releted_company = None, updated_section = None):
     obj = RecentActivity()
     obj.user_id = user_id
-    description = {'profile_pro':'Profile Updated', 'apply_pro':'Applied job', 'apply_com':'Professional apply for this job'}
+    description = {'profile_pro':'Profile Updated', 'apply_pro':'Applied job', 'apply_com':'Professional apply for this job',
+                   'favorite_pro':'professional favorite this job','update_pro':'profile updated','favorite_com':"professional favorite this job",
+                   'job-posted_com':'Job was posted','job-updated_com':'Job was updated','shortlist_com':'Professional was shortlisted'}
     obj.description = description[activity_type]
     obj.type = activity_type
+    obj.releted_professional_id = releted_professional
+    obj.releted_job_id = releted_job
+    obj.releted_company_id = releted_company
+    obj.updated_section = updated_section
     obj.save()

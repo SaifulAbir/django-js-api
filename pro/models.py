@@ -5,7 +5,7 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.utils import timezone
 
-from job.models import Industry, Gender, JobType, Experience, Qualification, Company, Skill
+from job.models import Industry, Gender, JobType, Experience, Qualification, Company, Skill, City, Job
 from p7.models import P7Model, populate_time_info
 from p7.utils import uuid_slug_generator
 from p7.validators import check_valid_password, MinLengthValidator, \
@@ -117,6 +117,10 @@ class Professional(P7Model):
     current_location = models.CharField(max_length=255, null=True, blank=True)
     current_company = models.CharField(max_length=255, null=True, blank=True)
     current_designation = models.CharField(max_length=255, null=True, blank=True)
+    job_search_preference = models.CharField(max_length=30, null=False, blank=False,
+                                             choices=strings_pro.SEARCH_PREFERENCE_OPTION,
+                                             default=strings_pro.DEFAULT_SEARCH_PREFERENCE_OPTION)
+    notification_on = models.BooleanField(default=False)
 
     def __str__(self):
         return self.full_name
@@ -148,11 +152,20 @@ class ProfessionalEducation(P7Model):
         db_table = 'professional_educations'
 
 
+class ProfessionalLocationPreference(P7Model):
+    professional = models.ForeignKey(Professional, on_delete=models.PROTECT, related_name='cities')
+    city_name = models.ForeignKey(City, on_delete=models.PROTECT)
+
+    class Meta:
+        db_table = 'professional_location_preferences'
+
+
 class ProfessionalSkill(P7Model):
     professional = models.ForeignKey(Professional, on_delete=models.PROTECT, related_name='skills')
     skill_name = models.ForeignKey(Skill, on_delete=models.PROTECT)
     rating = models.DecimalField(default=0, decimal_places=2, max_digits=4)
     verified_by_skillcheck = models.BooleanField(default=False)
+    is_top_skill = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'professional_skills'
@@ -235,6 +248,10 @@ class RecentActivity(P7Model):
     description = models.TextField(blank=False, null=False)
     time = models.DateTimeField(default=timezone.now)
     type = models.CharField(max_length=255, null=True, blank=True)
+    releted_job = models.ForeignKey(Job, on_delete=models.PROTECT, null=True, blank=True)
+    releted_professional = models.ForeignKey(Professional, on_delete=models.PROTECT, null=True, blank=True)
+    releted_company = models.ForeignKey(Company, on_delete=models.PROTECT, null=True, blank=True)
+    updated_section = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         db_table = 'recent_activities'

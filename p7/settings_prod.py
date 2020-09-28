@@ -2,7 +2,7 @@ from p7.settings_dev import *
 
 DEBUG=False
 ALLOWED_HOSTS = ['*']
-STATIC_ROOT = '/var/p7_static'
+STATIC_ROOT = '/var/jobxprss_static'
 
 DATABASES = {
     'default': {

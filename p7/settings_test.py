@@ -2,7 +2,7 @@ from p7.settings_dev import *
 
 DEBUG=True
 ALLOWED_HOSTS = ['*']
-
+STATIC_ROOT = '/home/ubuntu/Documents/jobxprss/static'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -20,5 +20,5 @@ DATABASES = {
         'COLLATION_CONNECTION':'utf8_general_ci'
     }
 }
-SITE_URL = '127.0.0.1:8000'
+SITE_URL = '127.0.0.1:9000'
 
