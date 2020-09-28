@@ -10,7 +10,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from job.models import Company, Job, JobApplication
-from job.serializers import CompanySerializer, CompanyUpdateSerializer, FeaturedCompanySerializer
+from job.serializers import CompanySerializer, CompanyUpdateSerializer, FeaturedCompanySerializer, JobSerializer
 from p7.auth import CompanyAuthentication
 from p7.models import populate_user_info_request, populate_user_info_querydict
 from p7.pagination import P7Pagination
@@ -22,6 +22,7 @@ from job.models import Job, FavouriteJob, JobApplication
 from p7.auth import ProfessionalAuthentication
 from p7.permissions import CompanyPermission
 from pro.models import ProfessionalSkill, Professional, RecentActivity
+from pro.serializers import ProfessionalSerializer
 from resources.strings_pro import ARCHIVED_FALSE
 
 
@@ -145,7 +146,7 @@ def company_info_box_api(request):
 @permission_classes([CompanyPermission])
 def company_recent_activity(request):
     user = request.user
-    activity = RecentActivity.objects.filter(user = user).order_by('-time')
+    activity = RecentActivity.objects.filter(user = user).order_by('-time')[:20]
     for obj in activity:
         if (timezone.now() - obj.time).days >=1:
             obj.activity_time = '{} days ago'.format((timezone.now() - obj.time).days)
@@ -158,7 +159,9 @@ def company_recent_activity(request):
     activity_list =[{
         'description': act.description,
         'time': act.activity_time,
-        'type': act.type
+        'type': act.type,
+        'releted_job': JobSerializer(act.releted_job).data,
+        'releted_professional': ProfessionalSerializer(act.releted_professional).data
     } for act in activity]
     return Response(activity_list)
 
