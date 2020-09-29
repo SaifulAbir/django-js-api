@@ -56,6 +56,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'p7.crawler_blocker.P7CrawlerBlockerMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -88,6 +89,19 @@ TEMPLATES = [
         },
     },
 ]
+
+## Django crawler
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'cache_table',
+    }
+}
+
+MAX_ALLOWED_HITS_PER_IP = 1000
+IP_HITS_TIMEOUT=60
+
+
 
 WSGI_APPLICATION = 'p7.wsgi.application'
 
