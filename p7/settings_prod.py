@@ -7,7 +7,7 @@ STATIC_ROOT = '/var/jobxprss_static'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'p7_job',
+        'NAME': 'p7',
         'USER': 'root',
         'PASSWORD': '123',
         'HOST': 'localhost',
