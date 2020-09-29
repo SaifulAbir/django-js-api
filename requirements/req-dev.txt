@@ -45,3 +45,4 @@ xlrd==1.2.0
 django-modeladmin-reorder
 oauth2client
 firebase-admin
+django-bot-crawler-blocker==1.0
