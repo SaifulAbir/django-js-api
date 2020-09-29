@@ -21,8 +21,12 @@ from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
 
+from p7.crawler_blocker import get_captcha
+
 urlpatterns = [
     path('', include('p7.urls_api')),
+    path('captcha', get_captcha),
+
 ]
 
 admin.site.unregister(Token)
