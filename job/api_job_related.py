@@ -71,7 +71,7 @@ class CityList(generics.ListAPIView):
 
 
 class CitySearch(generics.ListAPIView):
-    permission_classes = [CompanyPermission]
+    permission_classes = []
     queryset = City.objects.all()
     serializer_class = CitySerializer
     def get_queryset(self):
