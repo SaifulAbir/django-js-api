@@ -93,7 +93,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col">
-                            <img src="/captcha" />
+                            <img src="/api/captcha" />
                         </div>
                     </div>
                     <div class="row mt-4">
@@ -140,19 +140,16 @@
 <script src="{% static 'dashboard/js/upload-input.js' %}"></script>
 <script>
     $(document).ready(function() {
-
         $("#modal-register").modal({
             "backdrop": "static"
         })
+        function captchSubmitted(){
+            window.location.reload();
+        }
         $("#btnCaptcha").click(function (){
-            if(window.location.href.indexOf("?") == -1) {
-                window.location = window.location.href + "?captcha=" + $("#captcha").val();
-            } else if(window.location.href.indexOf("captcha") == -1) {
-                window.location = window.location.href + "&captcha=" + $("#captcha").val();
-            } else {
-                var url = window.location.href.replace(/(.*)(captcha=)(.{5})(.*)/, "$1$2" + $("#captcha").val() + "$4")
-                window.location = url;
-            }
+            post("/api/resolve-captcha/", JSON.stringify({
+                captcha : $("#captcha").val()
+            }), captchSubmitted);
         });
     });
 

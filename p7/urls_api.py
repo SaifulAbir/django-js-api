@@ -1,14 +1,15 @@
-from django.conf.urls import url
 from django.contrib import admin
 from django.urls import include
+from django.urls import path
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
     TokenVerifyView
 )
-from django.urls import path
+
 from p7.api import *
-from .api_auth import professional_signin, company_signin, verify_user
+from .api_auth import professional_signin, company_signin, verify_user, resolve_captcha
+from .crawler_blocker import get_captcha
 
 urlpatterns = [
     path('staff/', admin.site.urls),
@@ -31,6 +32,8 @@ urlpatterns = [
 
     path('api/pro/google/signin/', GoogleSigninProApi.as_view(), name='google_token_verify'),
     path('api/company/google/signin/', GoogleSigninCompanyApi.as_view(), name='google_token_verify'),
+    path('api/captcha', get_captcha),
+    path('api/resolve-captcha/', resolve_captcha),
 
 ]
 

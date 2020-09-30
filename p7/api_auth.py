@@ -118,3 +118,7 @@ def verify_user(request):
     response = Response(data)
     return response
 
+@api_view(["POST"])
+@permission_classes(())
+def resolve_captcha(request):
+    return Response({"Status": "OK"})

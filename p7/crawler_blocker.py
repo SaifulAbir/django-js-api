@@ -1,3 +1,4 @@
+import json
 import string
 from random import choice, Random
 
@@ -13,6 +14,8 @@ class P7CrawlerBlockerMiddleware(object):
         self.get_response = get_response
 
     def __call__(self, request):
+        if request.path.startswith("/staff"):
+            return self.get_response(request)
         # get the client's IP address
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
         ip = x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
@@ -32,18 +35,20 @@ class P7CrawlerBlockerMiddleware(object):
             this_ip_hits += 1
             cache.set(ip_cache_key, this_ip_hits)
 
-        if this_ip_hits > max_allowed_hits and request.path != "/captcha":
-            if request.GET.get("captcha") and  cache.get("captcha") and \
-                    request.GET.get("captcha").upper() == cache.get("captcha").upper():
-                this_ip_hits = 0
-                cache.set(ip_cache_key, this_ip_hits, ip_hits_timeout)
-                response = self.get_response(request)
-                return response
-            else:
-                return render(request, 'captcha.html')
+        print(f"{ip}: {this_ip_hits} of {max_allowed_hits}")
+
+        if this_ip_hits > max_allowed_hits and request.path != "/api/captcha":
+            if request.path == "/api/resolve-captcha/":
+                data = json.loads(request.body.decode('utf-8'))
+                if data.get("captcha") and  cache.get("captcha") and \
+                    data.get("captcha").upper() == cache.get("captcha").upper():
+                    this_ip_hits = 0
+                    cache.set(ip_cache_key, this_ip_hits, ip_hits_timeout)
+                    response = self.get_response(request)
+                    return response
+            return render(request, 'captcha.html')
         else:
-            response = self.get_response(request)
-            return response
+            return self.get_response(request)
 
 
 def get_captcha(request):
@@ -76,7 +81,7 @@ def get_captcha(request):
         )
         blurred = box.filter(ImageFilter.BLUR)
         degree = rand.randint(-60, 60)
-        rotated = blurred.rotate(degree, fillcolor=(245,217,29))
+        rotated = blurred.rotate(degree, fillcolor=(50,50,50))
 
         im.paste(rotated, (i * w_box, 0 , (i+1) * w_box, h_box))
 
