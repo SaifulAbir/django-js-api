@@ -4,6 +4,7 @@ venv/
 venva/
 /venvw/
 venvw/
+/patch
 
 .idea/
  __pycache__/

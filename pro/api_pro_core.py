@@ -1,5 +1,6 @@
 import base64
 import datetime
+import mimetypes
 import uuid
 
 import rest_framework
@@ -10,9 +11,10 @@ from django.core.files.storage import FileSystemStorage
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import Prefetch
 from django.dispatch import receiver
-from django.http import Http404, HttpRequest
-from django.template.loader import render_to_string
+from django.http import Http404, HttpRequest, HttpResponse
+from django.template.loader import render_to_string, get_template
 from django_rest_passwordreset.signals import reset_password_token_created
+import pdfkit
 from rest_framework import generics, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import AuthenticationFailed
@@ -26,7 +28,7 @@ from rest_framework.views import APIView
 from job.models import JobApplication
 from job.serializers import SkillSerializer
 from p7.auth import ProfessionalAuthentication
-from p7.models import is_professional_registered, get_user_address, populate_user_info_request
+from p7.models import is_professional_registered, get_user_address, populate_user_info_request, is_professional
 from p7.permissions import ProfessionalPermission, CompanyPermission
 from p7.settings_dev import SITE_URL
 from p7.utils import send_email
@@ -512,6 +514,43 @@ def check_professional_exist(request):
         'email_exist': status
     }
     return Response(data)
+
+
+class DownloadApplicantResumeAPIView(generics.RetrieveAPIView):
+    permission_classes = ()
+    template = get_template('public_profile_pdf.html')
+
+    def get(self, request, *args, **kwargs):
+
+        queryset = Professional.objects.filter(slug = self.kwargs['slug']).prefetch_related(
+            Prefetch('educations',
+                     queryset=ProfessionalEducation.objects.filter(is_archived=False).order_by('-enrolled_date')),
+            Prefetch('skills',
+                     queryset=ProfessionalSkill.objects.filter(is_archived=False).order_by('skill_name')),
+            Prefetch('work_experiences',
+                     queryset=WorkExperience.objects.filter(is_archived=False).order_by('-start_date')),
+            Prefetch('portfolios',
+                     queryset=Portfolio.objects.filter(is_archived=False).order_by('created_at')),
+            Prefetch('memberships',
+                     queryset=Membership.objects.filter(is_archived=False).order_by('created_at')),
+            Prefetch('certifications',
+                     queryset=Certification.objects.filter(is_archived=False).order_by('-issue_date')),
+            Prefetch('references',
+                     queryset=Reference.objects.filter(is_archived=False).order_by('created_at'))
+        )
+        html = self.template.render({'data': queryset, 'SITE_URL': SITE_URL})
+        options = {
+            'page-size': "A4",
+            'encoding': "UTF-8",
+            "enable-local-file-access": None,
+            "viewport-size": "1024x768",
+        }
+
+        resume = pdfkit.from_string(html, False, options=options)
+        filename = 'resume-' + str(uuid.uuid4()) + '.pdf'
+        response = HttpResponse(resume, content_type="application/pdf")
+        response['Content-Disposition'] = "attachment; filename=%s" % filename
+        return response
 
 
 

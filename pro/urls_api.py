@@ -5,7 +5,7 @@ from pro.api import job_alert, job_alert_notification, EducationObject, \
 from pro.api_dashboard import skill_job_chart, info_box_api
 from pro.api_pro_core import change_password, profile_completeness, check_professional_exist, \
     profile_create_with_user_create, ProfessionalDetail, ProfessionalPublicRetrieve, ProfessionalUpdateView, \
-    ProfessionalUpdatePartial, ApplicantDetail
+    ProfessionalUpdatePartial, ApplicantDetail, DownloadApplicantResumeAPIView
 from pro.api_pro_details import professional_education_save, EducationUpdateDelete, professional_skill_save, \
     SkillUpdateDelete, professional_workexperience_save, WorkExperienceUpdateDelete, professional_portfolio_save, \
     PortfolioUpdateDelete, professional_membership_save, MembershipUpdateDelete, professional_certification_save, \
@@ -65,6 +65,7 @@ urlpatterns = [
     path('professional/professional_skill_object/<str:pk>/', SkillObject.as_view()),
     path('professional/pro_recent_activity/', RecentActivityAPI.as_view()),
     path('professional/email-subscription-on-off/', EmailSubscriptionUpdateView.as_view()),
+    path('professional/download-resume/<str:slug>', DownloadApplicantResumeAPIView.as_view()),
     path('professional/signup-email-verification/<str:token>', professional_signup_email_verification,
          name='code-verify'),
 ]
