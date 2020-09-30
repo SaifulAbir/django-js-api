@@ -99,7 +99,7 @@ CACHES = {
     }
 }
 
-MAX_ALLOWED_HITS_PER_IP = 1000
+MAX_ALLOWED_HITS_PER_IP = 100000
 IP_HITS_TIMEOUT=60
 
 
@@ -205,7 +205,7 @@ MEDIA_URL = '/media/'
 
 SESSION_COOKIE_AGE = 6000
 SITE_URL = 'https://jobxprss.com'
-APP_VERSION_NUMBER = 'v1.0.1'
+APP_VERSION_NUMBER = 'v1.0.2'
 ## ToDo Shohag news_dev for testing news for production
 FIREBASE_CLOUD_MESSAGING_TOPIC = 'news'
 
