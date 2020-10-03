@@ -276,6 +276,8 @@ class SkillUpdateDelete(GenericAPIView, UpdateModelMixin):
     def put(self, request,pk, *args, **kwargs):
         professional_id = Professional.objects.get(user=request.user).id
         request.data['professional_id'] = professional_id
+        if request.data.get('is_archived'):
+            request.data['is_top_skill'] = False
         populate_user_info_request(request, True, request.data.get('is_archived'))
         self.partial_update(request, *args, **kwargs)
         prof_obj = ProfessionalSkillSerializer(ProfessionalSkill.objects.get(pk=pk)).data
