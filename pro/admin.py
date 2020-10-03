@@ -13,10 +13,12 @@ from pro.models import Professional, WorkExperience, Institute, Nationality, Rel
 @admin.register(Professional)
 class ProfesssionalAdmin(P7Admin):
     date_hierarchy = 'created_at' # Top filter
-    search_fields = ['full_name__icontains', 'email__icontains']
+    search_fields = ['full_name__icontains', 'email__icontains', 'skills__skill_name__name__icontains']
+
     list_filter = (
         ('created_at', DateRangeFilter),
-        ('industry_expertise', RelatedDropdownFilter)
+        ('industry_expertise', RelatedDropdownFilter),
+        ('skills__skill_name', RelatedDropdownFilter)
     )
 
     def total_applied(self, obj):
