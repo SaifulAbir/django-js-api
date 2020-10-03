@@ -343,6 +343,19 @@ class JobApplication(P7Model):
         return self.job.title
 
 
+class JobRecommendation(P7Model):
+    from pro.models import Professional
+    professional = models.ForeignKey(Professional, on_delete=models.PROTECT)
+    job = models.ForeignKey(Job, on_delete=models.PROTECT, db_column='job')
+    score = models.PositiveIntegerField()
+    is_notified = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = strings_job.JOB_RECOMMENDATION_VERBOSE_NAME
+        verbose_name_plural = strings_job.JOB_RECOMMENDATION_VERBOSE_NAME_PLURAL
+        db_table = 'job_recommendations'
+
+
 def before_job_save(sender, instance:Job, *args, **kwargs):
     if instance.job_city and len(instance.job_city.split(',')) == 2:
         instance.job_country = instance.job_city.split(',')[0].strip()
