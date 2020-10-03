@@ -79,6 +79,11 @@ JOB_APPLICATION_VERBOSE_NAME = 'Job Application'
 JOB_APPLICATION_VERBOSE_NAME_PLURAL = 'Job Applications'
 # Apply Online Strings #
 
+# Apply Online Strings #
+JOB_RECOMMENDATION_VERBOSE_NAME = 'Job Application'
+JOB_RECOMMENDATION_VERBOSE_NAME_PLURAL = 'Job Applications'
+# Apply Online Strings #
+
 # Added by Munir (02-03).05.2020 >>>
 JOB_SITES = (
     ('ONSITE', 'On-site'),
