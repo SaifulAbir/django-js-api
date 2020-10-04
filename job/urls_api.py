@@ -2,7 +2,7 @@ from django.urls import path
 
 from job.api_company import list_company_by_name, CompanyList, CompanyUpdateView, company_info_box_api, \
     company_recent_activity, company_job_application_chart, CompanyListWithoutPagination, FeaturedCompanyList, \
-    CompanyRetrieveView
+    CompanyRetrieveView, CompanyRetrieveViewByName
 from job.api_job_core import JobAPI, CompanyJobUpdateView, CompanyJobCreateAPI, CompanyJobAPI, \
     CompanyJobUnpublishAPI, CompanyJobPublishAPI, CompanyJobPostAPI
 from job.api_job_kpi import TopFavouriteList, TopCategoryList, TopSkillList, TopCompanyList, TrendingKeywordList, \
@@ -48,6 +48,7 @@ urlpatterns = [
     path('company/list/without-pagination/', CompanyListWithoutPagination.as_view()),
     path('company/search/', list_company_by_name),  # Public API
     path('company/get/', CompanyRetrieveView.as_view()),  # Public API
+    path('company/get/<str:name>/', CompanyRetrieveViewByName.as_view()),  # Public API
     path('company/dashboard/infobox/', company_info_box_api),
     path('company/dashboard/chart/', company_job_application_chart),
     path('company/dashboard/recent_activity/', company_recent_activity),

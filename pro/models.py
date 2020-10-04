@@ -173,7 +173,7 @@ class ProfessionalEducation(P7Model):
 
 
 class ProfessionalLocationPreference(P7Model):
-    professional = models.ForeignKey(Professional, on_delete=models.PROTECT, related_name='cities')
+    professional = models.ForeignKey(Professional, on_delete=models.PROTECT, related_name='pro_location_preferences')
     city_name = models.ForeignKey(City, on_delete=models.PROTECT)
 
     class Meta:
