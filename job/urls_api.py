@@ -48,7 +48,7 @@ urlpatterns = [
     path('company/list/without-pagination/', CompanyListWithoutPagination.as_view()),
     path('company/search/', list_company_by_name),  # Public API
     path('company/get/', CompanyRetrieveView.as_view()),  # Public API
-    path('company/get/<name:name>/', CompanyRetrieveViewByName.as_view()),  # Public API
+    path('company/get/<slug:slug>/', CompanyRetrieveViewByName.as_view()),  # Public API
     path('company/dashboard/infobox/', company_info_box_api),
     path('company/dashboard/chart/', company_job_application_chart),
     path('company/dashboard/recent_activity/', company_recent_activity),

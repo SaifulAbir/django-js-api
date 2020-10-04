@@ -77,9 +77,9 @@ class CompanyRetrieveView(generics.RetrieveAPIView):
 
 class CompanyRetrieveViewByName(APIView):
     permission_classes = ()
-    def get(self, request, name):
+    def get(self, request, slug):
         queryset = Company.objects.filter(
-            name = name,
+            name = slug,
         ).first()
         data = CompanySerializer(queryset, many=False).data
         return Response(data)
