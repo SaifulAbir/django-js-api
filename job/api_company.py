@@ -9,6 +9,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from job.models import Company, Job, JobApplication
 from job.serializers import CompanySerializer, CompanyUpdateSerializer, FeaturedCompanySerializer, JobSerializer
 from p7.auth import CompanyAuthentication
@@ -73,6 +74,15 @@ class CompanyRetrieveView(generics.RetrieveAPIView):
             user_id = user.id,
         )
         return get_object_or_404(queryset)
+
+class CompanyRetrieveViewBySlug(APIView):
+    permission_classes = ()
+    def get(self, request, slug):
+        queryset = Company.objects.filter(
+            slug = slug,
+        ).first()
+        data = CompanySerializer(queryset, many=False).data
+        return Response(data)
 
 class CompanyUpdateView(generics.UpdateAPIView):
     authentication_classes = [CompanyAuthentication]
