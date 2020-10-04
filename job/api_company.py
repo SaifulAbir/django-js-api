@@ -1,5 +1,6 @@
 import base64
 import uuid
+from urllib.parse import unquote
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
@@ -77,9 +78,9 @@ class CompanyRetrieveView(generics.RetrieveAPIView):
 
 class CompanyRetrieveViewByName(APIView):
     permission_classes = ()
-    def get(self, request, slug):
+    def get(self, request, name):
         queryset = Company.objects.filter(
-            name = slug,
+            name = unquote(name),
         ).first()
         data = CompanySerializer(queryset, many=False).data
         return Response(data)
