@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import format_html
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter
 from django_filters import Filter
 from rangefilter.filter import DateRangeFilter
@@ -27,8 +28,16 @@ class ProfesssionalAdmin(P7Admin):
         except:
             return ""
 
-    list_display = ['full_name', 'email','total_applied', 'created_at']
+    def pro_link(self, obj):
+        return format_html(f'<a target="_blank" href="https://jobxprss.com/pro/{obj.slug}">{obj.full_name}</a>')
 
+    def edit_link(self, obj):
+        return "Edit"
+
+    pro_link.allow_tags = True
+
+    list_display = ['pro_link', 'email','total_applied', 'created_at', 'edit_link']
+    list_display_links = ['edit_link']
 
 @admin.register(Institute)
 class InstituteAdmin(P7Admin):

@@ -19,6 +19,9 @@ class Nationality(P7Model):
     class Meta:
         db_table = 'nationalities'
 
+    def __str__(self):
+        return self.name
+
 
 class Institute(P7Model):
     name = models.CharField(max_length=255, )
@@ -27,6 +30,9 @@ class Institute(P7Model):
     class Meta:
         db_table = 'institutes'
 
+    def __str__(self):
+        return self.name
+
 
 class Organization(P7Model):
     name = models.CharField(max_length=255, )
@@ -34,6 +40,8 @@ class Organization(P7Model):
     class Meta:
         db_table = 'organizations'
 
+    def __str__(self):
+        return self.name
 
 class MembershipOrganization(P7Model):
     name = models.CharField(max_length=255, )
@@ -42,6 +50,8 @@ class MembershipOrganization(P7Model):
     class Meta:
         db_table = 'membership_organizations'
 
+    def __str__(self):
+        return self.name
 
 class CertifyingOrganization(P7Model):
     name = models.CharField(max_length=255, )
@@ -50,6 +60,8 @@ class CertifyingOrganization(P7Model):
     class Meta:
         db_table = 'certifying_organizations'
 
+    def __str__(self):
+        return self.name
 
 class Major(P7Model):
     name = models.CharField(max_length=255, )
@@ -57,15 +69,17 @@ class Major(P7Model):
     class Meta:
         db_table = 'majors'
 
+    def __str__(self):
+        return self.name
 
 class EducationLevel(P7Model):
     name = models.CharField(max_length=255, )
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         db_table = 'education_level'
+
+    def __str__(self):
+        return self.name
 
 
 class Religion(P7Model):
@@ -74,12 +88,19 @@ class Religion(P7Model):
     class Meta:
         db_table = 'religions'
 
+    def __str__(self):
+        return self.name
+
 
 class CertificateName(P7Model):
     name = models.CharField(max_length=255)
 
     class Meta:
         db_table = 'certificate_names'
+
+    def __str__(self):
+        return self.name
+
 
 class Professional(P7Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_column='id')
@@ -130,7 +151,6 @@ class Professional(P7Model):
         verbose_name_plural = strings_pro.PROFESSIONAL_VERBOSE_NAME_PLURAL
         db_table = 'professionals'
         ordering = ['-created_at']
-
 
 
 class ProfessionalEducation(P7Model):
