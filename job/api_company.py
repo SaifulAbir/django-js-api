@@ -75,11 +75,11 @@ class CompanyRetrieveView(generics.RetrieveAPIView):
         )
         return get_object_or_404(queryset)
 
-class CompanyRetrieveViewBySlug(APIView):
+class CompanyRetrieveViewByName(APIView):
     permission_classes = ()
-    def get(self, request, slug):
+    def get(self, request, name):
         queryset = Company.objects.filter(
-            slug = slug,
+            name = name,
         ).first()
         data = CompanySerializer(queryset, many=False).data
         return Response(data)
