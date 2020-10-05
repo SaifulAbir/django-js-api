@@ -31,9 +31,9 @@ class TestJobSourceList(unittest.TestCase):
         resp = requests.get(JOB_SOURCE_LIST_URL, headers={'Authorization': 'Bearer ' + self.access_token})
         self.assertEqual(resp.status_code, 200)
 
-    def test__when_access_token_empty__job_source_list__should_failed(self):
+    def test__when_access_token_empty__job_source_list__should_pass(self):
         resp = requests.get(JOB_SOURCE_LIST_URL)
-        self.assertEqual(resp.status_code, 401)
+        self.assertEqual(resp.status_code, 200)
 
 
 class TestJobCategoryList(unittest.TestCase):
@@ -45,9 +45,9 @@ class TestJobCategoryList(unittest.TestCase):
         resp = requests.get(JOB_CATEGORY_LIST_URL, headers={'Authorization': 'Bearer ' + self.access_token})
         self.assertEqual(resp.status_code, 200)
 
-    def test__when_access_token_empty__job_category_list__should_failed(self):
+    def test__when_access_token_empty__job_category_list__should_pass(self):
         resp = requests.get(JOB_CATEGORY_LIST_URL)
-        self.assertEqual(resp.status_code, 401)
+        self.assertEqual(resp.status_code, 200)
 
 
 class TestJobGenderList(unittest.TestCase):
