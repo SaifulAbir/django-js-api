@@ -83,7 +83,7 @@ def professional_skill_save(request):
         pro_skill_obj.is_archived = ARCHIVED_FALSE
         pro_skill_obj.save()
         data['skill_obj'] = SkillSerializer(Skill.objects.get(pk=data['skill_name_id'])).data
-        data['id'] = key_obj.id
+        data['id'] = pro_skill_obj.id
 
     elif not pro_skill_obj_with_archive and not pro_skill_obj_without_archive:
         key_obj.save()
@@ -276,6 +276,8 @@ class SkillUpdateDelete(GenericAPIView, UpdateModelMixin):
     def put(self, request,pk, *args, **kwargs):
         professional_id = Professional.objects.get(user=request.user).id
         request.data['professional_id'] = professional_id
+        if request.data.get('is_archived'):
+            request.data['is_top_skill'] = False
         populate_user_info_request(request, True, request.data.get('is_archived'))
         self.partial_update(request, *args, **kwargs)
         prof_obj = ProfessionalSkillSerializer(ProfessionalSkill.objects.get(pk=pk)).data
