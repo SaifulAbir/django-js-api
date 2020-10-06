@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User, Group
 from django.db import connection
 from django.http import HttpResponseRedirect
@@ -210,7 +211,7 @@ class CompanyAdmin(P7Admin):
                 email, pwd, pwd2 = emails[i], pwds[i], pwd2s[i]
                 if pwd == pwd2:
                     try:
-                        user = User.objects.create(username = email, email = email, password=pwd)
+                        user = User.objects.create(username = email, email = email, password=make_password(pwd))
                         pro_group = Group.objects.get(name='Company')
                         user.groups.add(pro_group)
                         comp = queryset.filter(name= company_name).get()
