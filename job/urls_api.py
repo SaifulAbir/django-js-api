@@ -27,8 +27,8 @@ urlpatterns = [
     path('job/get/<slug:slug>/', JobAPI.as_view()), # Public API
     path('company/job/get/<slug:slug>/', CompanyJobAPI.as_view()),
 
-    path('job-source/list/', JobSourceList.as_view()),
-    path('job-category/list/', JobCategoryList.as_view()),
+    path('job-source/list/', JobSourceList.as_view()), # Public API
+    path('job-category/list/', JobCategoryList.as_view()), # Public API
     path('job-gender/list/', JobGenderList.as_view()), # Public API
     path('job-site/list/', get_job_site_list),
     path('job-nature/list/', get_job_nature_list),

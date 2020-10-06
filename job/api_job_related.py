@@ -15,6 +15,7 @@ from resources.strings_location import CITY_COUNTRIES
 
 
 class JobSourceList(generics.ListAPIView):
+    permission_classes = ()
     queryset = JobSource.objects.filter(
         is_archived=False
     ).order_by('name')
@@ -22,6 +23,7 @@ class JobSourceList(generics.ListAPIView):
 
 
 class JobCategoryList(generics.ListAPIView):
+    permission_classes = ()
     queryset = JobCategory.objects.filter(
         is_archived=False
     ).order_by('name')
