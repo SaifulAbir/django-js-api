@@ -419,7 +419,7 @@ class CustomPasswordResetView:
             'current_user': reset_password_token.user,
             'username': reset_password_token.user.username,
             'email': reset_password_token.user.email,
-            'reset_password_url': "{}/{}/password/reset/{}".format(SITE_URL,user_type, reset_password_token.key),
+            'reset_password_url': "/password/reset/".format(SITE_URL,user_type, reset_password_token.key),
             'site_name': SITE_SHORTCUT_NAME,
             'site_domain': SITE_URL,
             'name': name,
