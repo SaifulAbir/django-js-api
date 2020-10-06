@@ -248,7 +248,7 @@ class ProfessionalSerializerAdmin(serializers.ModelSerializer):
     pro_location_preferences = ProfessionalLocationPreferencePublicSerializer(many=True)
     class Meta:
         model = Professional
-        fields = (['id', 'full_name', 'skills', 'job_search_preference', 'pro_location_preferences', 'notification_on'])
+        fields = (['id', 'skills', 'job_search_preference', 'pro_location_preferences', 'notification_on'])
 
 
 class JobApplicantSerializer(serializers.ModelSerializer):
