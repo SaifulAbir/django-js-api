@@ -105,7 +105,7 @@ def profile_create_with_user_create(request):
         if 'alert' in profile_data:
             pro.job_alert_status = True
         pro.save()
-    sendSignupEmail(profile_data['email'],pro.id, datetime.date.today)
+    sendSignupEmail(profile_data["full_name"], profile_data['email'], pro.id, datetime.date.today)
     data = {
         'status': 'success',
         'code': HTTP_200_OK,

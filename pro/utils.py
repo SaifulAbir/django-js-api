@@ -34,7 +34,7 @@ from p7.utils import send_email
 from settings.models import Settings
 
 
-def sendSignupEmail(email,id, date):
+def sendSignupEmail(name, email, id, date):
     # unique_id = random.randint(100000, 999999)
     # updateExamineeVerficationCode(email, unique_id)
     id=str(id)
@@ -49,6 +49,7 @@ def sendSignupEmail(email,id, date):
         {
             'activation_url': "{}/professional/signup-email-verification/email={}&token={}".format(SITE_URL, email, activation_link),
             'activation_email': email,
+            'name': name,
             'subject': 'Thank you from' + data,
         }
     )
