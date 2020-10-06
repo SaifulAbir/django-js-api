@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import admin
-from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User, Group
 from django.db import connection
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
@@ -197,6 +198,39 @@ class CompanyAdmin(P7Admin):
         super().save_model(request, obj, form, change)
 
 
+    def create_user(self, request, queryset):
+        if 'apply' in request.POST:
+            names = request.POST.getlist("_selected_action")
+            emails = request.POST.getlist("email")
+            pwds = request.POST.getlist("password")
+            pwd2s = request.POST.getlist("password2")
+
+            success_comps = []
+            failed_comps = []
+            for i, company_name in enumerate(names):
+                email, pwd, pwd2 = emails[i], pwds[i], pwd2s[i]
+                if pwd == pwd2:
+                    try:
+                        user = User.objects.create(username = email, email = email, password=make_password(pwd))
+                        pro_group = Group.objects.get(name='Company')
+                        user.groups.add(pro_group)
+                        comp = queryset.filter(name= company_name).get()
+                        comp.user = user
+                        comp.save()
+                        success_comps.append(company_name)
+                    except:
+                        failed_comps.append(company_name)
+                else:
+                    failed_comps.append(company_name)
+
+            self.message_user(request, f"Success: [{', '.join(success_comps)}], Failed:[{', '.join(failed_comps)}]")
+            return HttpResponseRedirect(request.get_full_path())
+        else:
+            return render(request, 'admin/create_user.html',
+                          context={"models": queryset.filter(user__email__isnull=True)})
+
+    create_user.short_description = "Create Company Users"
+
     def change_name(self, request, queryset):
         if 'apply' in request.POST:
             old_names = request.POST.getlist("_selected_action")
@@ -216,9 +250,9 @@ class CompanyAdmin(P7Admin):
             return HttpResponseRedirect(request.get_full_path())
         return render(request, 'admin/change_name.html', context={"models": queryset})
 
-    change_name.short_description = "Change Name"
+    change_name.short_description = "Change Names"
 
-    actions = ['change_name']
+    actions = ['change_name', 'create_user' ]
 
     class Media:
         if hasattr(settings, 'GOOGLE_MAPS_API_KEY') and settings.GOOGLE_MAPS_API_KEY:

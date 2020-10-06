@@ -181,6 +181,13 @@ class ProfessionalSkillPublicSerializer(serializers.ModelSerializer):
         fields = (['skill', 'rating', 'verified_by_skillcheck', 'is_top_skill'])
 
 
+class ProfessionalSkillAdminSerializer(serializers.ModelSerializer):
+    skill =  serializers.CharField(source='skill_name.name')
+    class Meta:
+        model = ProfessionalSkill
+        fields = (['skill', 'rating'])
+
+
 class JobApplicantSkillSerializer(serializers.ModelSerializer):
     skill =  serializers.CharField(source='skill_name.name')
     class Meta:
@@ -237,11 +244,11 @@ class ProfessionalPublicSerializer(serializers.ModelSerializer):
 
 
 class ProfessionalSerializerAdmin(serializers.ModelSerializer):
-    skills = ProfessionalSkillPublicSerializer(many=True)
+    skills = ProfessionalSkillAdminSerializer(many=True)
     pro_location_preferences = ProfessionalLocationPreferencePublicSerializer(many=True)
     class Meta:
         model = Professional
-        fields = (['id', 'full_name', 'skills', 'job_search_preference', 'pro_location_preferences', 'notification_on'])
+        fields = (['id', 'skills', 'job_search_preference', 'pro_location_preferences', 'notification_on'])
 
 
 class JobApplicantSerializer(serializers.ModelSerializer):
