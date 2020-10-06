@@ -210,7 +210,7 @@ class CompanyAdmin(P7Admin):
                 email, pwd, pwd2 = emails[i], pwds[i], pwd2s[i]
                 if pwd == pwd2:
                     try:
-                        user = User.objects.create(username = email, password=pwd)
+                        user = User.objects.create(username = email, email = email, password=pwd)
                         pro_group = Group.objects.get(name='Company')
                         user.groups.add(pro_group)
                         comp = queryset.filter(name= company_name).get()
