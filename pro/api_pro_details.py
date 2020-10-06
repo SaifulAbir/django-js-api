@@ -83,7 +83,7 @@ def professional_skill_save(request):
         pro_skill_obj.is_archived = ARCHIVED_FALSE
         pro_skill_obj.save()
         data['skill_obj'] = SkillSerializer(Skill.objects.get(pk=data['skill_name_id'])).data
-        data['id'] = key_obj.id
+        data['id'] = pro_skill_obj.id
 
     elif not pro_skill_obj_with_archive and not pro_skill_obj_without_archive:
         key_obj.save()
