@@ -72,6 +72,7 @@ def is_professional_registered(email):
 
 def get_user_address(request):
     http_header = request.META.get('HTTP_X_FORWARDED_FOR') if request.META.get('HTTP_X_FORWARDED_FOR') is not None else request.META.get('REMOTE_ADDR')
+    http_header += ", " + request.META.get('HTTP_USER_AGENT') + ", " + request.META.get('REMOTE_HOST')
     return http_header
 
 
