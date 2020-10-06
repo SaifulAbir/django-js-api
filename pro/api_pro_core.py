@@ -406,15 +406,23 @@ class CustomPasswordResetView:
         try:
             if reset_password_token.user.company:
                 user_type = "company"
+                name = reset_password_token.user.first_name
         except:
             user_type = "professional"
+            try:
+                name = Professional.objects.get(user_id=reset_password_token.user.id).full_name
+            except Professional.DoesNotExist:
+                name = reset_password_token.user.username
+
+
         context = {
             'current_user': reset_password_token.user,
             'username': reset_password_token.user.username,
             'email': reset_password_token.user.email,
-            'reset_password_url': "{}/{}/password-reset/{}".format(SITE_URL,user_type, reset_password_token.key),
+            'reset_password_url': "{}/{}/password/reset/{}".format(SITE_URL,user_type, reset_password_token.key),
             'site_name': SITE_SHORTCUT_NAME,
-            'site_domain': SITE_URL
+            'site_domain': SITE_URL,
+            'name': name,
         }
 
         # render email text
@@ -422,7 +430,7 @@ class CustomPasswordResetView:
         email_plaintext_message = render_to_string('user_reset_password.txt', context)
         settingsObj = Settings.objects.all().first()
         recipient_list = reset_password_token.user.email
-        subject_text = "Password Reset for {}".format(SITE_SHORTCUT_NAME)
+        subject_text = "Reset password for JobXprss account"
         send_email(recipient_list, subject_text, email_html_message, settingsObj.sender_email_host, settingsObj.sender_email_port,
                settingsObj.no_reply_sender_host_user, settingsObj.no_reply_sender_host_password)
 
