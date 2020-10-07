@@ -12,7 +12,7 @@ from rangefilter.filter import DateRangeFilter
 
 from job.forms import JobModelForm, CompanyModelForm
 from job.models import Company, Experience, Qualification, Gender, Industry, Job, Currency, Skill, JobSource, \
-    JobCategory, JobGender, ApplicationStatus, City
+    JobCategory, JobGender, ApplicationStatus, City, JobRecommendation
 from job.models import TrendingKeywords, JobApplication
 from p7.admin import P7Admin
 from p7.models import is_moderator
@@ -400,5 +400,10 @@ class ApplicationStatusAdmin(P7Admin):
 @admin.register(City)
 class CityAdmin(P7Admin):
     list_display = ['name', 'created_by', 'created_at']
+
+
+@admin.register(JobRecommendation)
+class JobRecommendationAdmin(P7Admin):
+    list_display = ['professional', 'job', 'score']
 
 
