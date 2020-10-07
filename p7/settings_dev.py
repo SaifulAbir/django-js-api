@@ -285,6 +285,7 @@ ADMIN_REORDER = (
             'job.JobSource',
             'job.Qualification',
             'job.Skill',
+            'job.JobRecommendation'
         )
     },
     {
