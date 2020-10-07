@@ -223,6 +223,7 @@ CKEDITOR_CONFIGS = {
             ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
             ['NumberedList','BulletedList'],
             ['Indent','Outdent'],
+            ['Link', 'Unlink'],
             ['Source'],
        ]
    }
