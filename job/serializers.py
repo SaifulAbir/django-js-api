@@ -106,7 +106,7 @@ class CompanyJobSerializer(serializers.ModelSerializer):
         fields = ('job_id', 'title', 'status', 'company', 'job_category',
                   'application_deadline', 'job_area', 'job_city', 'job_country',
                   'job_site', 'job_nature', 'job_type' , 'address', 'vacancy','salary',
-                  'created_at', 'post_date', 'slug', 'applied_count', 'favorite_count',
+                  'created_at', 'post_date', 'slug', 'applied_count', 'favorite_count','qualification',
                   'publish_date','other_benefits', 'responsibilities', 'additional_requirements', 'description',
                   'education','job_gender','job_skills','experience','salary_min','salary_max','company_profile','salary_option','currency'
         )
