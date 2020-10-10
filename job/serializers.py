@@ -12,7 +12,7 @@ class CompanyUpdateSerializer(serializers.ModelSerializer):
                   'total_number_of_human_resources', 'no_of_it_resources', 'address', 'area', 'city',
                   'company_contact_no_one', 'company_contact_no_two', 'company_contact_no_three', 'organization_head',
                   'organization_head_designation','organization_head_number','contact_person','contact_person_designation','contact_person_mobile_no',
-                  'contact_person_email','company_name_bdjobs','company_name_facebook','company_name_google','latitude','longitude','profile_picture']
+                  'contact_person_email','company_name_bdjobs','company_name_facebook','company_name_google','latitude','longitude','profile_picture','web_address']
 
 class CompanyNameSerializer(serializers.ModelSerializer):
     class Meta:
