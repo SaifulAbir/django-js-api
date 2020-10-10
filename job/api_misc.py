@@ -288,7 +288,7 @@ def get_all_applicants(request, job_id):
                                                                                        queryset=ProfessionalSkill.objects.filter(
                                                                                            is_archived=False).order_by(
                                                                                            'skill_name'))
-                                                                              ).order_by('-created_at')
+                                                                              ).order_by('-application_id')
 
     paginator = P7Pagination()
     result_page = paginator.paginate_queryset(queryset, request)
