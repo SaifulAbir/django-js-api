@@ -11,7 +11,7 @@ from django.contrib.auth.hashers import check_password, make_password
 from job.models import Company
 from job.serializers import CompanySerializer
 from p7.models import is_professional, is_company
-from pro.models import Professional
+from pro.models import Professional, ProfessionalSkill
 from pro.serializers import ProfessionalSerializer, INACTIVE_USER
 
 from p7.settings_dev import SIMPLE_JWT
@@ -54,12 +54,15 @@ def professional_signin(request):
     data['refresh'] = str(token)
 
     pro = Professional.objects.get(user_id = user.id)
+    top_skill_count = ProfessionalSkill.objects.filter(professional=pro, is_archived=False, is_top_skill=True).count()
+
     data['user'] = {
         'id': user.id,
         'email': email,
         'type': 'professional'
     }
     data['pro'] = ProfessionalSerializer(pro, many=False).data
+    data['pro'].update({'top_skill_count': top_skill_count})
     data['token_lifetime'] = SIMPLE_JWT
     return Response(data)
 
