@@ -1,3 +1,4 @@
+from django.db.models import Q, Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
@@ -9,7 +10,10 @@ from rest_framework.status import (
 from rest_framework.utils import json
 from rest_framework.views import APIView
 
+from job.models import JobRecommendation
 from job.serializers import JobSerializer
+from p7.permissions import StaffPermission
+from p7.socket_client import SocketClient
 from pro.serializers import *
 from pro.utils import job_alert_save
 from resources.strings_pro import *
@@ -186,5 +190,22 @@ class EducationObject(APIView):
             'edu_info': education,
         }
         return Response(edu_data)
+
+
+class SendRecommendedJobNotification(APIView):
+    required_privilege = 'job.change_jobrecommendation'
+    permission_classes = [StaffPermission]
+
+    def get(self, request):
+        job_recommendation_list = JobRecommendation.objects.filter(is_notified=False).values('professional').annotate(job_count = Count('professional'))
+        for job_recommendation in job_recommendation_list:
+            SocketClient.send({
+                "type": "job_notification",
+                "text": "You have " + str(job_recommendation['job_count']) + " job recommendation",
+                "from": "",
+                "to": str(Professional.objects.get(id=job_recommendation['professional']).user.id)
+            })
+        job_recommendation_list.update(is_notified = True)
+        return Response(job_recommendation_list)
 
 

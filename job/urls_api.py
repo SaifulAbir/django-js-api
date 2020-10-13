@@ -7,7 +7,8 @@ from job.api_job_core import JobAPI, CompanyJobUpdateView, CompanyJobCreateAPI, 
     CompanyJobUnpublishAPI, CompanyJobPublishAPI, CompanyJobPostAPI
 from job.api_job_kpi import TopFavouriteList, TopCategoryList, TopSkillList, TopCompanyList, TrendingKeywordList, \
     get_vital_stats
-from job.api_job_list import similar_jobs, applied_jobs, favourite_jobs, recent_jobs, JobSearchAPI, CompanyJobSearchAPI
+from job.api_job_list import similar_jobs, applied_jobs, favourite_jobs, recent_jobs, JobSearchAPI, CompanyJobSearchAPI, \
+    JobRecommendationAPI
 from job.api_job_related import get_job_site_list, JobSourceList, get_job_nature_list, get_job_type_list, \
     get_job_status_list, get_job_creator_type_list, JobCategoryList, JobGenderList, IndustryList, JobTypeList, \
     ExperienceList, CurrencyList, QualificationList, GenderList, SkillList, get_salary_range, \
@@ -19,6 +20,7 @@ from job.api_ml import MlJobAPI, AdminJobList, JobCreateView, MlJobUpdateView, S
 
 urlpatterns = [
     path('job/search/', JobSearchAPI.as_view()), # Public API
+    path('job/recommend/', JobRecommendationAPI.as_view()), # Public API
     path('company/job/search/', CompanyJobSearchAPI.as_view()),
     path('job/recent/', recent_jobs), # Public API
     path('job/applied/', applied_jobs),
