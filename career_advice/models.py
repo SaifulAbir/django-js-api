@@ -6,7 +6,7 @@ from p7.models import P7Model, populate_time_info
 from resources import strings_job
 
 class CareerAdvice(P7Model):
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=64)
     short_description = models.TextField()
     description = RichTextField()
     author = models.CharField(max_length=50)
