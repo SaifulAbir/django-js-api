@@ -11,7 +11,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 
-from job.models import Job
+from job.models import Job, JobRecommendation
 from job.serializers import JobSerializer, CompanyJobSerializer
 from p7.models import is_professional, is_company
 from p7.pagination import P7Pagination
@@ -139,6 +139,23 @@ class JobSearchAPI(ListAPIView):
             queryset = queryset.filter(job_city__icontains=job_city)
 
         return queryset
+
+
+class JobRecommendationAPI(JobSearchAPI):
+
+    def get_queryset(self):
+        request = self.request
+        if not request.user.is_authenticated:
+            return super(JobRecommendationAPI, self).get_queryset()
+        else:
+            job_recommendation = JobRecommendation.objects.filter(
+                professional__user__id=request.user.id).values_list("job__job_id", flat=True)
+            print(job_recommendation)
+            if len(job_recommendation) == 0:
+                return super(JobRecommendationAPI, self).get_queryset()
+            else:
+                queryset = super(JobRecommendationAPI, self).get_queryset().filter(job_id__in= job_recommendation)
+                return queryset
 
 
 class CompanyJobSearchAPI(ListAPIView):

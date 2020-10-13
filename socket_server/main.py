@@ -105,7 +105,7 @@ async def send(sid, data):
                             print("data!", e.__class__, "occurred.")
                             print(user)
 
-                        print(data)
+                        # print(data)
                         await socket.emit('receive', data, to=rec['sid'])
                     except Exception as e:
                         print("Oops!", e.__class__, "occurred.")

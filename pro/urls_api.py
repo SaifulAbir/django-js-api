@@ -1,7 +1,7 @@
 from django.urls import path, include
 
 from pro.api import job_alert, job_alert_notification, EducationObject, \
-    RecentActivityAPI
+    RecentActivityAPI, SendRecommendedJobNotification
 from pro.api_dashboard import skill_job_chart, info_box_api
 from pro.api_ml import MlProfessionalList, JobRecommendationBulkCreateView
 from pro.api_pro_core import change_password, profile_completeness, check_professional_exist, \
@@ -67,6 +67,7 @@ urlpatterns = [
     path('professional/certificate_name/', CertificateNameList.as_view()),
     path('professional/professional_skill_object/<str:pk>/', SkillObject.as_view()),
     path('professional/pro_recent_activity/', RecentActivityAPI.as_view()),
+    path('professional/job_notification/', SendRecommendedJobNotification.as_view()),
     path('professional/email-subscription-on-off/', EmailSubscriptionUpdateView.as_view()),
     path('professional/download-resume/<str:slug>', DownloadApplicantResumeAPIView.as_view()),
     path('professional/signup-email-verification/<str:token>', professional_signup_email_verification,
