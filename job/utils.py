@@ -61,7 +61,7 @@ def applied_job_counter(job):
 # Applied Job Counter
 
 
-def sendAccessRequestToEmail(email, company_name, phone, person_name, company_role, contact_info):
+def sendAccessRequestToEmail(email, company_name, person_name, company_role, contact_info, phone=None):
     html_message = loader.render_to_string(
         'company_access_request_content.html',
         {

@@ -323,9 +323,12 @@ def save_trending_keywords(request):
 @permission_classes(())
 def request_for_access(request):
     req_data = request.data
-    support_response = sendAccessRequestToEmail(req_data['email'], req_data['company_name'], req_data['phone'],
-                                                req_data['person_name'], req_data['company_role'],
-                                                req_data['contact_info'])
+
+    if 'phone' not in req_data:
+        req_data['phone'] = ''
+    support_response = sendAccessRequestToEmail(email= req_data['email'],company_name= req_data['company_name'],
+                                                person_name= req_data['person_name'], company_role= req_data['company_role'],
+                                                contact_info= req_data['contact_info'],phone= req_data['phone'])
     verification_code = randint(100000, 999999)
     company_response = sendVerificationRequestToEmail(req_data['email'], verification_code, req_data['person_name'],
                                                       req_data['company_name'])
