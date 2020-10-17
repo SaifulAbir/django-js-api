@@ -8,7 +8,7 @@ from django.db.models import Max, Min
 from django.db.models.signals import pre_save, post_save, post_delete
 from django.utils import timezone
 
-from job.utils import job_slug_generator
+from job.utils import job_slug_generator, save_notification
 from p7.models import P7Model, populate_time_info
 from resources import strings_job
 from settings.models import Settings
@@ -380,6 +380,7 @@ def before_job_save(sender, instance:Job, *args, **kwargs):
         elif instance.status == "PUBLISHED" and old_instance.status != "PUBLISHED":
             instance.publish_date = timezone.now()
             instance.published_by = instance.modified_by
+            save_notification('job-published_admin', str(instance.company.user_id))
 
     except Job.DoesNotExist:
         instance.slug = job_slug_generator(instance)

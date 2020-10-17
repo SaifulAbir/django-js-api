@@ -29,7 +29,8 @@ from resources.strings_pro import EMAIL_EXIST_ERROR_MSG
 from .models import FavouriteJob
 from settings.models import Settings
 from .serializers import *
-from .utils import favourite_job_counter, applied_job_counter, sendAccessRequestToEmail, sendVerificationRequestToEmail
+from .utils import favourite_job_counter, applied_job_counter, sendAccessRequestToEmail, sendVerificationRequestToEmail, \
+    save_notification
 from rest_framework.parsers import FileUploadParser
 from rest_framework import status
 
@@ -209,7 +210,7 @@ class JobApplicationAPI(APIView):
             save_recent_activity(request.user.id, 'apply_pro', pro_obj.id, request.data["job"])
             if job.company.user_id:
                 save_recent_activity(job.company.user_id, 'apply_com', pro_obj.id, request.data["job"])
-
+                save_notification('apply_pro', str(job.company.user_id))
             return Response(job_application_serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(job_application_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
