@@ -63,6 +63,7 @@ class JobAdmin(P7Admin):
         'raw_content',
         ('slug', 'applied_count', 'favorite_count'),
         'is_archived',
+        'featured_image',
     ]
     readonly_fields = [
         'slug', 'applied_count', 'favorite_count',
