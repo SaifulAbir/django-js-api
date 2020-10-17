@@ -114,3 +114,13 @@ def sendVerificationRequestToEmail(email, verification_code, person_name, compan
         'code': HTTP_200_OK
     }
     return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def save_notification(message_type, recipient, title="company notification"):
+    from messaging.models import Notification
+    notification_obj = Notification()
+    notification_obj.recipient = recipient
+    notification_obj.title = title
+    notification_msg = {'apply_pro':'Candidate applied','job-published_admin':'Job published'}
+    notification_obj.message = notification_msg[message_type]
+    notification_obj.save()
