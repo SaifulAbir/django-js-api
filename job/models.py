@@ -208,6 +208,7 @@ class Company(P7Model):
     latitude = models.DecimalField(max_digits=15, decimal_places=8, blank=True, null=True)
     longitude = models.DecimalField(max_digits=15, decimal_places=8, blank=True, null=True)
     featured = models.BooleanField(default=False)
+    featured_image = models.ImageField(upload_to='images/', blank=True, null=True)
 
     class Meta:
         verbose_name = strings_job.COMPANY_VERBOSE_NAME
@@ -291,6 +292,7 @@ class Job(P7Model):
     approved_by = models.CharField(max_length=255, blank=True, null=True)
     published_by = models.CharField(max_length=255, blank=True, null=True)
     featured = models.BooleanField(default=False)
+    featured_image = models.ImageField(upload_to='images/', blank=True, null=True)
 
     class Meta:
         verbose_name = strings_job.JOB_VERBOSE_NAME
