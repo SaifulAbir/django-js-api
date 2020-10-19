@@ -161,6 +161,7 @@ class CompanyAdmin(P7Admin):
         ('modified_by_name', 'modified_at', 'modified_from'),
         ('archived_by_name', 'archived_at', 'archived_from'),
         'is_archived',
+        'featured_image',
     ]
     readonly_fields = [
         'country',
