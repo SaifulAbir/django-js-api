@@ -37,6 +37,8 @@ def logout(request):
     response.delete_cookie('company_picture')
     response.delete_cookie('city')
     response.delete_cookie('refresh_expires_at')
+    response.delete_cookie('google_user')
+
     return response
 
 
