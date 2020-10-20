@@ -79,10 +79,15 @@ JOB_APPLICATION_VERBOSE_NAME = 'Job Application'
 JOB_APPLICATION_VERBOSE_NAME_PLURAL = 'Job Applications'
 # Apply Online Strings #
 
-# Apply Recommendation Strings #
+# Job Recommendation Strings #
 JOB_RECOMMENDATION_VERBOSE_NAME = 'Job Recommendation'
 JOB_RECOMMENDATION_VERBOSE_NAME_PLURAL = 'Job Recommendations'
-# Apply Recommendation Strings #
+# Job Recommendation Strings #
+
+# Job View Log Strings #
+JOB_View_Log_VERBOSE_NAME = 'Job View Log'
+JOB_View_Log_VERBOSE_NAME_PLURAL = 'Job View Logs'
+# Job View Log Strings #
 
 # Added by Munir (02-03).05.2020 >>>
 JOB_SITES = (

@@ -16,7 +16,7 @@ from django.db.models import Q, Count
 from job.models import Job, FavouriteJob, JobApplication, Skill, Company
 from job.serializers import JobSerializerAllField, JobSerializer, JobUpdateSerializer, CompnayJobCreateSerializer, \
     CompanyJobSerializer, JobUpdateStatusSerializer
-from job.utils import job_slug_generator
+from job.utils import job_slug_generator, save_job_view_log
 from p7.models import populate_user_info, is_professional, populate_user_info_request, populate_user_info_querydict
 
 # TODO Handle try catch
@@ -52,6 +52,8 @@ class JobAPI(APIView):
         ).annotate(applied_at=Max('applied__created_at')
         ).annotate(favourite_at=Max('favourite__created_at')
         ).first()
+        if request.is_ajax():
+            save_job_view_log(queryset)
         data = JobSerializerAllField(queryset, many=False).data
         return Response(data)
 
