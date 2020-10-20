@@ -74,7 +74,7 @@ def job_alert_save(email):
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
-def save_recent_activity(user_id, activity_type,releted_professional = None,releted_job = None,
+def save_recent_activity(request, user_id, activity_type,releted_professional = None,releted_job = None,
                          releted_company = None, updated_section = None):
     obj = RecentActivity()
     obj.user_id = user_id
@@ -87,4 +87,5 @@ def save_recent_activity(user_id, activity_type,releted_professional = None,rele
     obj.releted_job_id = releted_job
     obj.releted_company_id = releted_company
     obj.updated_section = updated_section
+    populate_user_info(request, obj, False, False)
     obj.save()

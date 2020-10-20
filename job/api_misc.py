@@ -55,9 +55,9 @@ def toggle_favourite(request):
             favourite_job.save()
             favourite_job_counter(job)
 
-            save_recent_activity(request.user.id, 'favorite_pro', releted_job=job_data['job_id'])
+            save_recent_activity(request, request.user.id, 'favorite_pro', releted_job=job_data['job_id'])
             if job.company.user_id:
-                save_recent_activity(job.company.user_id, 'favorite_com', releted_job=job_data['job_id'])
+                save_recent_activity(request, job.company.user_id, 'favorite_com', releted_job=job_data['job_id'])
 
             data = {
                 'code': HTTP_200_OK,
@@ -125,9 +125,9 @@ class JobApply(APIView):
             job = Job.objects.select_related('company__user').get(job_id=request.data["job"])
             applied_job_counter(job)
 
-            save_recent_activity(request.user.id, 'apply_pro', pro_id, request.data['job'])
+            save_recent_activity(request, request.user.id, 'apply_pro', pro_id, request.data['job'])
             if job.company.user_id:
-                save_recent_activity(job.company.user_id, 'apply_com', pro_id, request.data['job'])
+                save_recent_activity(request, job.company.user_id, 'apply_com', pro_id, request.data['job'])
 
             return Response(job_application_serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -207,9 +207,9 @@ class JobApplicationAPI(APIView):
             #     populate_user_info(request, notification, False, False)
             #     notification.save()
 
-            save_recent_activity(request.user.id, 'apply_pro', pro_obj.id, request.data["job"])
+            save_recent_activity(request, request.user.id, 'apply_pro', pro_obj.id, request.data["job"])
             if job.company.user_id:
-                save_recent_activity(job.company.user_id, 'apply_com', pro_obj.id, request.data["job"])
+                save_recent_activity(request, job.company.user_id, 'apply_com', pro_obj.id, request.data["job"])
                 save_notification('apply_pro', str(job.company.user_id))
             return Response(job_application_serializer.data, status=status.HTTP_201_CREATED)
         else:
