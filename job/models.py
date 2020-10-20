@@ -358,6 +358,15 @@ class JobRecommendation(P7Model):
         db_table = 'job_recommendations'
 
 
+class JobViewLog(P7Model):
+    job = models.ForeignKey(Job, on_delete=models.PROTECT, db_column='job')
+
+    class Meta:
+        verbose_name = strings_job.JOB_View_Log_VERBOSE_NAME
+        verbose_name_plural = strings_job.JOB_View_Log_VERBOSE_NAME_PLURAL
+        db_table = 'job_view_logs'
+
+
 def before_job_save(sender, instance:Job, *args, **kwargs):
     if instance.job_city and len(instance.job_city.split(',')) == 2:
         instance.job_country = instance.job_city.split(',')[0].strip()
@@ -434,6 +443,7 @@ pre_save.connect(populate_time_info, sender=JobSource)
 pre_save.connect(populate_time_info, sender=JobCategory)
 pre_save.connect(populate_time_info, sender=JobGender)
 pre_save.connect(populate_time_info, sender=Job)
+pre_save.connect(populate_time_info, sender=JobViewLog)
 pre_save.connect(before_job_save, sender=Job)
 post_save.connect(after_job_save, sender=Job)
 pre_save.connect(populate_time_info, sender=Skill)

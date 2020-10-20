@@ -124,3 +124,10 @@ def save_notification(message_type, recipient, title="company notification"):
     notification_msg = {'apply_pro':'Candidate applied','job-published_admin':'Job published'}
     notification_obj.message = notification_msg[message_type]
     notification_obj.save()
+
+
+def save_job_view_log(job):
+    from job.models import JobViewLog
+    job_view_log_obj = JobViewLog()
+    job_view_log_obj.job = job
+    job_view_log_obj.save()
