@@ -284,7 +284,8 @@ class JobApplicationAdmin(P7Admin):
     search_fields = ['pro__full_name__icontains', 'pro__email__icontains', 'job__title__icontains', 'job__company__name__icontains']
     list_filter = (
         ('created_at', DateRangeFilter),
-        ('job__job_category', RelatedDropdownFilter)
+        ('job__job_category', RelatedDropdownFilter),
+        ('job__application_deadline', DateRangeFilter)
     )
 
     def job_link(self, obj: JobApplication):
