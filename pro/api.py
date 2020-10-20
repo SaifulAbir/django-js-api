@@ -199,11 +199,15 @@ class SendRecommendedJobNotification(APIView):
     permission_classes = [StaffPermission]
 
     def get(self, request):
-        job_recommendation_list = JobRecommendation.objects.filter(is_notified=False).values('professional').annotate(job_count = Count('professional'))
+        job_recommendation_list = JobRecommendation.objects.filter(is_notified=False, professional__notification_on=True).values('professional').annotate(job_count = Count('professional'))
         for job_recommendation in job_recommendation_list:
+            if job_recommendation['job_count'] > 1:
+                text = "You have " + str(job_recommendation['job_count']) + " job(s) recommendation"
+            else:
+                text = "You have " + str(job_recommendation['job_count']) + " job recommendation"
             SocketClient.send({
                 "type": "job_notification",
-                "text": "You have " + str(job_recommendation['job_count']) + " job recommendation",
+                "text": text,
                 "from": "",
                 "to": str(Professional.objects.get(id=job_recommendation['professional']).user.id)
             })
