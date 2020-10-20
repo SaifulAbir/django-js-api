@@ -117,7 +117,7 @@ class CompanyJobCreateAPI(CreateAPIView):
                 if skill_obj:
                     job_obj.job_skills.add(skill_obj)
 
-        save_recent_activity(request.user.id, 'job-posted_com', releted_job=job_obj.job_id)
+        save_recent_activity(request, request.user.id, 'job-posted_com', releted_job=job_obj.job_id)
         return Response(HTTP_200_OK)
 
 
@@ -171,7 +171,7 @@ class CompanyJobUpdateView(GenericAPIView, UpdateModelMixin):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
-        save_recent_activity(request.user.id, 'job-updated_com', releted_job=instance.job_id)
+        save_recent_activity(request, request.user.id, 'job-updated_com', releted_job=instance.job_id)
         return Response(HTTP_200_OK)
 
 class CompanyJobUnpublishAPI(GenericAPIView, UpdateModelMixin):
@@ -189,7 +189,7 @@ class CompanyJobUnpublishAPI(GenericAPIView, UpdateModelMixin):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
-        save_recent_activity(request.user.id, 'job-updated_com', releted_job=instance.job_id)
+        save_recent_activity(request, request.user.id, 'job-updated_com', releted_job=instance.job_id)
         return Response(HTTP_200_OK)
 
 class CompanyJobPublishAPI(GenericAPIView, UpdateModelMixin):
@@ -207,7 +207,7 @@ class CompanyJobPublishAPI(GenericAPIView, UpdateModelMixin):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
-        save_recent_activity(request.user.id, 'job-updated_com', releted_job=instance.job_id)
+        save_recent_activity(request, request.user.id, 'job-updated_com', releted_job=instance.job_id)
         return Response(HTTP_200_OK)
 
 class CompanyJobPostAPI(GenericAPIView, UpdateModelMixin):
@@ -225,7 +225,7 @@ class CompanyJobPostAPI(GenericAPIView, UpdateModelMixin):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
-        save_recent_activity(request.user.id, 'job-updated_com', releted_job=instance.job_id)
+        save_recent_activity(request, request.user.id, 'job-updated_com', releted_job=instance.job_id)
         return Response(HTTP_200_OK)
 
 

@@ -56,7 +56,7 @@ def professional_education_save(request):
     data['id'] = key_obj.id
     data['degree_text'] = data["degree_text"]
   #  data['education_level'] = data["education_level"]
-    save_recent_activity(request.user.id, 'update_pro', updated_section='Professional Education')
+    save_recent_activity(request, request.user.id, 'update_pro', updated_section='Professional Education')
     return Response(data)
 
 
@@ -92,7 +92,7 @@ def professional_skill_save(request):
     else:
         raise serializers.ValidationError("Duplicate Entry")
 
-    save_recent_activity(request.user.id, 'update_pro', updated_section='Professional Skill')
+    save_recent_activity(request, request.user.id, 'update_pro', updated_section='Professional Skill')
     return Response(data)
 
 
@@ -109,7 +109,7 @@ def professional_workexperience_save(request):
     if 'company_id' in data and data['company_id'] is not None:
         data['company_obj'] = CompanySerializer(Company.objects.get(pk=data['company_id'])).data
 
-    save_recent_activity(request.user.id, 'update_pro', updated_section='Work Experience')
+    save_recent_activity(request, request.user.id, 'update_pro', updated_section='Work Experience')
     return Response(data)
 
 
@@ -135,7 +135,7 @@ def professional_portfolio_save(request):
     key_obj.save()
     data['id'] = key_obj.id
 
-    save_recent_activity(request.user.id, 'update_pro', updated_section='Portfolio')
+    save_recent_activity(request, request.user.id, 'update_pro', updated_section='Portfolio')
     return Response(data)
 
 
@@ -152,7 +152,7 @@ def professional_membership_save(request):
         data['organization_obj'] = MembershipOrganizationNameSerializer(MembershipOrganization.objects.get(pk=data['organization_key_id'])).data
     data['id'] = key_obj.id
 
-    save_recent_activity(request.user.id, 'update_pro', updated_section='Membership')
+    save_recent_activity(request, request.user.id, 'update_pro', updated_section='Membership')
     return Response(data)
 
 
@@ -169,7 +169,7 @@ def professional_certification_save(request):
         data['organization_obj'] = CertifyingOrganizationNameSerializer(CertifyingOrganization.objects.get(pk=data['organization_key_id'])).data
     data['id'] = key_obj.id
 
-    save_recent_activity(request.user.id, 'update_pro', updated_section='Certification')
+    save_recent_activity(request, request.user.id, 'update_pro', updated_section='Certification')
     return Response(data)
 
 
@@ -183,7 +183,7 @@ def professional_reference_save(request):
     populate_user_info(request, key_obj, False, False)
     key_obj.save()
     data['id'] = key_obj.id
-    save_recent_activity(request.user.id, 'update_pro', updated_section='Reference')
+    save_recent_activity(request, request.user.id, 'update_pro', updated_section='Reference')
     return Response(data)
 
 
@@ -204,7 +204,7 @@ class ReferenceUpdateDelete(GenericAPIView, UpdateModelMixin):
         populate_user_info_request(request, True, request.data.get('is_archived'))
         self.partial_update(request, *args, **kwargs)
         prof_obj = ReferenceSerializer(Reference.objects.get(pk=pk)).data
-        save_recent_activity(request.user.id, 'update_pro', updated_section='Reference')
+        save_recent_activity(request, request.user.id, 'update_pro', updated_section='Reference')
         return Response(prof_obj)
 
 
@@ -259,7 +259,7 @@ class EducationUpdateDelete(GenericAPIView, UpdateModelMixin):
             if prof_obj['major']:
                 prof_obj['major_obj'] = MajorSerializer(Major.objects.get(pk=prof_obj['major'])).data
 
-        save_recent_activity(request.user.id, 'update_pro', updated_section='Professional Education')
+        save_recent_activity(request, request.user.id, 'update_pro', updated_section='Professional Education')
         return Response(prof_obj)
 
 
@@ -287,7 +287,7 @@ class SkillUpdateDelete(GenericAPIView, UpdateModelMixin):
         else:
             prof_obj['skill_obj'] = SkillSerializer(Skill.objects.get(pk=prof_obj['skill_name'])).data
 
-        save_recent_activity(request.user.id, 'update_pro', updated_section='Professional Skill')
+        save_recent_activity(request, request.user.id, 'update_pro', updated_section='Professional Skill')
         return Response(prof_obj)
 
 
@@ -318,7 +318,7 @@ class WorkExperienceUpdateDelete(GenericAPIView, UpdateModelMixin):
         if 'company' in request.data and request.data['company'] is not None:
             prof_obj['company_obj'] = CompanySerializer(Company.objects.get(pk=request.data['company'])).data
 
-        save_recent_activity(request.user.id, 'update_pro', updated_section='Work Experience')
+        save_recent_activity(request, request.user.id, 'update_pro', updated_section='Work Experience')
         return Response(prof_obj)
 
 
@@ -351,7 +351,7 @@ class PortfolioUpdateDelete(GenericAPIView, UpdateModelMixin):
         self.partial_update(request, *args, **kwargs)
         prof_obj = PortfolioSerializer(Portfolio.objects.get(pk=pk)).data
 
-        save_recent_activity(request.user.id, 'update_pro', updated_section='Portfolio')
+        save_recent_activity(request, request.user.id, 'update_pro', updated_section='Portfolio')
         return Response(prof_obj)
 
 
@@ -387,7 +387,7 @@ class MembershipUpdateDelete(GenericAPIView, UpdateModelMixin):
                 prof_obj['organization_obj'] = MembershipOrganizationNameSerializer(
                     MembershipOrganization.objects.get(pk=prof_obj['organization_key'])).data
 
-        save_recent_activity(request.user.id, 'update_pro', updated_section='Membership')
+        save_recent_activity(request, request.user.id, 'update_pro', updated_section='Membership')
         return Response(prof_obj)
 
 
@@ -423,7 +423,7 @@ class CertificationUpdateDelete(GenericAPIView, UpdateModelMixin):
                 prof_obj['organization_obj'] = CertifyingOrganizationNameSerializer(
                     CertifyingOrganization.objects.get(pk=prof_obj['organization_key'])).data
 
-        save_recent_activity(request.user.id, 'update_pro', updated_section='Certification')
+        save_recent_activity(request, request.user.id, 'update_pro', updated_section='Certification')
         return Response(prof_obj)
 
 
