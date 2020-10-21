@@ -382,7 +382,8 @@ def before_job_save(sender, instance:Job, *args, **kwargs):
         elif instance.status == "PUBLISHED" and old_instance.status != "PUBLISHED":
             instance.publish_date = timezone.now()
             instance.published_by = instance.modified_by
-            save_notification('job-published_admin', str(instance.company.user_id))
+            if instance.company.user_id:
+                save_notification('job-published_admin', str(instance.company.user_id))
 
     except Job.DoesNotExist:
         instance.slug = job_slug_generator(instance)
