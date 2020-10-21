@@ -25,13 +25,14 @@ class JobAdmin(P7Admin):
     change_form_template = 'admin/job_change_form.html'
     save_on_top = True
     filter_horizontal = ('job_skills',) # Many to many field
-    list_display = ['title', 'company', 'created_at',  'post_date', 'created_by', 'status' ]
+    list_display = ['title', 'company', 'created_at',  'post_date', 'application_deadline', 'created_by', 'status' ]
     search_fields = ['title__icontains', 'company__name__icontains']
     date_hierarchy = 'post_date' # Top filter
     list_per_page = 15
     list_filter = (
         ('created_at', DateRangeFilter),
         ('post_date', DateRangeFilter),
+        ('application_deadline', DateRangeFilter),
         ('status', DropdownFilter),
         ('job_source_1', RelatedDropdownFilter),
         ('created_by', DropdownFilter),
