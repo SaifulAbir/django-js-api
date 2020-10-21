@@ -353,6 +353,7 @@ class JobRecommendation(P7Model):
     is_notified = models.BooleanField(default=False)
 
     class Meta:
+        unique_together = ('professional', 'job')
         verbose_name = strings_job.JOB_RECOMMENDATION_VERBOSE_NAME
         verbose_name_plural = strings_job.JOB_RECOMMENDATION_VERBOSE_NAME_PLURAL
         db_table = 'job_recommendations'
