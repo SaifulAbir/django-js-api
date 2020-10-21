@@ -11,7 +11,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from job.models import Company, Job, JobApplication
+from job.models import Company, Job, JobApplication, JobViewLog
 from job.serializers import CompanySerializer, CompanyUpdateSerializer, FeaturedCompanySerializer, JobSerializer
 from p7.auth import CompanyAuthentication
 from p7.models import populate_user_info_request, populate_user_info_querydict
@@ -123,13 +123,20 @@ class CompanyUpdateView(generics.UpdateAPIView):
 @permission_classes([CompanyPermission])
 def company_job_application_chart(request):
     com = Company.objects.filter(user = request.user).first()
-    last_year = datetime.now() - timedelta(days=365)
-    queryset = JobApplication.objects.filter(job__company_id=com.name, created_at__gte = last_year
-    ).values_list('created_at__year', 'created_at__month'
+    last_week = datetime.now() - timedelta(days=7)
+    queryset = JobApplication.objects.filter(job__company_id=com.name, created_at__gte = last_week
+    ).values_list('created_at__month', 'created_at__week_day'
     ).order_by(
     ).annotate(total=Count('*')
-    ).order_by('created_at__year', 'created_at__month')
-    data = list(queryset)
+    ).order_by('created_at__month', 'created_at__day')
+    view_log_queryset = JobViewLog.objects.filter(job__company_id=com.name, created_at__gte=last_week
+                                             ).values_list('created_at__month', 'created_at__week_day'
+                                             ).order_by(
+    ).annotate(total=Count('*')
+    ).order_by('created_at__month', 'created_at__day')
+    data = list()
+    data.append(queryset)
+    data.append(view_log_queryset)
     return Response(data)
 
 
