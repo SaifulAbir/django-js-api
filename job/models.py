@@ -10,6 +10,7 @@ from django.utils import timezone
 
 from job.utils import job_slug_generator, save_notification
 from p7.models import P7Model, populate_time_info
+from p7.validators import check_valid_phone_number, check_valid_password, MinLengthValidator
 from resources import strings_job
 from settings.models import Settings
 
@@ -356,6 +357,22 @@ class JobRecommendation(P7Model):
         verbose_name = strings_job.JOB_RECOMMENDATION_VERBOSE_NAME
         verbose_name_plural = strings_job.JOB_RECOMMENDATION_VERBOSE_NAME_PLURAL
         db_table = 'job_recommendations'
+
+
+class CompanyRegistration(P7Model):
+    name = models.CharField(max_length=255)
+    work_email = models.EmailField(max_length=255, unique=True)
+    phone = models.CharField(max_length=255, validators=[check_valid_phone_number], blank=True, null=True)
+    company_name = models.CharField(max_length=255)
+    job_title = models.CharField(max_length=255)
+    password = models.CharField(max_length=255, validators=[check_valid_password, MinLengthValidator(8)])
+    note = models.TextField(blank=True, null=True)
+    is_approved = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = strings_job.COMPANY_REGISTRATION_VERBOSE_NAME
+        verbose_name_plural = strings_job.COMPANY_REGISTRATION_VERBOSE_NAME_PLURAL
+        db_table = 'company_registrations'
 
 
 def before_job_save(sender, instance:Job, *args, **kwargs):

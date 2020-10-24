@@ -2,7 +2,8 @@ from rest_framework import serializers
 
 from pro.models import Institute
 from .models import Company, Job, Industry, JobType, Experience, Qualification, Gender, Currency, TrendingKeywords, \
-    Skill, JobSource, JobCategory, JobGender, JobApplication, ApplicationStatus, City, JobRecommendation
+    Skill, JobSource, JobCategory, JobGender, JobApplication, ApplicationStatus, City, JobRecommendation, \
+    CompanyRegistration
 from rest_framework.validators import *
 
 class CompanyUpdateSerializer(serializers.ModelSerializer):
@@ -158,6 +159,11 @@ class JobSerializerAllField(serializers.ModelSerializer):
 class JobSerializerAdmin(serializers.ModelSerializer):
     class Meta:
         model = Job
+        fields = '__all__'
+
+class CompanyRegistrationCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompanyRegistration
         fields = '__all__'
 
 class JobRecommendationSerializerAdmin(serializers.ModelSerializer):

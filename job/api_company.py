@@ -7,12 +7,13 @@ from django.core.files.storage import FileSystemStorage
 from django.utils import timezone
 from rest_framework import generics, status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import get_object_or_404, CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from job.models import Company, Job, JobApplication
-from job.serializers import CompanySerializer, CompanyUpdateSerializer, FeaturedCompanySerializer, JobSerializer
+from job.serializers import CompanySerializer, CompanyUpdateSerializer, FeaturedCompanySerializer, JobSerializer, \
+    CompanyRegistrationCreateSerializer
 from p7.auth import CompanyAuthentication
 from p7.models import populate_user_info_request, populate_user_info_querydict
 from p7.pagination import P7Pagination
@@ -175,4 +176,9 @@ def company_recent_activity(request):
         'releted_professional': ProfessionalSerializer(act.releted_professional).data
     } for act in activity]
     return Response(activity_list)
+
+
+class CompanyRegistrationCreateAPI(CreateAPIView):
+    permission_classes = []
+    serializer_class = CompanyRegistrationCreateSerializer
 

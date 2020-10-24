@@ -2,7 +2,7 @@ from django.urls import path
 
 from job.api_company import list_company_by_name, CompanyList, CompanyUpdateView, company_info_box_api, \
     company_recent_activity, company_job_application_chart, CompanyListWithoutPagination, FeaturedCompanyList, \
-    CompanyRetrieveView, CompanyRetrieveViewByName
+    CompanyRetrieveView, CompanyRetrieveViewByName, CompanyRegistrationCreateAPI
 from job.api_job_core import JobAPI, CompanyJobUpdateView, CompanyJobCreateAPI, CompanyJobAPI, \
     CompanyJobUnpublishAPI, CompanyJobPublishAPI, CompanyJobPostAPI
 from job.api_job_kpi import TopFavouriteList, TopCategoryList, TopSkillList, TopCompanyList, TrendingKeywordList, \
@@ -92,7 +92,7 @@ urlpatterns = [
     path('admin/job/get/<str:id>/', MlJobAPI.as_view()),
     path('admin/job/create/', JobCreateView.as_view()),
     path('admin/job/update/<str:id>/', MlJobUpdateView.as_view()),
-
+    path('company/registration/', CompanyRegistrationCreateAPI.as_view()),
     path('company/download-attachment/<int:id>/', DownloadAttachmentAPIView.as_view()),
     path('company/download-resume/<int:id>/', DownloadResumeAPIView.as_view()),
 ]
