@@ -81,7 +81,7 @@ urlpatterns = [
     path('job/update/publish/<str:pk>/', CompanyJobPublishAPI.as_view()),
     path('job/update/post/<str:pk>/', CompanyJobPostAPI.as_view()),
     path('job/create/', CompanyJobCreateAPI.as_view()),
-    path('job/trending_keywords/save/', save_trending_keywords), # Public API
+    #path('job/trending_keywords/save/', save_trending_keywords), # Public API
     path('vital_stats/get/', get_vital_stats), # Public API
     # TODO: will be removed later
     path('apply/', JobApply.as_view()),  # Public API

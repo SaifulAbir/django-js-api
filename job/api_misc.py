@@ -298,10 +298,10 @@ def get_all_applicants(request, job_id):
 
 
 # TODO: call as private method in job search
-@api_view(["POST"])
-@permission_classes(())
+# @api_view(["POST"])
+# @permission_classes(())
 def save_trending_keywords(request):
-    search_data = json.loads(request.body)
+    search_data = {}
 
     if request.user_agent.is_mobile is True:
         device_name = 'Mobile'
@@ -313,7 +313,7 @@ def save_trending_keywords(request):
     os_name = request.user_agent.os.family
 
     search_data.update([('device', device_name), ('browser', browser_name), ('operating_system', os_name)])
-
+    search_data['keyword'] = request.GET.get('q')
     if search_data['keyword']:
         key_obj = TrendingKeywords(**search_data)
         key_obj.save()
