@@ -79,10 +79,13 @@ def after_notification_save(sender, instance: Notification, *args, **kwargs):
         response = messaging.send(param)
     else:
         try:
-            messaging_obj = FcmCloudMessaging.objects.get(user_id=userid)
-            param  = build_single_message(messaging_obj.fcm_token, message)
-            response = messaging.send(param)
-
+            messaging_obj = FcmCloudMessaging.objects.filter(user_id=userid)
+            for message in messaging_obj:
+                try:
+                    param = build_single_message(message.fcm_token, message)
+                    response = messaging.send(param)
+                except:
+                    pass
         except FcmCloudMessaging.DoesNotExist:
             pass
 
