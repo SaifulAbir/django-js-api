@@ -11,6 +11,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 
+from job.api_misc import save_trending_keywords
 from job.models import Job, JobRecommendation
 from job.serializers import JobSerializer, CompanyJobSerializer
 from p7.models import is_professional, is_company
@@ -79,6 +80,7 @@ class JobSearchAPI(ListAPIView):
             queryset = queryset.order_by('-post_date')
 
         if query:
+            save_trending_keywords(self.request)
             queryset = queryset.filter(
                 Q(title__icontains=query) | Q(description__icontains=query) |
                 Q(company_id__name__icontains=query) |
@@ -150,7 +152,6 @@ class JobRecommendationAPI(JobSearchAPI):
         else:
             job_recommendation = JobRecommendation.objects.filter(
                 professional__user__id=request.user.id).values_list("job__job_id", flat=True)
-            print(job_recommendation)
             if len(job_recommendation) == 0:
                 return super(JobRecommendationAPI, self).get_queryset()
             else:
