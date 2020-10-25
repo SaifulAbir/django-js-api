@@ -442,6 +442,7 @@ def applied_job_counter(sender, instance:JobApplication, *args, **kwargs):
 
 
 pre_save.connect(populate_time_info, sender=Company)
+pre_save.connect(populate_time_info, sender=CompanyRegistration)
 pre_save.connect(populate_time_info, sender=Industry)
 pre_save.connect(populate_time_info, sender=JobType)
 pre_save.connect(populate_time_info, sender=Qualification)
