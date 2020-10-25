@@ -1,23 +1,24 @@
 import base64
 import uuid
 from urllib.parse import unquote
-
+from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
 from django.utils import timezone
-from rest_framework import generics, status
+from rest_framework import generics, status, serializers
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from job.models import Company, Job, JobApplication
-from job.serializers import CompanySerializer, CompanyUpdateSerializer, FeaturedCompanySerializer, JobSerializer
+from job.models import Company, Job, JobApplication, ApplicationComment
+from job.serializers import CompanySerializer, CompanyUpdateSerializer, FeaturedCompanySerializer, JobSerializer, \
+    ApplicationCommentSerializer, ApplicationCommentViewSerializer
 from p7.auth import CompanyAuthentication
-from p7.models import populate_user_info_request, populate_user_info_querydict
+from p7.models import populate_user_info_request, populate_user_info_querydict, is_company
 from p7.pagination import P7Pagination
 from datetime import datetime, timedelta
-from django.db.models import Count, Q
+from django.db.models import Count, Q, F
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
 from job.models import Job, FavouriteJob, JobApplication
@@ -176,3 +177,33 @@ def company_recent_activity(request):
     } for act in activity]
     return Response(activity_list)
 
+class ApplicationCommentAPI(APIView):
+    permission_classes = [CompanyPermission]
+
+    def post(self, request, *args, **kwargs):
+        req_data = request.data.copy()
+        req_data['commenter'] = request.user.id
+        populate_user_info_querydict(request, req_data, False, False)
+        application_comment_serializer = ApplicationCommentSerializer(data=req_data)
+
+        if application_comment_serializer.is_valid():
+            application_comment_serializer.save()
+            req_data['commenter_name'] = request.user.username
+            return Response(req_data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(application_comment_serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(["GET"])
+def get_application_comments(request, id):
+    queryset = ApplicationComment.objects.filter(
+        application_id = id
+    ).annotate(commenter_name = F("commenter__username")
+               ).order_by('-created_at')
+
+    paginator = P7Pagination()
+    result_page = paginator.paginate_queryset(queryset, request)
+    serializer = ApplicationCommentViewSerializer(result_page, many=True)
+
+    return paginator.get_paginated_response(serializer.data)
