@@ -253,6 +253,6 @@ class ApplicationCommentViewSerializer(serializers.ModelSerializer):
     commenter_name = serializers.CharField(required=False)
     class Meta:
         model = ApplicationComment
-        fields = ['commenter','application','comment','commenter_name']
+        fields = ['commenter','application','comment','commenter_name','created_at']
 
 
