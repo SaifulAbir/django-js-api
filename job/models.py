@@ -125,6 +125,18 @@ class JobGender(P7Model):
         return self.name
 
 
+class RegistrationStatus(P7Model):
+    name = models.CharField(max_length=255, primary_key=True)
+
+    class Meta:
+        verbose_name = strings_job.REGISTRATION_STATUS_VERBOSE_NAME
+        verbose_name_plural = strings_job.REGISTRATION_STATUS_VERBOSE_NAME_PLURAL
+        db_table = 'registration_statuses'
+
+    def __str__(self):
+        return self.name
+
+
 class City(P7Model):
     name = models.CharField(max_length=255, primary_key=True)
 
@@ -367,7 +379,7 @@ class CompanyRegistration(P7Model):
     job_title = models.CharField(max_length=255)
     password = models.CharField(max_length=255, validators=[check_valid_password, MinLengthValidator(8)])
     note = models.TextField(blank=True, null=True)
-    is_approved = models.BooleanField(default=False)
+    status = models.ForeignKey(RegistrationStatus, on_delete=models.PROTECT, null=True)
 
     class Meta:
         verbose_name = strings_job.COMPANY_REGISTRATION_VERBOSE_NAME
