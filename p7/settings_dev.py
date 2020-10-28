@@ -240,6 +240,7 @@ ADMIN_REORDER = (
         'app': 'job', 'label': 'Companies and Jobs',
         'models': (
             'job.Company',
+            'job.CompanyRegistration',
             'job.Job',
             'job.JobApplication',
             'job.TrendingKeywords',
