@@ -1,6 +1,8 @@
+from django.db import IntegrityError
 from django.db.models import Prefetch
 from rest_framework import status
 from rest_framework.generics import ListAPIView, CreateAPIView
+from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.utils import json
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -39,11 +41,13 @@ class JobRecommendationBulkCreateView(APIView):
     serializer_class = JobRecommendationSerializerAdmin
 
     def post(self, request, *args, **kwargs):
-        serializer = JobRecommendationSerializerAdmin(data=request.data, many=isinstance(request.data, list))
-        if serializer.is_valid():
-            for job_recomandation in serializer.data:
-                populate_user_info_querydict(request, job_recomandation, False, False)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        recommendation_list = json.loads(request.body)
+        if len(recommendation_list)>0:
+            for job_recommendation in recommendation_list:
+                job_recommendation_obj = JobRecommendation.objects.filter(job = job_recommendation["job_id"], professional = job_recommendation["professional_id"])
+                if not job_recommendation_obj.exists():
+                    populate_user_info_querydict(request, job_recommendation, False, False)
+                    JobRecommendation.objects.create(**job_recommendation)
+            return Response(recommendation_list, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(HTTP_400_BAD_REQUEST)
