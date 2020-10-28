@@ -358,6 +358,16 @@ class JobRecommendation(P7Model):
         verbose_name_plural = strings_job.JOB_RECOMMENDATION_VERBOSE_NAME_PLURAL
         db_table = 'job_recommendations'
 
+class ApplicationComment(P7Model):
+    commenter = models.ForeignKey(User, on_delete=models.PROTECT)
+    application = models.ForeignKey(JobApplication,on_delete=models.PROTECT)
+    comment = models.TextField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = strings_job.APPLICATION_COMMENT_VERBOSE_NAME
+        verbose_name_plural = strings_job.APPLICATION_COMMENT_VERBOSE_NAME_PLURAL
+        db_table = 'application_comments'
+
 
 class JobViewLog(P7Model):
     job = models.ForeignKey(Job, on_delete=models.PROTECT, db_column='job')
@@ -456,3 +466,4 @@ pre_save.connect(populate_time_info, sender=City)
 post_save.connect(after_job_save, sender=Job)
 post_delete.connect(applied_job_counter, sender=JobApplication)
 post_save.connect(applied_job_counter, sender=JobApplication)
+pre_save.connect(populate_time_info, sender=ApplicationComment)

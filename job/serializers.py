@@ -2,7 +2,8 @@ from rest_framework import serializers
 
 from pro.models import Institute
 from .models import Company, Job, Industry, JobType, Experience, Qualification, Gender, Currency, TrendingKeywords, \
-    Skill, JobSource, JobCategory, JobGender, JobApplication, ApplicationStatus, City, JobRecommendation
+    Skill, JobSource, JobCategory, JobGender, JobApplication, ApplicationStatus, City, JobRecommendation, \
+    ApplicationComment
 from rest_framework.validators import *
 
 class CompanyUpdateSerializer(serializers.ModelSerializer):
@@ -242,5 +243,16 @@ class JobApplicationUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobApplication
         fields = ['id', 'is_shortlisted', 'application_notes','application_status', 'application_status_name']
+
+class ApplicationCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApplicationComment
+        fields = ['commenter','application','comment']
+
+class ApplicationCommentViewSerializer(serializers.ModelSerializer):
+    commenter_name = serializers.CharField(required=False)
+    class Meta:
+        model = ApplicationComment
+        fields = ['commenter','application','comment','commenter_name','created_at']
 
 

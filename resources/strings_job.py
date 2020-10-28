@@ -89,6 +89,12 @@ JOB_View_Log_VERBOSE_NAME = 'Job View Log'
 JOB_View_Log_VERBOSE_NAME_PLURAL = 'Job View Logs'
 # Job View Log Strings #
 
+# Comments On Candidate Strings #
+APPLICATION_COMMENT_VERBOSE_NAME = 'Application Comment'
+APPLICATION_COMMENT_VERBOSE_NAME_PLURAL = 'Application Comments'
+# Comments On Candidate Strings #
+
+
 # Added by Munir (02-03).05.2020 >>>
 JOB_SITES = (
     ('ONSITE', 'On-site'),
