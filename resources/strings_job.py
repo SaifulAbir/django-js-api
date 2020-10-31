@@ -95,6 +95,11 @@ APPLICATION_COMMENT_VERBOSE_NAME_PLURAL = 'Application Comments'
 # Comments On Candidate Strings #
 
 
+# Company Registration Strings #
+COMPANY_REGISTRATION_VERBOSE_NAME = 'Company Registration'
+COMPANY_REGISTRATION_VERBOSE_NAME_PLURAL = 'Company Registrations'
+# Company Registration Strings #
+
 # Added by Munir (02-03).05.2020 >>>
 JOB_SITES = (
     ('ONSITE', 'On-site'),
@@ -141,6 +146,9 @@ JOBCATEGORY_VERBOSE_NAME_PLURAL = 'Job Categories'
 
 JOBGENDER_VERBOSE_NAME = 'Gender Preference(Job)'
 JOBGENDER_VERBOSE_NAME_PLURAL = 'Gender Preferences(Job)'
+
+REGISTRATION_STATUS_VERBOSE_NAME = 'Company Registration Status'
+REGISTRATION_STATUS_VERBOSE_NAME_PLURAL = 'Company Registration Statuses'
 
 DEFAULT_JOB_COUNTRY = 'BD'
 
