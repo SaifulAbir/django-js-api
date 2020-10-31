@@ -461,7 +461,7 @@ def change_password(request):
             "message": WRONG_OLD_PASSWORD_MSG,
             "result": ''
         }
-        return Response(data, HTTP_401_UNAUTHORIZED)
+        return Response(data, HTTP_200_OK)
     else:
         new_password = make_password(new_password)
         user_obj.password = new_password
