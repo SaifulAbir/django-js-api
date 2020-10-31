@@ -349,7 +349,8 @@ class TestProfessionalChangePassword(unittest.TestCase):
         }
         resp = requests.post(PRO_CHANGE_PASSWORD_URL, json=json,
                              headers={'Authorization': 'Bearer ' + self.access_token})
-        self.assertEqual(resp.status_code, 401)
+        data = resp.json()
+        self.assertEqual(data['code'], 401)
 
     def test__change_password__when_old_pass_and_new_pass_empty__should_failed(self):
         json = {
@@ -359,7 +360,8 @@ class TestProfessionalChangePassword(unittest.TestCase):
         }
         resp = requests.post(PRO_CHANGE_PASSWORD_URL, json=json,
                              headers={'Authorization': 'Bearer ' + self.access_token})
-        self.assertEqual(resp.status_code, 401)
+        data = resp.json()
+        self.assertEqual(data['code'], 401)
 
     def test__change_password__when_old_pass_and_new_pass_null__should_failed(self):
         json = {
@@ -377,7 +379,8 @@ class TestProfessionalChangePassword(unittest.TestCase):
         }
         resp = requests.post(PRO_CHANGE_PASSWORD_URL, json=json,
                              headers={'Authorization': 'Bearer ' + self.access_token})
-        self.assertEqual(resp.status_code, 401)
+        data = resp.json()
+        self.assertEqual(data['code'], 401)
 
     def test__change_password__when_old_pass_and_confirm_pass_null__should_failed(self):
         json = {
@@ -403,7 +406,8 @@ class TestProfessionalChangePassword(unittest.TestCase):
         }
         resp = requests.post(PRO_CHANGE_PASSWORD_URL, json=json,
                              headers={'Authorization': 'Bearer ' + self.access_token})
-        self.assertEqual(resp.status_code, 401)
+        data = resp.json()
+        self.assertEqual(data['code'], 401)
 
 
 class TestCheckProExist(unittest.TestCase):

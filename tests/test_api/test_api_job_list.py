@@ -27,7 +27,9 @@ class TestJobList(unittest.TestCase):
 
     def test__when_company_name_valid__should_pass(self):
         resp = requests.get(JOB_LIST_URL + 'company=' + COMPANY_NAME)
+        data = resp.json()
         self.assertEqual(resp.status_code, 200)
+        self.assertIsNotNone(data['count'])
 
     def test__with_access_token_also__should_pass(self):
         resp = requests.get(JOB_LIST_URL + 'company=' + "None",

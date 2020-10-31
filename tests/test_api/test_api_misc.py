@@ -231,15 +231,16 @@ class TestShortlistApplicants(unittest.TestCase):
         self.assertEqual(resp.status_code, 404)
 
 
-class TestTrendingKeywordsSave(unittest.TestCase):
-    def test__when_valid__user_agent_and_keyword__should_pass(self):
-        json = {
-           'keyword':'AWS'
-        }
-        resp = requests.post(TRENDING_KEYWORDS_SAVE_URL, headers={
-            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36'}, json=json)
-        self.assertEqual(resp.status_code, 200)
-
-
-if __name__ == '__main__':
-    unittest.main()
+## THIS API HAS BEEN DELETED
+# class TestTrendingKeywordsSave(unittest.TestCase):
+#     def test__when_valid__user_agent_and_keyword__should_pass(self):
+#         json = {
+#            'keyword':'AWS'
+#         }
+#         resp = requests.post(TRENDING_KEYWORDS_SAVE_URL, headers={
+#             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36'}, json=json)
+#         self.assertEqual(resp.status_code, 200)
+#
+#
+# if __name__ == '__main__':
+#     unittest.main()

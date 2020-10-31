@@ -309,6 +309,9 @@ def save_trending_keywords(request):
         device_name = 'Tablet'
     elif request.user_agent.is_pc is True:
         device_name = 'Computer'
+    else:
+        ## TODO: Rashed
+        device_name = ''
     browser_name = request.user_agent.browser.family
     os_name = request.user_agent.os.family
 
