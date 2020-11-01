@@ -18,6 +18,40 @@ from job.models import TrendingKeywords, JobApplication
 from p7.admin import P7Admin
 from p7.models import is_moderator
 
+class PublishedNameFilter(admin.SimpleListFilter):
+    title = 'Published By'
+    parameter_name = 'published_by'
+
+    def lookups(self, request, job_admin):
+        users = []
+        qs = User.objects.filter(is_staff=True, id__in=job_admin.model.objects.all().values_list('published_by', flat=True).distinct())
+        for user in qs:
+            users.append([user.id, user.get_full_name])
+        return users
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(published_by=self.value())
+        else:
+            return queryset
+
+class CreatedNameFilter(admin.SimpleListFilter):
+    title = 'Created By'
+    parameter_name = 'created_by'
+
+    def lookups(self, request, job_admin):
+        users = []
+        qs = User.objects.filter(is_staff=True, id__in=job_admin.model.objects.all().values_list('created_by', flat=True).distinct())
+        for user in qs:
+            users.append([user.id, user.get_full_name])
+        return users
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(published_by=self.value())
+        else:
+            return queryset
+
 
 @admin.register(Job)
 class JobAdmin(P7Admin):
@@ -25,17 +59,21 @@ class JobAdmin(P7Admin):
     change_form_template = 'admin/job_change_form.html'
     save_on_top = True
     filter_horizontal = ('job_skills',) # Many to many field
-    list_display = ['title', 'company', 'created_at',  'post_date', 'application_deadline', 'created_by', 'status' ]
     search_fields = ['title__icontains', 'company__name__icontains']
     date_hierarchy = 'post_date' # Top filter
+    list_display = ['title', 'company', 'created_at', 'post_date', 'application_deadline',
+                    'created_by_name', 'status', 'published_by_name', 'publish_date']
     list_per_page = 15
     list_filter = (
         ('created_at', DateRangeFilter),
         ('post_date', DateRangeFilter),
+        ('publish_date', DateRangeFilter),
         ('application_deadline', DateRangeFilter),
         ('status', DropdownFilter),
         ('job_source_1', RelatedDropdownFilter),
         ('created_by', DropdownFilter),
+        (PublishedNameFilter),
+        (CreatedNameFilter),
         ('is_archived', DropdownFilter)
     )
     fields = [
@@ -83,6 +121,7 @@ class JobAdmin(P7Admin):
             return User.objects.get(id = obj.created_by).get_full_name()
         except:
             return ""
+
 
     def modified_by_name(self, obj):
         try:
@@ -443,5 +482,4 @@ class CityAdmin(P7Admin):
 @admin.register(JobRecommendation)
 class JobRecommendationAdmin(P7Admin):
     list_display = ['professional', 'job', 'score']
-
 
