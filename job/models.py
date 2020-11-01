@@ -391,7 +391,8 @@ def before_job_save(sender, instance:Job, *args, **kwargs):
             instance.approved_by = instance.modified_by
         elif instance.status == "PUBLISHED" and old_instance.status != "PUBLISHED":
             instance.publish_date = timezone.now()
-            instance.published_by = instance.modified_by
+            if not old_instance.published_by:
+                instance.published_by = instance.modified_by
             if instance.company.user_id:
                 save_notification('job-published_admin', str(instance.company.user_id))
 
