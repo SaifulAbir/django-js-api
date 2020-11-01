@@ -13,7 +13,7 @@ from rangefilter.filter import DateRangeFilter
 
 from job.forms import JobModelForm, CompanyModelForm
 from job.models import Company, Experience, Qualification, Gender, Industry, Job, Currency, Skill, JobSource, \
-    JobCategory, JobGender, ApplicationStatus, City, JobRecommendation
+    JobCategory, JobGender, ApplicationStatus, City, JobRecommendation, CompanyRegistration, RegistrationStatus
 from job.models import TrendingKeywords, JobApplication
 from p7.admin import P7Admin
 from p7.models import is_moderator
@@ -267,6 +267,12 @@ class CompanyAdmin(P7Admin):
                 'js/admin/location_picker.js',
             )
 
+
+@admin.register(CompanyRegistration)
+class CompanyRegistrationAdmin(P7Admin):
+    list_display = ['name', 'work_email', 'company_name',]
+
+
 @admin.register(TrendingKeywords)
 class TrendingKeywordsAdmin(P7Admin):
     list_display = ['keyword', 'location', 'device', 'browser', 'operating_system', 'created_at']
@@ -443,5 +449,10 @@ class CityAdmin(P7Admin):
 @admin.register(JobRecommendation)
 class JobRecommendationAdmin(P7Admin):
     list_display = ['professional', 'job', 'score']
+
+
+@admin.register(RegistrationStatus)
+class RegistrationStatusAdmin(P7Admin):
+    list_display = ['name', 'created_by', 'created_at']
 
 

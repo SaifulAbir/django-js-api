@@ -1,21 +1,23 @@
 import base64
+import json
 import uuid
 from urllib.parse import unquote
+
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
 from django.utils import timezone
 from rest_framework import generics, status, serializers
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import get_object_or_404, CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
-
-from job.models import Company, Job, JobApplication, ApplicationComment,  JobViewLog
+from job.models import Company, Job, JobApplication, CompanyRegistration, JobViewLog, ApplicationComment
 from job.serializers import CompanySerializer, CompanyUpdateSerializer, FeaturedCompanySerializer, JobSerializer, \
-    ApplicationCommentSerializer, ApplicationCommentViewSerializer
-
+    CompanyRegistrationCreateSerializer, ApplicationCommentViewSerializer, ApplicationCommentSerializer
 from p7.auth import CompanyAuthentication
 from p7.models import populate_user_info_request, populate_user_info_querydict, is_company
 from p7.pagination import P7Pagination
@@ -203,6 +205,27 @@ class ApplicationCommentAPI(APIView):
             return Response(application_comment_serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
+
+class CompanyRegistrationCreateAPI(CreateAPIView):
+    permission_classes = []
+    serializer_class = CompanyRegistrationCreateSerializer
+
+    def post(self, request, *args, **kwargs):
+        com_registration_data = json.loads(request.body)
+        try:
+            reg_obj = CompanyRegistration.objects.get(work_email=com_registration_data['work_email'])
+            company_user_exist = True
+        except CompanyRegistration.DoesNotExist:
+            company_user_exist = False
+
+        if company_user_exist:
+            raise serializers.ValidationError('This email already exist!!')
+        else:
+            com_registration_data['password'] = make_password(com_registration_data['password'])
+            del com_registration_data['terms_and_condition_status']
+            com_registration_obj = CompanyRegistration(**com_registration_data)
+            com_registration_obj.save()
+            return Response(HTTP_200_OK)
 
 @api_view(["GET"])
 def get_application_comments(request, id):

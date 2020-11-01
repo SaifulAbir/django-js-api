@@ -240,6 +240,7 @@ ADMIN_REORDER = (
         'app': 'job', 'label': 'Companies and Jobs',
         'models': (
             'job.Company',
+            'job.CompanyRegistration',
             'job.Job',
             'job.JobApplication',
             'job.TrendingKeywords',
@@ -286,7 +287,8 @@ ADMIN_REORDER = (
             'job.JobSource',
             'job.Qualification',
             'job.Skill',
-            'job.JobRecommendation'
+            'job.JobRecommendation',
+            'job.RegistrationStatus',
         )
     },
     {

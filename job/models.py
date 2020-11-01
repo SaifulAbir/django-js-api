@@ -10,6 +10,7 @@ from django.utils import timezone
 
 from job.utils import job_slug_generator, save_notification
 from p7.models import P7Model, populate_time_info
+from p7.validators import check_valid_phone_number, check_valid_password, MinLengthValidator
 from resources import strings_job
 from settings.models import Settings
 
@@ -119,6 +120,18 @@ class JobGender(P7Model):
         verbose_name = strings_job.JOBGENDER_VERBOSE_NAME
         verbose_name_plural = strings_job.JOBGENDER_VERBOSE_NAME_PLURAL
         db_table = 'job_genders'
+
+    def __str__(self):
+        return self.name
+
+
+class RegistrationStatus(P7Model):
+    name = models.CharField(max_length=255, primary_key=True)
+
+    class Meta:
+        verbose_name = strings_job.REGISTRATION_STATUS_VERBOSE_NAME
+        verbose_name_plural = strings_job.REGISTRATION_STATUS_VERBOSE_NAME_PLURAL
+        db_table = 'registration_statuses'
 
     def __str__(self):
         return self.name
@@ -378,6 +391,22 @@ class JobViewLog(P7Model):
         db_table = 'job_view_logs'
 
 
+class CompanyRegistration(P7Model):
+    name = models.CharField(max_length=255)
+    work_email = models.EmailField(max_length=255, unique=True)
+    phone = models.CharField(max_length=255, validators=[check_valid_phone_number], blank=True, null=True)
+    company_name = models.CharField(max_length=255)
+    job_title = models.CharField(max_length=255)
+    password = models.CharField(max_length=255, validators=[check_valid_password, MinLengthValidator(8)])
+    note = models.TextField(blank=True, null=True)
+    status = models.ForeignKey(RegistrationStatus, on_delete=models.PROTECT, null=True)
+
+    class Meta:
+        verbose_name = strings_job.COMPANY_REGISTRATION_VERBOSE_NAME
+        verbose_name_plural = strings_job.COMPANY_REGISTRATION_VERBOSE_NAME_PLURAL
+        db_table = 'company_registrations'
+
+
 def before_job_save(sender, instance:Job, *args, **kwargs):
     if instance.job_city and len(instance.job_city.split(',')) == 2:
         instance.job_country = instance.job_city.split(',')[0].strip()
@@ -445,6 +474,7 @@ def applied_job_counter(sender, instance:JobApplication, *args, **kwargs):
 
 
 pre_save.connect(populate_time_info, sender=Company)
+pre_save.connect(populate_time_info, sender=CompanyRegistration)
 pre_save.connect(populate_time_info, sender=Industry)
 pre_save.connect(populate_time_info, sender=JobType)
 pre_save.connect(populate_time_info, sender=Qualification)
@@ -454,6 +484,7 @@ pre_save.connect(populate_time_info, sender=Currency)
 pre_save.connect(populate_time_info, sender=JobSource)
 pre_save.connect(populate_time_info, sender=JobCategory)
 pre_save.connect(populate_time_info, sender=JobGender)
+pre_save.connect(populate_time_info, sender=RegistrationStatus)
 pre_save.connect(populate_time_info, sender=Job)
 pre_save.connect(populate_time_info, sender=JobViewLog)
 pre_save.connect(before_job_save, sender=Job)
