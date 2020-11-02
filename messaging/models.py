@@ -98,6 +98,15 @@ def after_employer_message_save(sender, instance: EmployerMessage, *args, **kwar
         "from": instance.sender.id,
         "to": str(instance.receiver.id)
     })
+    ## Firebase push notification code start
+    try:
+        messaging_obj = FcmCloudMessaging.objects.filter(user_id=instance.receiver.id)
+        for message in messaging_obj:
+            param = build_single_message(message.fcm_token, instance.message)
+            response = messaging.send(param)
+    except FcmCloudMessaging.DoesNotExist:
+        pass
+    ## Firebase push notification code end
 
 
 
