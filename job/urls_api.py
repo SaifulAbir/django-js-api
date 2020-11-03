@@ -16,7 +16,7 @@ from job.api_job_related import get_job_site_list, JobSourceList, get_job_nature
 from job.api_misc import apply_online, save_trending_keywords, \
     toggle_favourite, MarkShortlistUpdateView, JobApplicationQuickApply, get_all_applicants, get_shortlisted_applicants, \
     JobApply, request_for_access, JobApplicationAPI, DownloadAttachmentAPIView, DownloadResumeAPIView
-from job.api_ml import MlJobAPI, AdminJobList, JobCreateView, MlJobUpdateView, SlugRegenerateAPI
+from job.api_ml import MlJobAPI, AdminJobList, JobCreateView, MlJobUpdateView, SlugRegenerateAPI, JobPublisherList
 
 urlpatterns = [
     path('job/search/', JobSearchAPI.as_view()), # Public API
@@ -97,5 +97,8 @@ urlpatterns = [
     path('company/download-resume/<int:id>/', DownloadResumeAPIView.as_view()),
     path('company/application_comment/', ApplicationCommentAPI.as_view()),
     path('company/get/application_comment/<int:id>/', get_application_comments),
+
+    path('job/publisher-list/', JobPublisherList.as_view()),  # Public API
+
 ]
 
