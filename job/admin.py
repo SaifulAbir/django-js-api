@@ -13,7 +13,7 @@ from rangefilter.filter import DateRangeFilter
 
 from job.forms import JobModelForm, CompanyModelForm
 from job.models import Company, Experience, Qualification, Gender, Industry, Job, Currency, Skill, JobSource, \
-    JobCategory, JobGender, ApplicationStatus, City, JobRecommendation
+    JobCategory, JobGender, ApplicationStatus, City, JobRecommendation, ApplicationComment
 from job.models import TrendingKeywords, JobApplication
 from p7.admin import P7Admin
 from p7.models import is_moderator
@@ -317,10 +317,30 @@ class TrendingKeywordsAdmin(P7Admin):
     def has_change_permission(self, request, obj=None):
         return False
 
+class ApplicationCommentAdmin(admin.StackedInline):
+    model = ApplicationComment
+    exclude = ('created_by', 'created_at', 'created_from', 'modified_by', 'modified_from', 'modified_at',
+               'is_archived', 'archived_by', 'archived_from', 'archived_at')
+    extra = 1
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def get_queryset(self, request):
+        qs = super(ApplicationCommentAdmin, self).get_queryset(request)
+        if request.user.is_superuser:
+            return qs.filter(commenter = request.user)
+        return qs
+
+
 
 @admin.register(JobApplication)
 class JobApplicationAdmin(P7Admin):
     date_hierarchy = 'created_at' # Top filter
+    inlines = [ApplicationCommentAdmin,]
     search_fields = ['pro__full_name__icontains', 'pro__email__icontains', 'job__title__icontains', 'job__company__name__icontains']
     list_filter = (
         ('created_at', DateRangeFilter),

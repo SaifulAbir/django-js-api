@@ -208,7 +208,7 @@ class ApplicationCommentAPI(APIView):
 def get_application_comments(request, id):
     queryset = ApplicationComment.objects.filter(
         application_id = id
-    ).annotate(commenter_name = F("commenter__username")
+    ).exclude(commenter__is_superuser = True).annotate(commenter_name = F("commenter__username")
                ).order_by('-created_at')
 
     paginator = P7Pagination()
