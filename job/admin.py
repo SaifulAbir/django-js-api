@@ -16,7 +16,8 @@ from job.models import Company, Experience, Qualification, Gender, Industry, Job
     JobCategory, JobGender, ApplicationStatus, City, JobRecommendation, ApplicationComment
 from job.models import TrendingKeywords, JobApplication
 from p7.admin import P7Admin
-from p7.models import is_moderator
+from p7.models import is_moderator, populate_user_info
+
 
 class PublishedNameFilter(admin.SimpleListFilter):
     title = 'Published By'
@@ -320,7 +321,8 @@ class TrendingKeywordsAdmin(P7Admin):
 class ApplicationCommentAdmin(admin.StackedInline):
     model = ApplicationComment
     exclude = ('created_by', 'created_at', 'created_from', 'modified_by', 'modified_from', 'modified_at',
-               'is_archived', 'archived_by', 'archived_from', 'archived_at')
+               'is_archived', 'archived_by', 'archived_from', 'archived_at',)
+    readonly_fields = ('commenter',)
     extra = 1
 
     def has_delete_permission(self, request, obj=None):
@@ -331,9 +333,11 @@ class ApplicationCommentAdmin(admin.StackedInline):
 
     def get_queryset(self, request):
         qs = super(ApplicationCommentAdmin, self).get_queryset(request)
-        if request.user.is_superuser:
-            return qs.filter(commenter = request.user)
-        return qs
+        return qs.filter(commenter__is_superuser = True)
+
+
+
+
 
 
 
@@ -386,6 +390,14 @@ class JobApplicationAdmin(P7Admin):
     shortlist.short_description = "Shortlist"
 
     actions = ['approve', 'shortlist']
+
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        for instance in instances:
+            if isinstance(instance, ApplicationComment):
+                instance.commenter = request.user
+                instance.save()
+
 
 @admin.register(JobCategory)
 class JobCategoryAdmin(P7Admin):
