@@ -359,11 +359,9 @@ class JobRecommendation(P7Model):
         db_table = 'job_recommendations'
 
 
-def get_user_default_id():
-    return User.objects.get(username='admin')
 
 class ApplicationComment(P7Model):
-    commenter = models.ForeignKey(User, on_delete=models.PROTECT, default= get_user_default_id)
+    commenter = models.ForeignKey(User, on_delete=models.PROTECT)
     application = models.ForeignKey(JobApplication,on_delete=models.PROTECT)
     comment = models.TextField(blank=True, null=True)
 
