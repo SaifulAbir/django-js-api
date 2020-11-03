@@ -358,8 +358,12 @@ class JobRecommendation(P7Model):
         verbose_name_plural = strings_job.JOB_RECOMMENDATION_VERBOSE_NAME_PLURAL
         db_table = 'job_recommendations'
 
+
+def get_user_default_id():
+    return User.objects.get(username='admin')
+
 class ApplicationComment(P7Model):
-    commenter = models.ForeignKey(User, on_delete=models.PROTECT)
+    commenter = models.ForeignKey(User, on_delete=models.PROTECT, default= get_user_default_id)
     application = models.ForeignKey(JobApplication,on_delete=models.PROTECT)
     comment = models.TextField(blank=True, null=True)
 
@@ -367,6 +371,11 @@ class ApplicationComment(P7Model):
         verbose_name = strings_job.APPLICATION_COMMENT_VERBOSE_NAME
         verbose_name_plural = strings_job.APPLICATION_COMMENT_VERBOSE_NAME_PLURAL
         db_table = 'application_comments'
+
+    def __str__(self):
+        return self.commenter.username
+
+
 
 
 class JobViewLog(P7Model):
