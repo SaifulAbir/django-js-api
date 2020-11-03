@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
 
 from pro.models import Institute
 from .models import Company, Job, Industry, JobType, Experience, Qualification, Gender, Currency, TrendingKeywords, \
@@ -50,6 +51,8 @@ class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
         fields = '__all__'
+
+
 
 class CompanyProfilePictureSerializer(serializers.ModelSerializer):
     class Meta:
@@ -256,3 +259,7 @@ class ApplicationCommentViewSerializer(serializers.ModelSerializer):
         fields = ['commenter','application','comment','commenter_name','created_at']
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'

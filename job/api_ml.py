@@ -1,14 +1,21 @@
+from django.contrib.auth.models import User
 from django.db.models import Q, Count, Max, FilteredRelation
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, RetrieveAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from job.models import Job
-from job.serializers import JobSerializer, JobSerializerAllField, JobUpdateSerializer, JobSerializerAdmin
+from job.serializers import JobSerializer, JobSerializerAllField, JobUpdateSerializer, JobSerializerAdmin, \
+    UserSerializer
 from p7.models import is_professional, populate_user_info_request
 from p7.pagination import P7Pagination
 from p7.permissions import StaffPermission
 from job.utils import job_slug_generator
+
+class JobPublisherList(ListAPIView):
+    permission_classes = [StaffPermission]
+    queryset = User.objects.filter(groups__name='Publisher')
+    serializer_class = UserSerializer
 
 
 class MlJobAPI(RetrieveAPIView):

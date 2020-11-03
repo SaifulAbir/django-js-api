@@ -52,6 +52,23 @@ class CreatedNameFilter(admin.SimpleListFilter):
         else:
             return queryset
 
+class AssignToFilter(admin.SimpleListFilter):
+    title = 'Assign To'
+    parameter_name = 'assign_to'
+
+    def lookups(self, request, job_admin):
+        users = []
+        qs = User.objects.filter(is_staff=True, id__in=job_admin.model.objects.all().values_list('assign_to', flat=True).distinct())
+        for user in qs:
+            users.append([user.id, user.get_full_name])
+        return users
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(assign_to=self.value())
+        else:
+            return queryset
+
 
 @admin.register(Job)
 class JobAdmin(P7Admin):
@@ -62,7 +79,7 @@ class JobAdmin(P7Admin):
     search_fields = ['title__icontains', 'company__name__icontains']
     date_hierarchy = 'post_date' # Top filter
     list_display = ['title', 'company', 'created_at', 'post_date', 'application_deadline',
-                    'created_by_name', 'status', 'published_by_name', 'publish_date']
+                    'created_by_name', 'status', 'published_by_name', 'publish_date', 'assign_to']
     list_per_page = 15
     list_filter = (
         ('created_at', DateRangeFilter),
@@ -71,9 +88,9 @@ class JobAdmin(P7Admin):
         ('application_deadline', DateRangeFilter),
         ('status', DropdownFilter),
         ('job_source_1', RelatedDropdownFilter),
-        ('created_by', DropdownFilter),
         (PublishedNameFilter),
         (CreatedNameFilter),
+        (AssignToFilter),
         ('is_archived', DropdownFilter)
     )
     fields = [
@@ -102,7 +119,7 @@ class JobAdmin(P7Admin):
         'raw_content',
         ('slug', 'applied_count', 'favorite_count'),
         'is_archived',
-        'featured_image',
+        'featured_image','assign_to'
     ]
     readonly_fields = [
         'slug', 'applied_count', 'favorite_count',
@@ -113,7 +130,7 @@ class JobAdmin(P7Admin):
         'reviewed_by_name', 'review_date',
         'approved_by_name', 'approve_date',
         'published_by_name', 'publish_date',
-        'job_country', 'company_country'
+        'job_country', 'company_country', 'assign_to'
     ]
 
     def created_by_name(self, obj):
