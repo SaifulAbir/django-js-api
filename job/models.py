@@ -293,6 +293,8 @@ class Job(P7Model):
     published_by = models.CharField(max_length=255, blank=True, null=True)
     featured = models.BooleanField(default=False)
     featured_image = models.ImageField(upload_to='images/', blank=True, null=True)
+    assign_to = models.OneToOneField(User, on_delete=models.PROTECT, null=True, blank=True)
+
 
     class Meta:
         verbose_name = strings_job.JOB_VERBOSE_NAME
