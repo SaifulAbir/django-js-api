@@ -13,8 +13,8 @@ from p7.permissions import StaffPermission
 from job.utils import job_slug_generator
 
 class JobPublisherList(ListAPIView):
-    # permission_classes = [StaffPermission]
-    # required_privilege = 'user.view_user'
+    permission_classes = [StaffPermission]
+    required_privilege = 'job.add_job'
     queryset = User.objects.filter(groups__name='Publisher')
     serializer_class = UserSerializer
 
