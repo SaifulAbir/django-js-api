@@ -27,7 +27,7 @@ class PublishedNameFilter(admin.SimpleListFilter):
         users = []
         qs = User.objects.filter(is_staff=True, id__in=job_admin.model.objects.all().values_list('published_by', flat=True).distinct())
         for user in qs:
-            users.append([user.id, user.get_full_name])
+            users.append([user.id, user.username])
         return users
 
     def queryset(self, request, queryset):
@@ -44,7 +44,7 @@ class CreatedNameFilter(admin.SimpleListFilter):
         users = []
         qs = User.objects.filter(is_staff=True, id__in=job_admin.model.objects.all().values_list('created_by', flat=True).distinct())
         for user in qs:
-            users.append([user.id, user.get_full_name])
+            users.append([user.id, user.username])
         return users
 
     def queryset(self, request, queryset):
@@ -61,7 +61,7 @@ class AssignToFilter(admin.SimpleListFilter):
         users = []
         qs = User.objects.filter(is_staff=True, id__in=job_admin.model.objects.all().values_list('assign_to', flat=True).distinct())
         for user in qs:
-            users.append([user.id, user.get_full_name])
+            users.append([user.id, user.username])
         return users
 
     def queryset(self, request, queryset):
