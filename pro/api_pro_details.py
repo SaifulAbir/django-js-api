@@ -460,4 +460,4 @@ class ProfessionalLocationPreferenceCreateUpdateAPI(CreateAPIView):
                     pro_location_preference_obj = ProfessionalLocationPreference(professional = professional, city_name = city_obj)
                     populate_user_info(request, pro_location_preference_obj, False, False)
                     pro_location_preference_obj.save()
-        return Response(HTTP_200_OK)
+        return Response(location_preference_data, HTTP_200_OK)
