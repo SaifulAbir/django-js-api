@@ -14,7 +14,7 @@ from pro.api_pro_details import professional_education_save, EducationUpdateDele
     ProfessionalLocationPreferenceCreateUpdateAPI
 from pro.api_pro_related import EmailSubscriptionUpdateView, ReligionList, NationalityList, OrganizationList, MajorList, \
     InstituteList, CertificateNameList, InstituteSearch, EducationLevelList, MembershipOrganizationList, \
-    CertifyingOrganizationList, MembershipOrganizationSearch, CertifyingOrganizationSearch
+    CertifyingOrganizationList, MembershipOrganizationSearch, CertifyingOrganizationSearch, SendAppLinkAPI
 from pro.views import professional_signup_email_verification
 
 urlpatterns = [
@@ -32,6 +32,7 @@ urlpatterns = [
     path('pro/public-profile/<str:slug>/', ProfessionalPublicRetrieve.as_view()),  # Public API
     path('admin/professional/list/', MlProfessionalList.as_view()),
     path('admin/job_recommendation/create/', JobRecommendationBulkCreateView.as_view()),
+    path('send/app_link/', SendAppLinkAPI.as_view()),
 
     path('professional/profile_update/<str:pk>/', ProfessionalUpdateView.as_view()),
     path('professional/job_alert/', job_alert),

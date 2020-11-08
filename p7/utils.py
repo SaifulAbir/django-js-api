@@ -14,6 +14,7 @@ from email.mime.text import MIMEText
 from os.path import basename
 from threading import Thread
 
+import requests
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.template import loader
@@ -110,3 +111,15 @@ def _send_email(to, subject, body, smtp_server, smtp_port, sender_email, sender_
 def send_email(to, subject, body, smtp_server, smtp_port, sender_email, sender_password, attachments = [], secured = True):
     email_thread = Thread(target=_send_email, args=(to, subject, body, smtp_server, smtp_port, sender_email, sender_password, attachments, secured))
     email_thread.start()
+
+
+def send_sms(mobile, text):
+    settingsObj = Settings.objects.all().first()
+    sms_sid = settingsObj.sms_sid
+    sms_username = settingsObj.sms_username
+    sms_password = settingsObj.sms_password
+    payload = {'user': sms_username, 'pass': sms_password, 'sid': sms_sid,
+               'sms[0][0]': "88" + mobile,
+               'sms[0][1]': text, 'sms[0][2]': uuid.uuid4}
+    resp = requests.get('http://sms.sslwireless.com/pushapi/dynamic/server.php', params=payload)
+    return resp
