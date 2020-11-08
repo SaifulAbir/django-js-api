@@ -226,7 +226,7 @@ class Job(P7Model):
     job_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_column='id')
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
-    address = models.CharField(max_length=50, blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
     job_area = models.CharField(max_length=255, blank=True, null=True)
     job_city = models.CharField(max_length=255, blank=True, null=True)
     locked_by = models.CharField(max_length=255, blank=True, null=True)
