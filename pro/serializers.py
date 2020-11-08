@@ -309,3 +309,6 @@ class EmailSubscriptionUpdateSerializer(serializers.ModelSerializer):
         model = Professional
         fields = ['job_alert_status']
 
+
+class SendAppLinkSerializer(serializers.Serializer):
+   mobile = serializers.CharField(required=True)

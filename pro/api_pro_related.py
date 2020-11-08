@@ -1,13 +1,23 @@
+import uuid
+
+import requests
+from django.core import serializers
 from django.shortcuts import get_object_or_404
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.response import Response
+from rest_framework.utils import json
+from rest_framework.views import APIView
 
 from p7.models import populate_user_info_request
 from p7.permissions import ProfessionalPermission
+from p7.utils import send_sms
+from settings.models import Settings
 from .models import CertificateName, Major, Organization, Institute, Nationality, Religion, Professional, \
     EducationLevel, CertifyingOrganization, MembershipOrganization
 from .serializers import EmailSubscriptionUpdateSerializer, CertificateNameSerializer, MajorSerializer, \
     OrganizationNameSerializer, InstituteNameSerializer, NationalitySerializer, ReligionSerializer, \
-    EducationLevelSerializer, MembershipOrganizationNameSerializer, CertifyingOrganizationNameSerializer
+    EducationLevelSerializer, MembershipOrganizationNameSerializer, CertifyingOrganizationNameSerializer, \
+    SendAppLinkSerializer
 
 
 class ReligionList(generics.ListAPIView):
@@ -112,4 +122,18 @@ class EmailSubscriptionUpdateView(generics.UpdateAPIView):
     def put(self, request, *args, **kwargs):
         populate_user_info_request(request, True, False)
         return super(EmailSubscriptionUpdateView, self).put(request, *args, **kwargs)
+
+
+class SendAppLinkAPI(APIView):
+    permission_classes = []
+
+    def post(self, request):
+        serializer = SendAppLinkSerializer(data=request.data)
+        settingsObj = Settings.objects.all().first()
+        sms_text = settingsObj.sms_text
+        if serializer.is_valid():
+            resp = send_sms(request.data.get("mobile"), sms_text)
+            if resp.status_code == 200:
+                return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
