@@ -51,7 +51,7 @@ class Qualification(P7Model):
 
 
 class Experience(P7Model):
-    name = models.CharField(max_length=255, primary_key=True)
+    name = models.IntegerField(primary_key=True)
 
     class Meta:
         verbose_name = strings_job.EXPERIENCE_VERBOSE_NAME
