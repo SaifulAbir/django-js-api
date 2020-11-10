@@ -119,6 +119,6 @@ def send_sms(mobile_num, text):
     api_token = settingsObj.sms_api_token
     mobile_num = "88" + mobile_num
     payload = {'api_token': api_token, 'sid': sms_sid, 'msisdn': mobile_num,
-               'sms': text, 'csm_id': uuid.uuid4}
+               'sms': text, 'csms_id': str(uuid.uuid4())[:10]}
     resp = requests.post('https://smsplus.sslwireless.com/api/v3/send-sms', params=payload)
     return resp
