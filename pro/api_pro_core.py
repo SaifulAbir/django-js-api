@@ -31,7 +31,7 @@ from p7.auth import ProfessionalAuthentication
 from p7.models import is_professional_registered, get_user_address, populate_user_info_request, is_professional
 from p7.permissions import ProfessionalPermission, CompanyPermission
 from p7.settings_dev import SITE_URL
-from p7.utils import send_email
+from p7.utils import send_email, send_sms
 from resources.strings_pro import EMAIL_EXIST_ERROR_MSG, USER_ID_NOT_EXIST, WRONG_OLD_PASSWORD_MSG, SITE_SHORTCUT_NAME, \
     ON_TXT, PASSWORD_CHANGED_SUCCESS_MSG, FAILED_TXT, EMAIL_BLANK_ERROR_MSG, MOBILE_BLANK_ERROR_MSG, \
     PASSWORD_BLANK_ERROR_MSG, FULL_NAME_BLANK_ERROR_MSG, TAC_BLANK_ERROR_MSG
@@ -580,6 +580,8 @@ class SendMobileVerificationCode(GenericAPIView, UpdateModelMixin):
         self.current_user = request.user
         request.data['mobile_verification_code'] = random.randint(100000,999999)
         populate_user_info_request(request, True, request.data.get('is_archived'))
+        message = 'Your verification code for mobile number is ' + request.data['mobile_verification_code']
+        send_sms(mobile_num = request.data['phone'], text = message )
         del request.data['phone']
         prof_obj = self.partial_update(request, *args, **kwargs).data
         return Response(prof_obj)
