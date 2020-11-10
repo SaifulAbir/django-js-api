@@ -113,13 +113,12 @@ def send_email(to, subject, body, smtp_server, smtp_port, sender_email, sender_p
     email_thread.start()
 
 
-def send_sms(mobile, text):
+def send_sms(mobile_num, text):
     settingsObj = Settings.objects.all().first()
     sms_sid = settingsObj.sms_sid
-    sms_username = settingsObj.sms_username
-    sms_password = settingsObj.sms_password
-    payload = {'user': sms_username, 'pass': sms_password, 'sid': sms_sid,
-               'sms[0][0]': "88" + mobile,
-               'sms[0][1]': text, 'sms[0][2]': uuid.uuid4}
-    resp = requests.get('http://sms.sslwireless.com/pushapi/dynamic/server.php', params=payload)
+    api_token = settingsObj.sms_api_token
+    mobile_num = "88" + mobile_num
+    payload = {'api_token': api_token, 'sid': sms_sid, 'msisdn': mobile_num,
+               'sms': text, 'csm_id': uuid.uuid4}
+    resp = requests.post('https://smsplus.sslwireless.com/api/v3/send-sms', params=payload)
     return resp
