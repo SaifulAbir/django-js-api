@@ -15,7 +15,7 @@ from django.http import Http404, HttpRequest, HttpResponse
 from django.template.loader import render_to_string, get_template
 from django_rest_passwordreset.signals import reset_password_token_created
 import pdfkit
-from rest_framework import generics, status
+from rest_framework import generics, status, serializers
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.generics import GenericAPIView, get_object_or_404
@@ -577,6 +577,30 @@ class SendMobileVerificationCode(GenericAPIView, UpdateModelMixin):
         self.current_user = request.user
         request.data['mobile_verification_code'] = random.randint(100000,999999)
         populate_user_info_request(request, True, request.data.get('is_archived'))
+        del request.data['phone']
         prof_obj = self.partial_update(request, *args, **kwargs).data
         return Response(prof_obj)
 
+
+class VerifyMobileVerificationCode(GenericAPIView, UpdateModelMixin):
+    permission_classes = [ProfessionalPermission]
+    queryset = Professional.objects.all()
+    serializer_class = ProfessionalSerializer
+    current_user = None
+
+    def get_object(self):
+        return get_object_or_404(Professional.objects.filter(
+            user_id=self.current_user.id
+        ))
+
+    def put(self, request, *args, **kwargs, ):
+        self.current_user = request.user
+        obj = Professional.objects.get(user_id=self.current_user.id)
+        if obj.mobile_verification_code == request.data['mobile_verification_code']:
+            request.data['is_mobile_verified'] = True
+            request.data['mobile_verification_code'] = ''
+            populate_user_info_request(request, True, request.data.get('is_archived'))
+            prof_obj = self.partial_update(request, *args, **kwargs).data
+            return Response(prof_obj)
+        else:
+            raise serializers.ValidationError('Verification code Is incorrect')
