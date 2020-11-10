@@ -580,7 +580,7 @@ class SendMobileVerificationCode(GenericAPIView, UpdateModelMixin):
         self.current_user = request.user
         request.data['mobile_verification_code'] = random.randint(100000,999999)
         populate_user_info_request(request, True, request.data.get('is_archived'))
-        message = 'Your verification code for mobile number is ' + request.data['mobile_verification_code']
+        message = 'Your verification code for mobile number is ' + str(request.data['mobile_verification_code'])
         send_sms(mobile_num = request.data['phone'], text = message )
         del request.data['phone']
         prof_obj = self.partial_update(request, *args, **kwargs).data
