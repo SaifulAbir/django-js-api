@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 from p7.models import populate_user_info_request
 from p7.permissions import ProfessionalPermission
 from p7.utils import send_sms
+from p7.validators import check_valid_phone_number
 from settings.models import Settings
 from .models import CertificateName, Major, Organization, Institute, Nationality, Religion, Professional, \
     EducationLevel, CertifyingOrganization, MembershipOrganization
@@ -131,6 +132,7 @@ class SendAppLinkAPI(APIView):
         serializer = SendAppLinkSerializer(data=request.data)
         settingsObj = Settings.objects.all().first()
         sms_text = settingsObj.sms_text
+        check_valid_phone_number(request.data.get("mobile"))
         if serializer.is_valid():
             resp = send_sms(request.data.get("mobile"), sms_text)
             if resp.status_code == 200:

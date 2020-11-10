@@ -20,6 +20,7 @@ EXPERIENCE_LIST_URL = f'{MAIN_URL}/api/experience/list'
 QUALIFICATION_LIST_URL = f'{MAIN_URL}/api/qualification/list'
 GENDER_LIST_URL = f'{MAIN_URL}/api/gender/list'
 SKILL_LIST_URL = f'{MAIN_URL}/api/skill/list/'
+SEND_APP_LINK_API_URL = f'{MAIN_URL}/api/send/app_link/'
 
 
 class TestJobSourceList(unittest.TestCase):
@@ -268,6 +269,30 @@ class TestSkillList(unittest.TestCase):
 
     def test__when_access_token__should_also_pass(self):
         resp = requests.get(SKILL_LIST_URL, headers={'Authorization': 'Bearer ' + self.access_token})
+        self.assertEqual(resp.status_code, 200)
+
+
+class TestSendAppLinkAPI(unittest.TestCase):
+    def setUp(self) -> None:
+        self.mobile = "01626296800"  # Test Number
+
+    def test__when_mobile_number_empty__should_fail(self):
+        json = {}
+        resp = requests.post(SEND_APP_LINK_API_URL, json=json)
+        self.assertEqual(resp.status_code, 500)
+
+    def test__when_mobile_number_invalid__should_fail(self):
+        json = {
+            "mobile": "1162629680",
+        }
+        resp = requests.post(SEND_APP_LINK_API_URL, json=json)
+        self.assertEqual(resp.status_code, 500)
+
+    def test__when_mobile_number_valid__should_pass(self):
+        json = {
+            "mobile": self.mobile,
+        }
+        resp = requests.post(SEND_APP_LINK_API_URL, json=json)
         self.assertEqual(resp.status_code, 200)
 
 
