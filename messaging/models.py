@@ -83,13 +83,14 @@ def after_notification_save(sender, instance: Notification, *args, **kwargs):
 
 
     from messaging.serializers import NotificationSerializer
+    text = NotificationSerializer(instance, many=False).data
+    text['unread_notification_count'] = Notification.objects.filter(is_read=False, recipient=instance.recipient).count()
     SocketClient.send({
         "type": "notification",
-        "text": json.dumps(NotificationSerializer(instance, many=False).data),
+        "text": json.dumps(text),
         "from": "",
         "to": instance.recipient
     })
-
     # if userid == '*':
     #     param = build_topic_message(message)
     #     response = messaging.send(param)
