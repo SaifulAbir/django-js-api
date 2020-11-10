@@ -151,6 +151,10 @@ class JobApplicationAPI(APIView):
         settings_minimum_profile_completeness = Settings.objects.values('minimum_profile_completeness')[0][
             'minimum_profile_completeness']
 
+        if pro_obj.is_mobile_verified == False:
+            return Response({'details': 'Please verify your mobile number.'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
         if user_profile_completeness < settings_minimum_profile_completeness:
             return Response({'details': 'Please complete your profile with necessary and authentic information.'},status=status.HTTP_400_BAD_REQUEST)
 

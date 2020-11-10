@@ -603,4 +603,5 @@ class VerifyMobileVerificationCode(GenericAPIView, UpdateModelMixin):
             prof_obj = self.partial_update(request, *args, **kwargs).data
             return Response(prof_obj)
         else:
-            raise serializers.ValidationError('Verification code Is incorrect')
+            return Response({'details': "Please enter correct verification code"},
+                            status=status.HTTP_400_BAD_REQUEST)
