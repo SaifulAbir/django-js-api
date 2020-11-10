@@ -205,7 +205,7 @@ MEDIA_URL = '/media/'
 
 SESSION_COOKIE_AGE = 6000
 SITE_URL = 'https://jobxprss.com'
-APP_VERSION_NUMBER = 'v1.0.44'
+APP_VERSION_NUMBER = 'v1.0.45'
 ## ToDo Shohag news_dev for testing news for production
 FIREBASE_CLOUD_MESSAGING_TOPIC = 'news'
 
