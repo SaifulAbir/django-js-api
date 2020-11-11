@@ -15,7 +15,7 @@ from django.http import Http404, HttpRequest, HttpResponse
 from django.template.loader import render_to_string, get_template
 from django_rest_passwordreset.signals import reset_password_token_created
 import pdfkit
-from rest_framework import generics, status
+from rest_framework import generics, status, serializers
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.generics import GenericAPIView, get_object_or_404
@@ -31,7 +31,7 @@ from p7.auth import ProfessionalAuthentication
 from p7.models import is_professional_registered, get_user_address, populate_user_info_request, is_professional
 from p7.permissions import ProfessionalPermission, CompanyPermission
 from p7.settings_dev import SITE_URL
-from p7.utils import send_email
+from p7.utils import send_email, send_sms
 from resources.strings_pro import EMAIL_EXIST_ERROR_MSG, USER_ID_NOT_EXIST, WRONG_OLD_PASSWORD_MSG, SITE_SHORTCUT_NAME, \
     ON_TXT, PASSWORD_CHANGED_SUCCESS_MSG, FAILED_TXT, EMAIL_BLANK_ERROR_MSG, MOBILE_BLANK_ERROR_MSG, \
     PASSWORD_BLANK_ERROR_MSG, FULL_NAME_BLANK_ERROR_MSG, TAC_BLANK_ERROR_MSG
@@ -384,6 +384,9 @@ class ProfessionalUpdatePartial(GenericAPIView, UpdateModelMixin):
                 uploaded_file_url = fs.url(filename)
                 request.data['image'] = uploaded_file_url
         populate_user_info_request(request, True, request.data.get('is_archived'))
+        prof_phone = Professional.objects.get(user_id = self.current_user.id).phone
+        if prof_phone != request.data['phone']:
+            request.data['is_mobile_verified'] = False
         prof_obj = self.partial_update(request, *args, **kwargs).data
         save_recent_activity(request, request.user.id, 'update_pro', updated_section='Basic Info')
         if prof_obj['religion']:
@@ -561,4 +564,49 @@ class DownloadApplicantResumeAPIView(generics.RetrieveAPIView):
         return response
 
 
+import random
+class SendMobileVerificationCode(GenericAPIView, UpdateModelMixin):
+    permission_classes = [ProfessionalPermission]
+    queryset = Professional.objects.all()
+    serializer_class = ProfessionalSerializer
+    current_user = None
 
+    def get_object(self):
+        return get_object_or_404(Professional.objects.filter(
+            user_id=self.current_user.id
+        ))
+
+    def put(self, request, *args, **kwargs, ):
+        self.current_user = request.user
+        request.data['mobile_verification_code'] = random.randint(100000,999999)
+        populate_user_info_request(request, True, request.data.get('is_archived'))
+        message = 'Your verification code for mobile number is ' + str(request.data['mobile_verification_code'])
+        send_sms(mobile_num = request.data['phone'], text = message )
+        del request.data['phone']
+        prof_obj = self.partial_update(request, *args, **kwargs).data
+        return Response(prof_obj)
+
+
+class VerifyMobileVerificationCode(GenericAPIView, UpdateModelMixin):
+    permission_classes = [ProfessionalPermission]
+    queryset = Professional.objects.all()
+    serializer_class = ProfessionalSerializer
+    current_user = None
+
+    def get_object(self):
+        return get_object_or_404(Professional.objects.filter(
+            user_id=self.current_user.id
+        ))
+
+    def put(self, request, *args, **kwargs, ):
+        self.current_user = request.user
+        obj = Professional.objects.get(user_id=self.current_user.id)
+        if obj.mobile_verification_code == request.data['mobile_verification_code']:
+            request.data['is_mobile_verified'] = True
+            request.data['mobile_verification_code'] = ''
+            populate_user_info_request(request, True, request.data.get('is_archived'))
+            prof_obj = self.partial_update(request, *args, **kwargs).data
+            return Response(prof_obj)
+        else:
+            return Response({'details': "Please enter correct verification code"},
+                            status=status.HTTP_400_BAD_REQUEST)
