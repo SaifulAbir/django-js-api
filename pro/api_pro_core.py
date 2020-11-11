@@ -385,8 +385,9 @@ class ProfessionalUpdatePartial(GenericAPIView, UpdateModelMixin):
                 request.data['image'] = uploaded_file_url
         populate_user_info_request(request, True, request.data.get('is_archived'))
         prof_phone = Professional.objects.get(user_id = self.current_user.id).phone
-        if prof_phone != request.data['phone']:
-            request.data['is_mobile_verified'] = False
+        if 'phone' in request.data:
+            if prof_phone != request.data['phone']:
+                request.data['is_mobile_verified'] = False
         prof_obj = self.partial_update(request, *args, **kwargs).data
         save_recent_activity(request, request.user.id, 'update_pro', updated_section='Basic Info')
         if prof_obj['religion']:
