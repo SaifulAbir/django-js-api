@@ -33,8 +33,15 @@ from resources.strings_pro import ARCHIVED_FALSE
 
 class CompanyList(generics.ListAPIView):
     pagination_class = P7Pagination
-    queryset = Company.objects.all().order_by('name')
     serializer_class = CompanySerializer
+
+    def get_queryset(self):
+        request = self.request
+        dateCreated = request.GET.get('dateCreated')
+        queryset = Company.objects.all().order_by('name')
+        if dateCreated:
+            queryset = queryset.filter(created_at__gt=dateCreated)
+        return queryset
 
 class FeaturedCompanyList(generics.ListAPIView):
     pagination_class = P7Pagination

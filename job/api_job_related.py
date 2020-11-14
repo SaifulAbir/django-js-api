@@ -16,11 +16,17 @@ from resources.strings_location import CITY_COUNTRIES
 
 class JobSourceList(generics.ListAPIView):
     permission_classes = ()
-    queryset = JobSource.objects.filter(
-        is_archived=False
-    ).order_by('name')
     serializer_class = JobSourceSerializer
 
+    def get_queryset(self):
+        request = self.request
+        dateCreated = request.GET.get('dateCreated')
+        queryset = JobSource.objects.filter(
+            is_archived=False
+        ).order_by('name')
+        if dateCreated:
+            queryset = queryset.filter(created_at__gt=dateCreated)
+        return queryset
 
 class JobCategoryList(generics.ListAPIView):
     permission_classes = ()
@@ -135,8 +141,15 @@ class GenderList(generics.ListAPIView):
 
 class SkillList(generics.ListCreateAPIView):
     permission_classes = ()
-    queryset = Skill.objects.all()
     serializer_class = SkillSerializer
+
+    def get_queryset(self):
+        request = self.request
+        dateCreated = request.GET.get('dateCreated')
+        queryset = Skill.objects.all()
+        if dateCreated:
+            queryset = queryset.filter(created_at__gt=dateCreated)
+        return queryset
 
 class ApplicationStatusList(generics.ListCreateAPIView):
     permission_classes = ()
