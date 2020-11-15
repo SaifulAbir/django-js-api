@@ -53,7 +53,8 @@ INSTALLED_APPS = [
     'career_advice',
     'django_user_agents',
      'rangefilter',
-    'django_bot_crawler_blocker'
+    'django_bot_crawler_blocker',
+    'feedback',
 ]
 
 MIDDLEWARE = [

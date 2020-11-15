@@ -19,6 +19,7 @@ urlpatterns = [
     path('api/', include('testimonial.urls_api')),
     path('api/', include('settings.urls_api')),
     path('api/', include('career_advice.urls_api')),
+    path('api/', include('feedback.urls_api')),
 
     path('api/send_email_to_admin_contact_us/', send_email_to_admin_contact_us), # Public API
     path('log/', isLoggedIn), # Public API
