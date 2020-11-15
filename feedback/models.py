@@ -7,13 +7,13 @@ from resources import strings_feedback
 
 
 class Feedback(P7Model):
-    name = models.CharField(max_length=255,),
-    email = models.CharField(max_length=255,),
-    phone = models.CharField(max_length=255, validators=[check_valid_phone_number], blank=True, null=True),
+    name = models.CharField(max_length=255,)
+    email = models.CharField(max_length=255,)
+    phone = models.CharField(max_length=255, validators=[check_valid_phone_number], blank=True, null=True)
     feedback = models.TextField(blank=False, null=False)
 
     def __str__(self):
-        return self.full_name
+        return self.name
 
     class Meta:
         verbose_name = strings_feedback.FEEDBACK_VERBOSE_NAME
