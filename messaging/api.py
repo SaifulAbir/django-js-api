@@ -15,7 +15,6 @@ from pro.models import Professional
 
 class NotificationListCreate(generics.ListCreateAPIView):
     serializer_class = NotificationSerializer
-    pagination_class = P7Pagination
     def get_queryset(self):
         user = self.request.user
         userwithcomma = str(user.id) + ','
