@@ -74,6 +74,7 @@ class AdminJobList(ListAPIView):
         datePosted = request.GET.get('datePosted')
         dateCreated = request.GET.get('dateCreated')
         status = request.GET.get('status')
+        creator_type = request.GET.get('creator_type')
         job_type = request.GET.get('job_type')
         category = request.GET.get('category')
         applicationDeadline = request.GET.get('application_deadline')
@@ -89,6 +90,9 @@ class AdminJobList(ListAPIView):
 
         if category:
             queryset = queryset.filter(job_category=category)
+
+        if creator_type:
+            queryset = queryset.filter(creator_type=creator_type)
 
         if status:
             queryset = queryset.filter(status=status)

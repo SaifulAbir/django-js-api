@@ -59,7 +59,7 @@ class Experience(P7Model):
         db_table = 'experiences'
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class Gender(P7Model):
