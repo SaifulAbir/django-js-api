@@ -4,7 +4,7 @@ from threading import Thread
 import socketio
 
 class SocketClient:
-    socket = socketio.Client(ssl_verify=False)
+    socket = socketio.Client(ssl_verify=False, reconnection=False)
 
     @staticmethod
     @socket.on("receive")
