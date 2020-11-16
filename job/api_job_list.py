@@ -10,7 +10,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
-
+import urllib.parse
 from job.api_misc import save_trending_keywords
 from job.models import Job, JobRecommendation
 from job.serializers import JobSerializer, CompanyJobSerializer
@@ -129,7 +129,17 @@ class JobSearchAPI(ListAPIView):
             queryset = queryset.filter(qualification_id=qualification)
 
         if skill:
-            queryset = queryset.filter(job_skills__name__in = [skill])
+            skill = urllib.parse.unquote(skill)
+            skill_list = skill.split(',')
+            #string = ''
+            for skill in skill_list:
+                print(skill)
+                queryset = queryset.filter(job_skills__name=skill)
+            #     string += skill + ','
+            # string = string[:-1]
+            # print("'" + string + "'")
+
+           # queryset = queryset.filter(job_skills__name__in = [string])
 
         if experienceMin and  experienceMax:
             queryset = queryset.filter(

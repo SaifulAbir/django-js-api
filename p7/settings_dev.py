@@ -53,7 +53,8 @@ INSTALLED_APPS = [
     'career_advice',
     'django_user_agents',
      'rangefilter',
-    'django_bot_crawler_blocker'
+    'django_bot_crawler_blocker',
+    'feedback',
 ]
 
 MIDDLEWARE = [
@@ -205,7 +206,7 @@ MEDIA_URL = '/media/'
 
 SESSION_COOKIE_AGE = 6000
 SITE_URL = 'https://jobxprss.com'
-APP_VERSION_NUMBER = 'v1.0.48'
+APP_VERSION_NUMBER = 'v1.0.50'
 ## ToDo Shohag news_dev for testing news for production
 FIREBASE_CLOUD_MESSAGING_TOPIC = 'news'
 
