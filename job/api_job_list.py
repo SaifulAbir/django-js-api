@@ -130,8 +130,16 @@ class JobSearchAPI(ListAPIView):
 
         if skill:
             skill = urllib.parse.unquote(skill)
-            print(skill)
-            queryset = queryset.filter(job_skills__name__in = [skill])
+            skill_list = skill.split(',')
+            #string = ''
+            for skill in skill_list:
+                print(skill)
+                queryset = queryset.filter(job_skills__name=skill)
+            #     string += skill + ','
+            # string = string[:-1]
+            # print("'" + string + "'")
+
+           # queryset = queryset.filter(job_skills__name__in = [string])
 
         if experienceMin and  experienceMax:
             queryset = queryset.filter(
