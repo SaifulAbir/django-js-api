@@ -135,7 +135,7 @@ class SendAppLinkAPI(APIView):
         check_valid_phone_number(request.data.get("mobile"))
         if serializer.is_valid():
             resp = send_sms(request.data.get("mobile"), sms_text)
-            if resp.status_code == 200:
+            if json.loads(resp.text)['status_code'] == 200:
                 return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
