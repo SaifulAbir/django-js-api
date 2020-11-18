@@ -261,7 +261,8 @@ class JobApplicantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Professional
         fields = ('application_id','full_name','image','application_notes','application_status','application_status_name',
-                  'is_shortlisted', 'user', 'current_designation', 'current_company', 'experience', 'skills', 'slug')
+                  'is_shortlisted', 'user', 'current_designation', 'current_company', 'experience', 'skills', 'slug',
+                  'phone', 'email')
 
 class TokenObtainCustomPairSerializer(TokenObtainCustomSerializer):
     @classmethod
