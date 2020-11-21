@@ -19,6 +19,7 @@ from rest_framework.views import APIView
 from messaging.models import Notification
 from p7.models import populate_user_info, is_professional, populate_user_info_request, populate_user_info_querydict
 from p7.pagination import P7Pagination
+from p7.permissions import ProfessionalPermission
 from p7.settings_dev import SITE_URL
 from pro.api_pro_core import profile_create_with_user_create, profile_completeness
 from pro.models import Professional, ProfessionalSkill, ProfessionalEducation, WorkExperience, Portfolio, Membership, \
@@ -218,6 +219,22 @@ class JobApplicationAPI(APIView):
             return Response(job_application_serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(job_application_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class JobQuestionListCreate(generics.ListCreateAPIView):
+    permission_classes = [ProfessionalPermission]
+    serializer_class = JobQuestionSerializer
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated and is_professional(request.user):
+            populate_user_info_request(request, False, False)
+            current_user_id = request.user.id
+            pro_obj = Professional.objects.get(user_id=current_user_id)
+            request.data.update({"question_by": pro_obj.id})
+            return super(JobQuestionListCreate, self).post(request, *args, **kwargs)
+        else:
+            return Response({'details': 'Professional is not found.'},
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
 # No Uses. Will be reviewed

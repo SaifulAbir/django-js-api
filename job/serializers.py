@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from pro.models import Institute
 from .models import Company, Job, Industry, JobType, Experience, Qualification, Gender, Currency, TrendingKeywords, \
     Skill, JobSource, JobCategory, JobGender, JobApplication, ApplicationStatus, City, JobRecommendation, \
-    ApplicationComment
+    ApplicationComment, JobQuestionAnswer
 from rest_framework.validators import *
 
 class CompanyUpdateSerializer(serializers.ModelSerializer):
@@ -263,3 +263,10 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
+
+
+class JobQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobQuestionAnswer
+        fields = '__all__'
+        optional_fields = ['question_by', ]
