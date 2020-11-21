@@ -19,7 +19,7 @@ class Notification(P7Model) :
     message = models.TextField()
     recipient = models.CharField(max_length=255, null=True)
     is_read = models.BooleanField(default=False)
-
+    is_system_generated = models.BooleanField(default=False)
     class Meta:
         verbose_name = strings_messaging.NOTIFICATION_VERBOSE_NAME
         verbose_name_plural = strings_messaging.NOTIFICATION_VERBOSE_NAME_PLURAL
@@ -64,30 +64,50 @@ class FcmCloudMessaging(P7Model):
         unique_together = ('user', 'fcm_token', 'device_id')
 
 def after_notification_save(sender, instance: Notification, *args, **kwargs):
+    if instance.is_system_generated:
+        return
+    userid = instance.recipient
+    message = instance.message
+    if userid == '*':
+        pro_list = Professional.objects.all()
+        for professional in pro_list:
+            notification_obj = Notification(title=instance.title, message=instance.message,
+                                            recipient=professional.id, is_system_generated=True)
+            notification_obj.save()
+    elif len(userid.split(','))>1:
+        pro_list = userid.split(',')
+        for pro_id in pro_list:
+            notification_obj = Notification(title=instance.title, message=instance.message,
+                                            recipient=pro_id, is_system_generated=True)
+            notification_obj.save()
+
+
     from messaging.serializers import NotificationSerializer
+    text = NotificationSerializer(instance, many=False).data
+    text['unread_notification_count'] = Notification.objects.filter(is_read=False, recipient=instance.recipient).count()
     SocketClient.send({
         "type": "notification",
-        "text": json.dumps(NotificationSerializer(instance, many=False).data),
+        "text": json.dumps(text),
         "from": "",
         "to": instance.recipient
     })
-    userid = instance.recipient
-    message = instance.message
+    # if userid == '*':
+    #     param = build_topic_message(message)
+    #     response = messaging.send(param)
+    # else:
+    #     try:
+    #         messaging_obj = FcmCloudMessaging.objects.filter(user_id=userid)
+    #         for message in messaging_obj:
+    #             try:
+    #                 param = build_single_message(message.fcm_token, message)
+    #                 response = messaging.send(param)
+    #             except:
+    #                 pass
+    #     except FcmCloudMessaging.DoesNotExist:
+    #         pass
 
-    if userid == '*':
-        param = build_topic_message(message)
-        response = messaging.send(param)
-    else:
-        try:
-            messaging_obj = FcmCloudMessaging.objects.filter(user_id=userid)
-            for message in messaging_obj:
-                try:
-                    param = build_single_message(message.fcm_token, message)
-                    response = messaging.send(param)
-                except:
-                    pass
-        except FcmCloudMessaging.DoesNotExist:
-            pass
+    if userid == '*' or len(userid.split(','))>1:
+        instance.delete()
 
 
 def after_employer_message_save(sender, instance: EmployerMessage, *args, **kwargs):
