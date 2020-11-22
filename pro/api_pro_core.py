@@ -3,6 +3,7 @@ import datetime
 import mimetypes
 import uuid
 
+import boto3
 import rest_framework
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import Group, User
@@ -30,7 +31,8 @@ from job.serializers import SkillSerializer
 from p7.auth import ProfessionalAuthentication
 from p7.models import is_professional_registered, get_user_address, populate_user_info_request, is_professional
 from p7.permissions import ProfessionalPermission, CompanyPermission
-from p7.settings_dev import SITE_URL
+from p7.settings_dev import SITE_URL, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME, \
+    AWS_S3_ORIGIN
 from p7.utils import send_email, send_sms
 from resources.strings_pro import EMAIL_EXIST_ERROR_MSG, USER_ID_NOT_EXIST, WRONG_OLD_PASSWORD_MSG, SITE_SHORTCUT_NAME, \
     ON_TXT, PASSWORD_CHANGED_SUCCESS_MSG, FAILED_TXT, EMAIL_BLANK_ERROR_MSG, MOBILE_BLANK_ERROR_MSG, \
@@ -379,6 +381,19 @@ class ProfessionalUpdatePartial(GenericAPIView, UpdateModelMixin):
                 ext = format.split('/')[-1]
                 filename = str(uuid.uuid4()) + '-professional.' + ext
                 data = ContentFile(base64.b64decode(imgstr), name=filename)
+
+                client = boto3.client(
+                    's3',
+                    region_name=AWS_S3_ORIGIN,
+                    aws_access_key_id=AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key=AWS_SECRET_ACCESS_KEY
+                )
+                client.put_object(
+                    Body=data,
+                    Bucket=AWS_STORAGE_BUCKET_NAME,
+                    Key='media/' + filename,
+                )
+
                 fs = FileSystemStorage()
                 filename = fs.save(filename, data)
                 uploaded_file_url = fs.url(filename)
