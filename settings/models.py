@@ -31,6 +31,10 @@ class Settings(P7Model):
     latitude = models.DecimalField(max_digits=10, decimal_places=6, blank=True, null=True)
     longitude = models.DecimalField(max_digits=10, decimal_places=6, blank=True, null=True)
     minimum_profile_completeness = models.IntegerField(blank=True,null=True,default=0)
+    regular_member_apply_limit_per_day = models.IntegerField(blank=True, null=True)
+    regular_member_apply_limit_per_month = models.IntegerField(blank=True, null=True)
+    standard_member_apply_limit_per_day = models.IntegerField(blank=True, null=True)
+    standard_member_apply_limit_per_month = models.IntegerField(blank=True, null=True)
 
     class Meta:
         verbose_name = strings_settings.SETTINGS_VERBOSE_NAME
