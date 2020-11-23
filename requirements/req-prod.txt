@@ -46,3 +46,4 @@ xlrd==1.2.0
 django-modeladmin-reorder
 oauth2client
 firebase-admin
+boto3==1.16.23

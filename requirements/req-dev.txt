@@ -46,3 +46,4 @@ django-modeladmin-reorder
 oauth2client
 firebase-admin
 django-bot-crawler-blocker==1.0
+boto3==1.16.23
