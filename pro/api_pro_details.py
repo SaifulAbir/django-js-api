@@ -19,6 +19,7 @@ from job.models import Skill, Company, City
 from job.serializers import SkillSerializer, CompanySerializer
 from p7.models import populate_user_info, populate_user_info_request
 from p7.permissions import ProfessionalPermission
+from p7.utils import upload_to_s3
 from pro.models import Membership, Certification, Portfolio, WorkExperience, ProfessionalEducation, Institute, Major, \
     ProfessionalSkill, Reference, Professional, EducationLevel, MembershipOrganization, CertifyingOrganization, \
     ProfessionalLocationPreference
@@ -343,10 +344,13 @@ class PortfolioUpdateDelete(GenericAPIView, UpdateModelMixin):
                 ext = format.split('/')[-1]
                 filename = str(uuid.uuid4()) + '-professional.' + ext
                 data = ContentFile(base64.b64decode(imgstr), name=filename)
-                fs = FileSystemStorage()
-                filename = fs.save(filename, data)
-                uploaded_file_url = fs.url(filename)
-                request.data['image'] = uploaded_file_url
+
+                ## Uploading File to S3 Media Bucket
+                path = ''.join(filename)
+                path = 'media/' + path
+                upload_to_s3(path, data)
+
+                request.data['image'] = path
         populate_user_info_request(request, True, request.data.get('is_archived'))
         self.partial_update(request, *args, **kwargs)
         prof_obj = PortfolioSerializer(Portfolio.objects.get(pk=pk)).data

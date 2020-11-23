@@ -3,6 +3,7 @@ import datetime
 import mimetypes
 import uuid
 
+import boto3
 import rest_framework
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import Group, User
@@ -30,8 +31,9 @@ from job.serializers import SkillSerializer
 from p7.auth import ProfessionalAuthentication
 from p7.models import is_professional_registered, get_user_address, populate_user_info_request, is_professional
 from p7.permissions import ProfessionalPermission, CompanyPermission
-from p7.settings_dev import SITE_URL
-from p7.utils import send_email, send_sms
+from p7.settings_dev import SITE_URL, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME, \
+    AWS_S3_ORIGIN
+from p7.utils import send_email, send_sms, upload_to_s3
 from resources.strings_pro import EMAIL_EXIST_ERROR_MSG, USER_ID_NOT_EXIST, WRONG_OLD_PASSWORD_MSG, SITE_SHORTCUT_NAME, \
     ON_TXT, PASSWORD_CHANGED_SUCCESS_MSG, FAILED_TXT, EMAIL_BLANK_ERROR_MSG, MOBILE_BLANK_ERROR_MSG, \
     PASSWORD_BLANK_ERROR_MSG, FULL_NAME_BLANK_ERROR_MSG, TAC_BLANK_ERROR_MSG
@@ -379,10 +381,21 @@ class ProfessionalUpdatePartial(GenericAPIView, UpdateModelMixin):
                 ext = format.split('/')[-1]
                 filename = str(uuid.uuid4()) + '-professional.' + ext
                 data = ContentFile(base64.b64decode(imgstr), name=filename)
-                fs = FileSystemStorage()
-                filename = fs.save(filename, data)
-                uploaded_file_url = fs.url(filename)
-                request.data['image'] = uploaded_file_url
+
+                ## Uploading File to S3 Media Bucket
+                path = ''.join(filename)
+                path = 'media/' + path
+                upload_to_s3(path, data)
+
+                # fs = FileSystemStorage()
+                # filename = fs.save(filename, data)
+                # uploaded_file_url = fs.url(filename)
+                # print(uploaded_file_url)
+                # print(path)
+                # if uploaded_file_url == path :
+                #     print('equal')
+
+                request.data['image'] = path
         populate_user_info_request(request, True, request.data.get('is_archived'))
         prof_phone = Professional.objects.get(user_id = self.current_user.id).phone
         if 'phone' in request.data:

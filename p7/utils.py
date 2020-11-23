@@ -14,6 +14,7 @@ from email.mime.text import MIMEText
 from os.path import basename
 from threading import Thread
 
+import boto3
 import requests
 from django.contrib.auth.models import User
 from django.http import HttpResponse
@@ -122,3 +123,16 @@ def send_sms(mobile_num, text):
                'sms': text, 'csms_id': str(uuid.uuid4())[:10]}
     resp = requests.post('https://smsplus.sslwireless.com/api/v3/send-sms', params=payload)
     return resp
+
+def upload_to_s3(path, file):
+    client = boto3.client(
+        's3',
+        region_name=AWS_S3_ORIGIN,
+        aws_access_key_id=AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=AWS_SECRET_ACCESS_KEY
+    )
+    client.put_object(
+        Body=file,
+        Bucket=AWS_STORAGE_BUCKET_NAME,
+        Key=path,
+    )
