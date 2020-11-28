@@ -153,7 +153,7 @@ class JobBulkCreateView(APIView):
                 if not j_obj.exists():
                     populate_user_info_querydict(request, j, False, False)
                     Job.objects.create(**j)
-                    result.append(j)
+                    result.append(j["job_id"])
             return Response(result, status=status.HTTP_201_CREATED)
         else:
             return Response({'Error' : 'Job list size should be 1-20'})
