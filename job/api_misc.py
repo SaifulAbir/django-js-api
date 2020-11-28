@@ -225,16 +225,42 @@ class JobQuestionListCreate(generics.ListCreateAPIView):
     permission_classes = [ProfessionalPermission]
     serializer_class = JobQuestionSerializer
 
-    def post(self, request, *args, **kwargs):
+    def get_queryset(self):
+        user = self.request.user
+        userwithcomma = str(user.id) + ','
+        commawithuser = ',' + str(user.id)
+        commawithuserwithcomma = ',' + str(user.id) + ','
+        queryset = Notification.objects.filter(
+            Q(recipient=user.id) | Q(recipient='*') | Q(recipient__startswith=userwithcomma)
+            | Q(recipient__endswith=commawithuser) | Q(recipient__icontains=commawithuserwithcomma)
+        ).filter( is_archived = False).order_by('-created_at')
+        return queryset
+
+    # def post(self, request, *args, **kwargs):
+    #     if request.user.is_authenticated and is_professional(request.user):
+    #         populate_user_info_request(request, False, False)
+    #         current_user_id = request.user.id
+    #         pro_obj = Professional.objects.get(user_id=current_user_id)
+    #         request.data.update({"question_by": pro_obj.id})
+    #         return super(JobQuestionListCreate, self).post(request, *args, **kwargs)
+    #     else:
+    #         return Response({'details': 'Professional is not found.'},
+    #                         status=status.HTTP_400_BAD_REQUEST)
+    def create(self, request, *args, **kwargs):
         if request.user.is_authenticated and is_professional(request.user):
             populate_user_info_request(request, False, False)
             current_user_id = request.user.id
             pro_obj = Professional.objects.get(user_id=current_user_id)
             request.data.update({"question_by": pro_obj.id})
-            return super(JobQuestionListCreate, self).post(request, *args, **kwargs)
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            ques_ans_dict = {"pro_name": pro_obj.full_name, "pro_image": pro_obj.image}
+            ques_ans_dict.update(serializer.data)
+            return Response(ques_ans_dict, status=status.HTTP_201_CREATED, headers=headers)
         else:
-            return Response({'details': 'Professional is not found.'},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response({'details': 'Professional is not found.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # No Uses. Will be reviewed

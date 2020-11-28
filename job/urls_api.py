@@ -99,6 +99,7 @@ urlpatterns = [
     path('company/application_comment/', ApplicationCommentAPI.as_view()),
     path('company/get/application_comment/<int:id>/', get_application_comments),
     path('job/question/', JobQuestionListCreate.as_view()),
+    path('job/question-list/<str:id>/', JobQuestionListCreate.as_view()),
     path('job/publisher-list/', JobPublisherList.as_view()),  # Public API
 
 ]
