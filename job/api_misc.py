@@ -190,7 +190,9 @@ class JobApplicationAPI(APIView):
         req_data = request.data.copy()
         company = Job.objects.get(job_id=req_data['job']).company
         req_data['pro'] = pro_obj.id
+
         req_data['resume'] = ContentFile(resume, name=filename)
+
         populate_user_info_querydict(request, req_data, False, False)
         job_application_serializer = JobApplySerializer(data=req_data)
 
