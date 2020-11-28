@@ -1,8 +1,11 @@
+from random import randint
+
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User, Group
 from django.db import connection
+from django.db.models import Count
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.template.response import TemplateResponse
@@ -181,19 +184,36 @@ class JobAdmin(P7Admin):
     def view_on_site(self, obj):
         return 'https://jobxprss.com/job-detail/' + obj.slug
 
-    def get_urls(self):
-        urls = super().get_urls()
-        my_urls = [
-            path('job_post/', self.job_post, name='job_post'),
-        ]
-        return my_urls + urls
-
     def job_post(self, request):
         context = dict()
         if request.user.id:
             return TemplateResponse(request, "admin/job_post.html", context)
         else:
             return redirect('/admin/login/')
+
+    def request_assignment(self, request):
+        remaining = Job.objects.filter(
+            status="DRAFT",
+            assign_to__isnull= True
+        )
+
+        count = remaining.aggregate(count=Count('job_id'))['count']
+        random_index = randint(0, count - 1)
+        job = remaining[random_index]
+
+        job.assign_to = request.user
+        job.save()
+
+        self.message_user(request, f"{job.title} ({job.company}) assigned to you")
+        return HttpResponseRedirect(f'/staff/job/job/{job.job_id}/change/')
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path('job_post/', self.job_post, name='job_post'),
+            path('request_assignment/', self.request_assignment, name='request_assignment'),
+        ]
+        return my_urls + urls
 
 
 @admin.register(Company)
