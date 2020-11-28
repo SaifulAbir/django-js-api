@@ -147,11 +147,14 @@ class JobBulkCreateView(APIView):
     def post(self, request, *args, **kwargs):
         job_list = json.loads(request.body)
         if 20 >= len(job_list) > 0:
+            result = []
             for j in job_list:
                 j_obj = Job.objects.filter(job_id = j["job_id"])
                 if not j_obj.exists():
                     populate_user_info_querydict(request, j, False, False)
                     Job.objects.create(**j)
-            return Response(job_list, status=status.HTTP_201_CREATED)
+                    result.append(j)
+            return Response(result, status=status.HTTP_201_CREATED)
         else:
             return Response({'Error' : 'Job list size should be 1-20'})
+
