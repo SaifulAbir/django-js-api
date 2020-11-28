@@ -1,5 +1,8 @@
+import json
+
 from django.contrib.auth.models import User
 from django.db.models import Q, Count, Max, FilteredRelation
+from rest_framework import status
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, RetrieveAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -7,7 +10,7 @@ from rest_framework.views import APIView
 from job.models import Job
 from job.serializers import JobSerializer, JobSerializerAllField, JobUpdateSerializer, JobSerializerAdmin, \
     UserSerializer
-from p7.models import is_professional, populate_user_info_request
+from p7.models import is_professional, populate_user_info_request, populate_user_info_querydict
 from p7.pagination import P7Pagination
 from p7.permissions import StaffPermission
 from job.utils import job_slug_generator
@@ -136,3 +139,19 @@ class SlugRegenerateAPI(APIView):
             'processed_jobs': processed_jobs,
             'failed_jobs': failed_jobs
         })
+
+class JobBulkCreateView(APIView):
+    required_privilege = 'job.add_job'
+    permission_classes = [StaffPermission]
+    serializer_class = JobSerializerAdmin
+    def post(self, request, *args, **kwargs):
+        job_list = json.loads(request.body)
+        if 20 >= len(job_list) > 0:
+            for j in job_list:
+                j_obj = Job.objects.filter(job = j["job_id"], professional = j["professional_id"])
+                if not j_obj.exists():
+                    populate_user_info_querydict(request, j, False, False)
+                    Job.objects.create(**j)
+            return Response(job_list, status=status.HTTP_201_CREATED)
+        else:
+            return Response({'Error' : 'Job list size should be 1-20'})

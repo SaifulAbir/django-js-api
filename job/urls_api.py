@@ -16,7 +16,7 @@ from job.api_job_related import get_job_site_list, JobSourceList, get_job_nature
 from job.api_misc import apply_online, save_trending_keywords, \
     toggle_favourite, MarkShortlistUpdateView, JobApplicationQuickApply, get_all_applicants, get_shortlisted_applicants, \
     JobApply, request_for_access, JobApplicationAPI, DownloadAttachmentAPIView, DownloadResumeAPIView
-from job.api_ml import MlJobAPI, AdminJobList, JobCreateView, MlJobUpdateView, SlugRegenerateAPI, JobPublisherList
+from job.api_ml import MlJobAPI, AdminJobList, JobBulkCreateView, MlJobUpdateView, SlugRegenerateAPI, JobPublisherList
 
 urlpatterns = [
     path('job/search/', JobSearchAPI.as_view()), # Public API
@@ -90,7 +90,7 @@ urlpatterns = [
 
     path('admin/job/list/', AdminJobList.as_view()),
     path('admin/job/get/<str:id>/', MlJobAPI.as_view()),
-    path('admin/job/create/', JobCreateView.as_view()),
+    path('admin/job/create/', JobBulkCreateView.as_view()),
     path('admin/job/update/<str:id>/', MlJobUpdateView.as_view()),
 
     path('company/download-attachment/<int:id>/', DownloadAttachmentAPIView.as_view()),
