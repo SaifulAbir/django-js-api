@@ -328,3 +328,5 @@ ADMIN_REORDER = (
     },
 )
 
+## For production MEDIA_SOURCE = 'S3'
+MEDIA_SOURCE = 'Local'

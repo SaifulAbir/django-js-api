@@ -16,12 +16,9 @@ from threading import Thread
 
 import boto3
 import requests
-from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.core.files.storage import FileSystemStorage
 from django.template import loader
-from rest_framework.utils import json
-
-from p7.settings_dev import *
+from  django.conf import settings as current_settings
 from resources.strings_pro import Contact_US_MAIL_SUBJECT_STR
 from settings.models import Settings
 
@@ -125,14 +122,20 @@ def send_sms(mobile_num, text):
     return resp
 
 def upload_to_s3(path, file):
-    client = boto3.client(
-        's3',
-        region_name=AWS_S3_REGION_NAME,
-        aws_access_key_id=AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=AWS_SECRET_ACCESS_KEY
-    )
-    client.put_object(
-        Body=file,
-        Bucket=AWS_STORAGE_BUCKET_NAME,
-        Key=path,
-    )
+    if current_settings.MEDIA_SOURCE == 'S3':
+        client = boto3.client(
+            's3',
+            region_name=current_settings.AWS_S3_REGION_NAME,
+            aws_access_key_id=current_settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=current_settings.AWS_SECRET_ACCESS_KEY
+        )
+        client.put_object(
+            Body=file,
+            Bucket=current_settings.AWS_STORAGE_BUCKET_NAME,
+            Key=path,
+        )
+    else:
+        fs = FileSystemStorage()
+        filename = fs.save(path, file)
+        uploaded_file_url = fs.url(filename)
+        print(uploaded_file_url)

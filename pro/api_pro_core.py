@@ -381,16 +381,8 @@ class ProfessionalUpdatePartial(GenericAPIView, UpdateModelMixin):
                 path = ''.join(filename)
                 path = 'media/' + path
                 upload_to_s3(path, data)
-
-                # fs = FileSystemStorage()
-                # filename = fs.save(filename, data)
-                # uploaded_file_url = fs.url(filename)
-                # print(uploaded_file_url)
-                # print(path)
-                # if uploaded_file_url == path :
-                #     print('equal')
-
                 request.data['image'] = path
+
         populate_user_info_request(request, True, request.data.get('is_archived'))
         prof_phone = Professional.objects.get(user_id = self.current_user.id).phone
         if 'phone' in request.data:
