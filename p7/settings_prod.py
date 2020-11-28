@@ -9,7 +9,8 @@ AWS_SECRET_ACCESS_KEY = ''
 AWS_STORAGE_BUCKET_NAME = 'jobxprss-media'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_S3_REGION_NAME = 'us-east-2'
-
+MEDIA_BUCKET_URL = 'jobxprss-media.s3.us-east-2.amazonaws.com'
+MEDIA_URL = 'https://%s/' % (MEDIA_BUCKET_URL)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
