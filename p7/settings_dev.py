@@ -55,6 +55,7 @@ INSTALLED_APPS = [
      'rangefilter',
     'django_bot_crawler_blocker',
     'feedback',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -201,7 +202,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     STATIC_DIR,
 ]
-MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
+
+## Only for local
+# MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
+
 MEDIA_URL = '/media/'
 
 SESSION_COOKIE_AGE = 6000
@@ -324,7 +328,3 @@ ADMIN_REORDER = (
     },
 )
 
-AWS_ACCESS_KEY_ID = 'AKIA4EJCWTQ4QOSYSAWI'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'jobxprss-media'
-AWS_S3_ORIGIN = 'us-east-2'

@@ -1,38 +1,33 @@
 import base64
 import datetime
-import mimetypes
 import uuid
 
-import boto3
-import rest_framework
+import pdfkit
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import Group, User
 from django.core.files.base import ContentFile
 from django.core.files.storage import FileSystemStorage
-from django.core.mail import EmailMultiAlternatives
 from django.db.models import Prefetch
 from django.dispatch import receiver
-from django.http import Http404, HttpRequest, HttpResponse
+from django.http import Http404, HttpResponse
 from django.template.loader import render_to_string, get_template
 from django_rest_passwordreset.signals import reset_password_token_created
-import pdfkit
-from rest_framework import generics, status, serializers
+from rest_framework import generics, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.mixins import UpdateModelMixin
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED, HTTP_404_NOT_FOUND
+from rest_framework.status import HTTP_200_OK, HTTP_401_UNAUTHORIZED
 from rest_framework.utils import json
 from rest_framework.views import APIView
 
 from job.models import JobApplication
 from job.serializers import SkillSerializer
 from p7.auth import ProfessionalAuthentication
-from p7.models import is_professional_registered, get_user_address, populate_user_info_request, is_professional
+from p7.models import is_professional_registered, get_user_address, populate_user_info_request
 from p7.permissions import ProfessionalPermission, CompanyPermission
-from p7.settings_dev import SITE_URL, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME, \
-    AWS_S3_ORIGIN
+from p7.settings_dev import SITE_URL
 from p7.utils import send_email, send_sms, upload_to_s3
 from resources.strings_pro import EMAIL_EXIST_ERROR_MSG, USER_ID_NOT_EXIST, WRONG_OLD_PASSWORD_MSG, SITE_SHORTCUT_NAME, \
     ON_TXT, PASSWORD_CHANGED_SUCCESS_MSG, FAILED_TXT, EMAIL_BLANK_ERROR_MSG, MOBILE_BLANK_ERROR_MSG, \
