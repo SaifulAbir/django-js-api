@@ -141,8 +141,8 @@ class SlugRegenerateAPI(APIView):
         })
 
 class JobBulkCreateView(APIView):
-    # required_privilege = 'job.add_job'
-    # permission_classes = [StaffPermission]
+    required_privilege = 'job.add_job'
+    permission_classes = [StaffPermission]
     serializer_class = JobSerializerAdmin
     def post(self, request, *args, **kwargs):
         job_list = json.loads(request.body)
