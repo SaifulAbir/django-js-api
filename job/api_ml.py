@@ -1,13 +1,16 @@
+import json
+
 from django.contrib.auth.models import User
 from django.db.models import Q, Count, Max, FilteredRelation
+from rest_framework import status
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, RetrieveAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from job.models import Job
+from job.models import Job, Skill
 from job.serializers import JobSerializer, JobSerializerAllField, JobUpdateSerializer, JobSerializerAdmin, \
     UserSerializer
-from p7.models import is_professional, populate_user_info_request
+from p7.models import is_professional, populate_user_info_request, populate_user_info_querydict
 from p7.pagination import P7Pagination
 from p7.permissions import StaffPermission
 from job.utils import job_slug_generator
@@ -136,3 +139,40 @@ class SlugRegenerateAPI(APIView):
             'processed_jobs': processed_jobs,
             'failed_jobs': failed_jobs
         })
+
+class JobBulkCreateView(APIView):
+    # required_privilege = 'job.add_job'
+    # permission_classes = [StaffPermission]
+    serializer_class = JobSerializerAdmin
+    def post(self, request, *args, **kwargs):
+        job_list = json.loads(request.body)
+        if 20 >= len(job_list) > 0:
+            result = []
+            for j in job_list:
+                j_obj = Job.objects.filter(job_id = j["job_id"])
+                if not j_obj.exists():
+                    try:
+                        skills = j["job_skills"]
+                        print(skills)
+                        del j['job_skills']
+                    except KeyError:
+                        skills = None
+
+                    job_obj = Job(**j)
+                    populate_user_info_querydict(request, j, False, False)
+                    job_obj.save()
+
+                    if skills:
+                        skill_list = skills
+                        for skill in skill_list:
+                            try:
+                                skill_obj = Skill.objects.get(id=skill)
+                            except Skill.DoesNotExist:
+                                skill_obj = None
+                            if skill_obj:
+                                job_obj.job_skills.add(skill_obj)
+                    result.append(j["job_id"])
+            return Response(result, status=status.HTTP_201_CREATED)
+        else:
+            return Response({'Error' : 'Job list size should be 1-20'})
+
