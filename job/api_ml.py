@@ -7,7 +7,7 @@ from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, R
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from job.models import Job
+from job.models import Job, Skill
 from job.serializers import JobSerializer, JobSerializerAllField, JobUpdateSerializer, JobSerializerAdmin, \
     UserSerializer
 from p7.models import is_professional, populate_user_info_request, populate_user_info_querydict
@@ -141,8 +141,8 @@ class SlugRegenerateAPI(APIView):
         })
 
 class JobBulkCreateView(APIView):
-    required_privilege = 'job.add_job'
-    permission_classes = [StaffPermission]
+    # required_privilege = 'job.add_job'
+    # permission_classes = [StaffPermission]
     serializer_class = JobSerializerAdmin
     def post(self, request, *args, **kwargs):
         job_list = json.loads(request.body)
@@ -151,8 +151,26 @@ class JobBulkCreateView(APIView):
             for j in job_list:
                 j_obj = Job.objects.filter(job_id = j["job_id"])
                 if not j_obj.exists():
+                    try:
+                        skills = j["job_skills"]
+                        print(skills)
+                        del j['job_skills']
+                    except KeyError:
+                        skills = None
+
+                    job_obj = Job(**j)
                     populate_user_info_querydict(request, j, False, False)
-                    Job.objects.create(**j)
+                    job_obj.save()
+
+                    if skills:
+                        skill_list = skills
+                        for skill in skill_list:
+                            try:
+                                skill_obj = Skill.objects.get(id=skill)
+                            except Skill.DoesNotExist:
+                                skill_obj = None
+                            if skill_obj:
+                                job_obj.job_skills.add(skill_obj)
                     result.append(j["job_id"])
             return Response(result, status=status.HTTP_201_CREATED)
         else:
