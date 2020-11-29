@@ -17,7 +17,7 @@ MEDIA_URL = 'https://%s/' % (MEDIA_BUCKET_URL)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'p7_job',
+        'NAME': 'p7',
         'USER': 'root',
         'PASSWORD': '123',
         'HOST': 'localhost',
