@@ -9,7 +9,8 @@ AWS_SECRET_ACCESS_KEY = 'a9b3YULZNFxYkg0HvcTIGyUfANIbsSRVmeiTIpKW'
 AWS_STORAGE_BUCKET_NAME = 'jobxprss-media'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_S3_REGION_NAME = 'us-east-2'
-
+CLOUD_FRONT_ROOT_DOMAIN = 'd73v8sr570q51.cloudfront.net'
+STATIC_URL = 'https://%s/' % (CLOUD_FRONT_ROOT_DOMAIN)
 MEDIA_SOURCE = 'S3'
 
 MEDIA_BUCKET_URL = 'jobxprss-media.s3.us-east-2.amazonaws.com'
