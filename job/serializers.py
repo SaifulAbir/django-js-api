@@ -266,6 +266,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class JobQuestionSerializer(serializers.ModelSerializer):
+    from pro.serializers import ProfessionalSerializer
+    professional = ProfessionalSerializer(many=False, source='question_by', read_only=True)
     class Meta:
         model = JobQuestionAnswer
         fields = '__all__'
