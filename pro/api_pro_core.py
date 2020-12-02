@@ -602,7 +602,7 @@ class VerifyMobileVerificationCode(GenericAPIView, UpdateModelMixin):
         self.current_user = request.user
         obj = Professional.objects.get(user_id=self.current_user.id)
         if obj.mobile_verification_number != request.data['phone']:
-            return Response({'details': "Please enter correct mobile number"},
+            return Response({'details': "You are not allowed to change the mobile number after the code was sent. Please enter the correct number."},
                      status=status.HTTP_400_BAD_REQUEST)
         if obj.mobile_verification_code == request.data['mobile_verification_code']:
             request.data['is_mobile_verified'] = True
@@ -612,5 +612,5 @@ class VerifyMobileVerificationCode(GenericAPIView, UpdateModelMixin):
             prof_obj = self.partial_update(request, *args, **kwargs).data
             return Response(prof_obj)
         else:
-            return Response({'details': "Please enter correct verification code"},
+            return Response({'details': "The code entered does not match with the code we sent. Please enter the correct code again."},
                             status=status.HTTP_400_BAD_REQUEST)
