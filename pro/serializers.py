@@ -23,7 +23,7 @@ class WorkExperienceDetailSerializer(serializers.ModelSerializer):
 class ProfessionalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Professional
-        exclude = ('password','terms_and_condition_status','signup_verification_code',)
+        exclude = ('password','terms_and_condition_status','signup_verification_code','mobile_verification_code')
 
 class ProfessionalLocationPreferenceSerializer(serializers.ModelSerializer):
     class Meta:
