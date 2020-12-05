@@ -55,6 +55,7 @@ INSTALLED_APPS = [
      'rangefilter',
     'django_bot_crawler_blocker',
     'feedback',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -201,12 +202,15 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     STATIC_DIR,
 ]
+
+## Only for local
 MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
+
 MEDIA_URL = '/media/'
 
 SESSION_COOKIE_AGE = 6000
 SITE_URL = 'https://jobxprss.com'
-APP_VERSION_NUMBER = 'v1.0.57'
+APP_VERSION_NUMBER = 'v1.0.58'
 ## ToDo Shohag news_dev for testing news for production
 FIREBASE_CLOUD_MESSAGING_TOPIC = 'news'
 
@@ -323,3 +327,6 @@ ADMIN_REORDER = (
         )
     },
 )
+
+# For production MEDIA_SOURCE = 'S3'
+MEDIA_SOURCE = 'Local'

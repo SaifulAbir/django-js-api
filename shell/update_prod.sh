@@ -13,5 +13,5 @@ python manage.py migrate
 #   user.first_name = 'Admin'
 #   user.save()
 #EOF
-python manage.py collectstatic
+#python manage.py collectstatic
 
