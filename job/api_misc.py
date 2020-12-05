@@ -241,20 +241,6 @@ class JobQuestionListCreate(generics.ListCreateAPIView):
         else:
             return Response({'details': 'Professional is not found.'},
                             status=status.HTTP_400_BAD_REQUEST)
-    # def create(self, request, *args, **kwargs):
-    #     if request.user.is_authenticated and is_professional(request.user):
-    #         populate_user_info_request(request, False, False)
-    #         current_user_id = request.user.id
-    #         pro_obj = Professional.objects.get(user_id=current_user_id)
-    #         request.data.update({"question_by": pro_obj.id})
-    #         serializer = self.get_serializer(data=request.data)
-    #         serializer.is_valid(raise_exception=True)
-    #         self.perform_create(serializer)
-    #         headers = self.get_success_headers(serializer.data)
-    #         ques_ans_dict = serializer.data
-    #         return Response(ques_ans_dict, status=status.HTTP_201_CREATED, headers=headers)
-    #     else:
-    #         return Response({'details': 'Professional is not found.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class JobQuestionUpdate(generics.RetrieveUpdateAPIView):
