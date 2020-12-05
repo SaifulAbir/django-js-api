@@ -38,7 +38,7 @@ from .models import ProfessionalEducation, ProfessionalSkill, WorkExperience, Po
 from .serializers import ProfessionalSerializer, ReligionSerializer, NationalitySerializer, \
     WorkExperienceDetailSerializer, InstituteNameSerializer, MajorSerializer, ProfessionalPublicSerializer, \
     EducationLevelSerializer, MembershipOrganizationNameSerializer, CertifyingOrganizationNameSerializer, \
-    ProfessionalLocationPreferenceSerializer
+    ProfessionalLocationPreferenceSerializer, MobileNumberVerificationSerializer
 from .utils import sendSignupEmail, save_recent_activity
 
 
@@ -569,7 +569,7 @@ import random
 class SendMobileVerificationCode(GenericAPIView, UpdateModelMixin):
     permission_classes = [ProfessionalPermission]
     queryset = Professional.objects.all()
-    serializer_class = ProfessionalSerializer
+    serializer_class = MobileNumberVerificationSerializer
     current_user = None
 
     def get_object(self):
@@ -584,7 +584,7 @@ class SendMobileVerificationCode(GenericAPIView, UpdateModelMixin):
         message = 'Your verification code for mobile number is ' + str(request.data['mobile_verification_code'])
         send_sms(mobile_num = request.data['mobile_verification_number'], text = message )
         prof_obj = self.partial_update(request, *args, **kwargs).data
-        return Response(prof_obj)
+        return Response(HTTP_200_OK)
 
 
 class VerifyMobileVerificationCode(GenericAPIView, UpdateModelMixin):
