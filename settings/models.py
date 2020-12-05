@@ -35,6 +35,10 @@ class Settings(P7Model):
     regular_member_apply_limit_per_month = models.IntegerField(blank=True, null=True)
     standard_member_apply_limit_per_day = models.IntegerField(blank=True, null=True)
     standard_member_apply_limit_per_month = models.IntegerField(blank=True, null=True)
+    android_app_latest_version = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    android_force_update_app_latest_version = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    ios_app_latest_version = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    ios_force_update_app_latest_version = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     class Meta:
         verbose_name = strings_settings.SETTINGS_VERBOSE_NAME
