@@ -192,7 +192,7 @@ class TestSendEmailToAdminContactUs(unittest.TestCase):
             "message": self.message
         }
         resp = requests.post(SEND_EMAIL_TO_ADMIN_URL, json=json)
-        data = resp.json()
+        # data = resp.json()
         self.assertEqual(resp.status_code, 200)
 
 

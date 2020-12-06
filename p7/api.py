@@ -11,6 +11,7 @@ from rest_framework.status import (
     HTTP_200_OK,
     HTTP_404_NOT_FOUND
 )
+from rest_framework.utils import json
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
