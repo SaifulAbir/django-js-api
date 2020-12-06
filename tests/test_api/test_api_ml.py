@@ -404,10 +404,10 @@ class TestMlJobUpdateAPI(unittest.TestCase):
         resp = requests.put(ML_JOB_UPDATE_URL + JOB_ID_UPDATE + '/', json=json,
                             headers={'Authorization': 'Bearer ' + self.access_token})
         data = resp.json()
-        self.assertEqual(resp.status_code, 200)
+        self.assertIsNotNone(data['job_id'])
 
     def test__when_required_filed__title_and_company_empty__should_fail(self):
-        json = {
+        json = [{
             'title': "",
             'address': self.address,
             'job_area': self.job_area,
@@ -451,13 +451,14 @@ class TestMlJobUpdateAPI(unittest.TestCase):
             'post_date': str(self.post_date),
             'featured': self.featured,
 
-        }
+        }]
         resp = requests.post(ML_JOB_CREATE_URL, json=json, headers={'Authorization': 'Bearer ' + self.access_token})
-        self.assertEqual(resp.status_code, 400)
+        data = resp.json()
+        self.assertIsNotNone(data['error'])
 
     #
     def test__when_required_field__title_and_company_null__should_fail(self):
-        json = {
+        json = [{
             'address': self.address,
             'job_area': self.job_area,
             'job_city': self.job_city,
@@ -499,9 +500,10 @@ class TestMlJobUpdateAPI(unittest.TestCase):
             'post_date': str(self.post_date),
             'featured': self.featured,
 
-        }
+        }]
         resp = requests.post(ML_JOB_CREATE_URL, json=json, headers={'Authorization': 'Bearer ' + self.access_token})
-        self.assertEqual(resp.status_code, 400)
+        data = resp.json()
+        self.assertIsNotNone(data['error'])
 
     #
     def test__when_access_token_none__should_fail(self):
