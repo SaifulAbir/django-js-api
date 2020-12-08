@@ -161,6 +161,7 @@ class IpnAPI(APIView):
         store_amount = data['store_amount']
         tran_date = data['tran_date']
         response = str(request.data)
+        logging.log(logging.INFO, 'ipn response')
         logging.log(logging.INFO, response)
         return Response(request.data)
 
