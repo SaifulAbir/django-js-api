@@ -38,7 +38,7 @@ from .models import ProfessionalEducation, ProfessionalSkill, WorkExperience, Po
 from .serializers import ProfessionalSerializer, ReligionSerializer, NationalitySerializer, \
     WorkExperienceDetailSerializer, InstituteNameSerializer, MajorSerializer, ProfessionalPublicSerializer, \
     EducationLevelSerializer, MembershipOrganizationNameSerializer, CertifyingOrganizationNameSerializer, \
-    ProfessionalLocationPreferenceSerializer
+    ProfessionalLocationPreferenceSerializer, MobileNumberVerificationSerializer
 from .utils import sendSignupEmail, save_recent_activity
 
 
@@ -569,7 +569,7 @@ import random
 class SendMobileVerificationCode(GenericAPIView, UpdateModelMixin):
     permission_classes = [ProfessionalPermission]
     queryset = Professional.objects.all()
-    serializer_class = ProfessionalSerializer
+    serializer_class = MobileNumberVerificationSerializer
     current_user = None
 
     def get_object(self):
@@ -582,10 +582,9 @@ class SendMobileVerificationCode(GenericAPIView, UpdateModelMixin):
         request.data['mobile_verification_code'] = random.randint(100000,999999)
         populate_user_info_request(request, True, request.data.get('is_archived'))
         message = 'Your verification code for mobile number is ' + str(request.data['mobile_verification_code'])
-        send_sms(mobile_num = request.data['phone'], text = message )
-        del request.data['phone']
+        send_sms(mobile_num = request.data['mobile_verification_number'], text = message )
         prof_obj = self.partial_update(request, *args, **kwargs).data
-        return Response(prof_obj)
+        return Response(HTTP_200_OK)
 
 
 class VerifyMobileVerificationCode(GenericAPIView, UpdateModelMixin):
@@ -602,12 +601,16 @@ class VerifyMobileVerificationCode(GenericAPIView, UpdateModelMixin):
     def put(self, request, *args, **kwargs, ):
         self.current_user = request.user
         obj = Professional.objects.get(user_id=self.current_user.id)
+        if obj.mobile_verification_number != request.data['phone']:
+            return Response({'details': "You are not allowed to change the mobile number after the code was sent. Please enter the correct number."},
+                     status=status.HTTP_400_BAD_REQUEST)
         if obj.mobile_verification_code == request.data['mobile_verification_code']:
             request.data['is_mobile_verified'] = True
-            request.data['mobile_verification_code'] = ''
+            request.data['mobile_verification_code'] = None
+            request.data['mobile_verification_number'] = None
             populate_user_info_request(request, True, request.data.get('is_archived'))
             prof_obj = self.partial_update(request, *args, **kwargs).data
             return Response(prof_obj)
         else:
-            return Response({'details': "Please enter correct verification code"},
+            return Response({'details': "The code entered does not match with the code we sent. Please enter the correct code again."},
                             status=status.HTTP_400_BAD_REQUEST)

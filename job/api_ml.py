@@ -151,31 +151,44 @@ class JobBulkCreateView(APIView):
     def post(self, request, *args, **kwargs):
         job_list = json.loads(request.body)
         if 20 >= len(job_list) > 0:
-            result = []
+            success = []
+            errors = []
+            warning = []
+
             for j in job_list:
-                j_obj = Job.objects.filter(job_id = j["job_id"])
-                if not j_obj.exists():
-                    try:
-                        skills = j["job_skills"]
-                        print(skills)
-                        del j['job_skills']
-                    except KeyError:
-                        skills = None
+                try:
 
-                    job_obj = Job(**j)
-                    populate_user_info_querydict(request, j, False, False)
-                    job_obj.save()
+                    j_obj = Job.objects.filter(job_id = j["job_id"])
+                    if j_obj.exists():
+                        errors.append({"id":j["job_id"], "error" : "Exist"})
+                    else:
+                        if "job_skills" in j.keys():
+                            skills = j["job_skills"]
+                            del j['job_skills']
+                        else:
+                            skills = None
 
-                    if skills:
-                        skill_list = skills
-                        for skill in skill_list:
-                            try:
-                                skill_obj = Skill.objects.get(id=skill)
-                            except Skill.DoesNotExist:
-                                skill_obj = None
-                            if skill_obj:
-                                job_obj.job_skills.add(skill_obj)
-                    result.append(j["job_id"])
+                        job_obj = Job(**j)
+                        populate_user_info_querydict(request, j, False, False)
+                        job_obj.save()
+
+                        if skills:
+                            for skill in skills:
+                                try:
+                                    skill_obj = Skill.objects.get(id=skill)
+                                    job_obj.job_skills.add(skill_obj)
+                                except Skill.DoesNotExist:
+                                    warning.append({"id":j["job_id"], "error" : f"Skill {skill} not exist but job was added"})
+                        success.append(j["job_id"])
+                except Exception as ex:
+                    #errors.append({"id": j["job_id"] if "job_id" in j.keys() else None, "error": str(ex)})
+                    errors.append({"id": j.get("job_id") , "error": str(ex)})
+
+                result = {
+                    "success" : success,
+                    "warning" : warning,
+                    "error" : errors
+                }
             return Response(result, status=status.HTTP_201_CREATED)
         else:
             return Response({'Error' : 'Job list size should be 1-20'})

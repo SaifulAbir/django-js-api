@@ -49,3 +49,11 @@ DEFAULT_SEARCH_PREFERENCE_OPTION = "LOOKING_FOR_OPPORTUNITIES"
 
 Account_Activation_Request_MAIL_STR = "Activate JobXprss account"
 Contact_US_MAIL_SUBJECT_STR  = "Contact Us"
+
+
+MEMBERSHIP_TYPE_OPTION = (
+    ('REGULAR', 'Regular'),
+    ('STANDARD','Standard')
+)
+
+DEFAULT_MEMBERSHIP_TYPE_OPTION = 'Regular'
