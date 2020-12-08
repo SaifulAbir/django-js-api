@@ -75,6 +75,7 @@ class AdminJobList(ListAPIView):
         request = self.request
         query = request.GET.get('q')
         datePosted = request.GET.get('datePosted')
+        datePublished = request.GET.get('datePublished')
         dateCreated = request.GET.get('dateCreated')
         status = request.GET.get('status')
         creator_type = request.GET.get('creator_type')
@@ -105,6 +106,9 @@ class AdminJobList(ListAPIView):
 
         if dateCreated:
             queryset = queryset.filter(created_at__gt=dateCreated)
+
+        if datePublished:
+            queryset = queryset.filter(publish_date__gt=datePublished)
 
         if applicationDeadline:
             queryset = queryset.filter(
