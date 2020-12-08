@@ -14,6 +14,7 @@ from rest_framework.status import (
 from rest_framework.utils import json
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+import logging
 
 from job.models import Company
 from job.serializers import CompanySerializer
@@ -149,5 +150,18 @@ class GoogleSigninCompanyApi(APIView):
         return Response(data)
 
 
+
+
+class IpnAPI(APIView):
+    permission_classes = []
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        status = data['status']
+        amount = data['amount']
+        store_amount = data['store_amount']
+        tran_date = data['tran_date']
+        response = str(request.data)
+        logging.log(logging.INFO, response)
+        return Response(request.data)
 
 

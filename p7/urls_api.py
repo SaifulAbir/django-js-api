@@ -33,6 +33,7 @@ urlpatterns = [
 
     path('api/pro/google/signin/', GoogleSigninProApi.as_view(), name='google_token_verify'),
     path('api/company/google/signin/', GoogleSigninCompanyApi.as_view(), name='google_token_verify'),
+    path('api/ipn/', IpnAPI.as_view(), name='ipn-api'),
     path('api/captcha', get_captcha),
     path('api/resolve-captcha/', resolve_captcha),
 
