@@ -1,11 +1,13 @@
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.test import TestCase
-from job.models import Job, Company, JobType, Qualification, JobGender, Experience, Industry, Currency, TrendingKeywords, \
-    Skill, FavouriteJob, JobApplication
+from job.models import Job, Company, JobType, Qualification, JobGender, Experience, Industry, Currency, \
+    TrendingKeywords, \
+    Skill, FavouriteJob, JobApplication, JobQuestionAnswer
 from django.contrib.auth.models import User
 
 from pro.models import Professional
+from settings.models import Settings
 
 exclude = [
     'created_by', 'created_at', 'created_from',
@@ -492,3 +494,89 @@ class FavouriteJobTest(TestCase):
             favouritejob.full_clean(exclude=exclude)
 
 #BOOKMARK_JOB_TEST#
+
+#JOB_QUESTION_ANSWER_TEST#
+class JobQuestionAnswerTest(TestCase):
+    def setUp(self) :
+        company = Company(name='Ishraak Solutions', web_address='www.ishraak.com')
+        company.save()
+        self.company = company
+
+        job_gender = JobGender(name='Male')
+        job_gender.save()
+        self.job_gender = job_gender
+
+        experience = Experience(name=2)
+        experience.save()
+        self.experience = experience
+
+        qualification = Qualification(name='Graduate')
+        qualification.save()
+        self.qualification = qualification
+
+        setting_obj = Settings()
+        setting_obj.save()
+
+        job = Job(title='Software Engineer',
+                  experience = 1, salary_min=5000.00, salary_max=10000.00,
+                  qualification=self.qualification, job_gender=self.job_gender, application_deadline='2020-03-29',
+                  description='Test job', responsibilities='Web developer', education='Computer Science',
+                  other_benefits='Apple Watch', company=self.company, status='Published',
+                    latitude=3.00, longitude=4.00,
+                  )
+        job.save()
+        self.job = job
+
+        industry = Industry(name='Information Technology')
+        industry.save()
+        self.industry = industry
+
+        professional = Professional(professional_id='1234', full_name='Peter',
+                                    email='peter@any.com', phone='01542345678', address='Dhaka',
+                                    industry_expertise=self.industry, about_me='This is Peter',
+                                    password='h1234567')
+        professional.save()
+        self.pro = professional
+
+    def test__when_everything_required_is_given__should_pass(self):
+        job_question_ans = JobQuestionAnswer(job=self.job, question_by=self.pro,
+                                             question="How many vacancies are available?")
+        try:
+            job_question_ans.full_clean(exclude=exclude)
+        except:
+            self.fail()
+
+    def test__when_job_is_blank__should__raise_error(self):
+        with self.assertRaises(ValueError):
+            job_question_ans = JobQuestionAnswer(job='', question_by=self.pro,
+                                                 question="How many vacancies are available?")
+
+    def test__when_job_is_null_should__raise_error(self):
+        job_question_ans = JobQuestionAnswer(question_by=self.pro,
+                                             question="How many vacancies are available?")
+        with self.assertRaises(ValidationError):
+            job_question_ans.full_clean(exclude=exclude)
+
+    def test__when_professional_is_blank_should__raise_error(self):
+        with self.assertRaises(ValueError):
+            job_question_ans = JobQuestionAnswer(job=self.job, question_by='',
+                                                 question="How many vacancies are available?")
+
+    def test__when_professional_is_null_should__raise_error(self):
+        job_question_ans = JobQuestionAnswer(job=self.job,
+                                             question="How many vacancies are available?")
+        with self.assertRaises(ValidationError):
+            job_question_ans.full_clean(exclude=exclude)
+
+    def test__when_question_is_blank_should__raise_error(self):
+        job_question_ans = JobQuestionAnswer(job=self.job, question_by=self.pro,
+                                             question='')
+        with self.assertRaises(ValidationError):
+            job_question_ans.full_clean(exclude=exclude)
+
+    def test__when_question_is_null_should__raise_error(self):
+        job_question_ans = JobQuestionAnswer(job=self.job, question_by=self.pro)
+        with self.assertRaises(ValidationError):
+            job_question_ans.full_clean(exclude=exclude)
+
+#JOB_QUESTION_ANSWER_TEST#

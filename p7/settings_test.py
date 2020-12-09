@@ -1,8 +1,8 @@
 from p7.settings_dev import *
 
 DEBUG=True
-# ALLOWED_HOSTS = ['*']
-# STATIC_ROOT = '/home/ubuntu/Documents/jobxprss/static'
+ALLOWED_HOSTS = ['*']
+STATIC_ROOT = '/home/ubuntu/Documents/jobxprss/static'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
