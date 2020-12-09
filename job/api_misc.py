@@ -221,7 +221,18 @@ class JobApplicationAPI(APIView):
             return Response(job_application_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class JobQuestionListCreate(generics.ListCreateAPIView):
+class JobQuestionListAPI(generics.ListAPIView):
+    permission_classes = []
+    serializer_class = JobQuestionSerializer
+
+    def get_queryset(self):
+        slug = self.kwargs['slug']
+        queryset = JobQuestionAnswer.objects.filter(
+            job__slug=slug).select_related('question_by').order_by('-created_at')
+        return queryset
+
+
+class JobQuestionCreateAPI(generics.ListCreateAPIView):
     permission_classes = [ProfessionalPermission]
     serializer_class = JobQuestionSerializer
 
@@ -236,8 +247,10 @@ class JobQuestionListCreate(generics.ListCreateAPIView):
             populate_user_info_request(request, False, False)
             current_user_id = request.user.id
             pro_obj = Professional.objects.get(user_id=current_user_id)
+            job = Job.objects.get(job_id=request.data["job"])
             request.data.update({"question_by": pro_obj.id})
-            return super(JobQuestionListCreate, self).post(request, *args, **kwargs)
+            save_notification('job-question_pro', str(job.company.user_id))
+            return super(JobQuestionCreateAPI, self).post(request, *args, **kwargs)
         else:
             return Response({'details': 'Professional is not found.'},
                             status=status.HTTP_400_BAD_REQUEST)

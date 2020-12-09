@@ -121,7 +121,7 @@ def save_notification(message_type, recipient, title="company notification"):
     notification_obj = Notification()
     notification_obj.recipient = recipient
     notification_obj.title = title
-    notification_msg = {'apply_pro':'Candidate applied','job-published_admin':'Job published'}
+    notification_msg = {'apply_pro':'Candidate applied','job-published_admin':'Job published', 'job-question_pro':'Question asked on job'}
     notification_obj.message = notification_msg[message_type]
     notification_obj.save()
 
