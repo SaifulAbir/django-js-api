@@ -569,6 +569,28 @@ import random
 class SendMobileVerificationCode(GenericAPIView, UpdateModelMixin):
     permission_classes = [ProfessionalPermission]
     queryset = Professional.objects.all()
+    serializer_class = ProfessionalSerializer
+    current_user = None
+
+    def get_object(self):
+        return get_object_or_404(Professional.objects.filter(
+            user_id=self.current_user.id
+        ))
+
+    def put(self, request, *args, **kwargs, ):
+        self.current_user = request.user
+        request.data['mobile_verification_code'] = random.randint(100000,999999)
+        populate_user_info_request(request, True, request.data.get('is_archived'))
+        message = 'Your verification code for mobile number is ' + str(request.data['mobile_verification_code'])
+        send_sms(mobile_num = request.data['phone'], text = message )
+        del request.data['phone']
+        prof_obj = self.partial_update(request, *args, **kwargs).data
+        return Response(prof_obj)
+
+
+class SendMobileVerificationCodeVOnePointZeroPointSixtyFour(GenericAPIView, UpdateModelMixin):
+    permission_classes = [ProfessionalPermission]
+    queryset = Professional.objects.all()
     serializer_class = MobileNumberVerificationSerializer
     current_user = None
 
