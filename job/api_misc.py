@@ -9,6 +9,7 @@ from django.core.files.base import ContentFile
 from django.db.models import Count, F, Prefetch
 from django.http import HttpResponse, Http404
 from django.template.loader import get_template
+from django.utils import timezone
 from rest_framework import generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import NotFound
@@ -154,6 +155,70 @@ class JobApplicationAPI(APIView):
         settings_minimum_profile_completeness = Settings.objects.values('minimum_profile_completeness')[0][
             'minimum_profile_completeness']
 
+        remaining_application_message = ''
+        if pro_obj.membership_type == "Regular":
+            regular_member_apply_limit_per_month = Settings.objects.values('regular_member_apply_limit_per_month')[0]['regular_member_apply_limit_per_month']
+            if regular_member_apply_limit_per_month:
+                monthly_apply_count = JobApplication.objects.filter(pro = pro_obj, created_at__gte=timezone.now()
+                        .replace(day=1, hour=0, minute=0, second=0, microsecond=0)).count()
+                if monthly_apply_count >= regular_member_apply_limit_per_month:
+                    return Response({'details': 'Your Monthly Job Application Limit Reached.'}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    regular_member_apply_limit_per_day = Settings.objects.values('regular_member_apply_limit_per_day')[0]['regular_member_apply_limit_per_day']
+                    if regular_member_apply_limit_per_day:
+                        daily_apply_count = JobApplication.objects.filter(pro=pro_obj, created_at__gte=timezone.now()
+                                                                        .replace(hour=0, minute=0, second=0,microsecond=0)).count()
+                        if daily_apply_count >= regular_member_apply_limit_per_day:
+                            return Response({'details': 'Your Daily Job Application Limit Reached.'},
+                                            status=status.HTTP_400_BAD_REQUEST)
+                        else:
+                            remaining_application_message = 'As a Free Member, you can apply for %d more job(s) today and %d more job(s) this month.'\
+                                                            % ((regular_member_apply_limit_per_day - daily_apply_count),(regular_member_apply_limit_per_month-monthly_apply_count))
+            else:
+                regular_member_apply_limit_per_day = Settings.objects.values('regular_member_apply_limit_per_day')[0][
+                    'regular_member_apply_limit_per_day']
+                if regular_member_apply_limit_per_day:
+                    daily_apply_count = JobApplication.objects.filter(pro=pro_obj, created_at__gte=timezone.now()
+                                                                      .replace(hour=0, minute=0, second=0,
+                                                                               microsecond=0)).count()
+                    if daily_apply_count >= regular_member_apply_limit_per_day:
+                        return Response({'details': 'Your Daily Job Application Limit Reached.'},
+                                        status=status.HTTP_400_BAD_REQUEST)
+                    else:
+                        remaining_application_message = 'As a Free Member, you can apply for %d more job(s) today' \
+                                                        % ((regular_member_apply_limit_per_day - daily_apply_count))
+
+        if pro_obj.membership_type == "Standard":
+            standard_member_apply_limit_per_month = Settings.objects.values('standard_member_apply_limit_per_month')[0]['standard_member_apply_limit_per_month']
+            if standard_member_apply_limit_per_month:
+                monthly_apply_count = JobApplication.objects.filter(pro = pro_obj, created_at__gte=timezone.now()
+                        .replace(day=1, hour=0, minute=0, second=0, microsecond=0)).count()
+                if monthly_apply_count >= standard_member_apply_limit_per_month:
+                    return Response({'details': 'Your Monthly Job Application Limit Reached.'}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    standard_member_apply_limit_per_day = Settings.objects.values('standard_member_apply_limit_per_day')[0]['standard_member_apply_limit_per_day']
+                    if standard_member_apply_limit_per_day:
+                        daily_apply_count = JobApplication.objects.filter(pro=pro_obj, created_at__gte=timezone.now()
+                                                                        .replace(hour=0, minute=0, second=0,microsecond=0)).count()
+                        if daily_apply_count >= standard_member_apply_limit_per_day:
+                            return Response({'details': 'Your Daily Job Application Limit Reached.'},
+                                            status=status.HTTP_400_BAD_REQUEST)
+                        else:
+                            remaining_application_message = 'As a Valued Standard Member, you can apply for %d more job(s) today and %d more job(s) this month.'\
+                                                            % ((standard_member_apply_limit_per_day - daily_apply_count),(standard_member_apply_limit_per_month-monthly_apply_count))
+            else:
+                standard_member_apply_limit_per_day = Settings.objects.values('standard_member_apply_limit_per_day')[0][
+                    'standard_member_apply_limit_per_day']
+                if standard_member_apply_limit_per_day:
+                    daily_apply_count = JobApplication.objects.filter(pro=pro_obj, created_at__gte=timezone.now()
+                                                                      .replace(hour=0, minute=0, second=0,
+                                                                               microsecond=0)).count()
+                    if daily_apply_count >= standard_member_apply_limit_per_day:
+                        return Response({'details': 'Your Daily Job Application Limit Reached.'},
+                                        status=status.HTTP_400_BAD_REQUEST)
+                    else:
+                        remaining_application_message = 'As a Valued Standard Member, you can apply for %d more job(s) today' \
+                                                        % ((standard_member_apply_limit_per_day - daily_apply_count))
         if pro_obj.is_mobile_verified == False:
             return Response({'details': 'Please verify your mobile number.'},
                             status=status.HTTP_400_BAD_REQUEST)
@@ -226,7 +291,10 @@ class JobApplicationAPI(APIView):
             if job.company.user_id:
                 save_recent_activity(request, job.company.user_id, 'apply_com', pro_obj.id, request.data["job"])
                 save_notification('apply_pro', str(job.company.user_id))
-            return Response(job_application_serializer.data, status=status.HTTP_201_CREATED)
+
+            response_obj = {'remaining_application': remaining_application_message}
+            response_obj.update(job_application_serializer.data)
+            return Response(response_obj, status=status.HTTP_201_CREATED)
         else:
             return Response(job_application_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
