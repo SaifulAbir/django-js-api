@@ -209,8 +209,8 @@ MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 SESSION_COOKIE_AGE = 6000
-# SITE_URL = 'http://localhost'
-APP_VERSION_NUMBER = 'v1.0.64'
+SITE_URL = 'https://jobxprss.com'
+APP_VERSION_NUMBER = 'v1.0.65'
 ## ToDo Shohag news_dev for testing news for production
 FIREBASE_CLOUD_MESSAGING_TOPIC = 'news'
 
