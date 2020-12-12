@@ -20,5 +20,5 @@ DATABASES = {
         'COLLATION_CONNECTION':'utf8_general_ci'
     }
 }
-# SITE_URL = '127.0.0.1:9000'
+SITE_URL = 'http://localhost'
 
