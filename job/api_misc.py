@@ -2,32 +2,25 @@ import mimetypes
 import uuid
 from random import randint
 import pdfkit
-from  django.conf import settings as current_settings
-from django.contrib.auth.models import User
-from django.core.files import File
 from django.core.files.base import ContentFile
 from django.db.models import Count, F, Prefetch
 from django.http import HttpResponse, Http404
 from django.template.loader import get_template
 from rest_framework import generics
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.status import *
 from rest_framework.utils import json
 from rest_framework.views import APIView
-
-from messaging.models import Notification
 from p7.models import populate_user_info, is_professional, populate_user_info_request, populate_user_info_querydict
 from p7.pagination import P7Pagination
-from p7.settings_dev import SITE_URL
+from django.conf import settings
 from p7.utils import upload_to_s3
 from pro.api_pro_core import profile_create_with_user_create, profile_completeness
 from pro.models import Professional, ProfessionalSkill, ProfessionalEducation, WorkExperience, Portfolio, Membership, \
     Certification, Reference
 from pro.serializers import ProfessionalSerializer, JobApplicantSerializer
 from pro.utils import save_recent_activity
-from resources.strings_pro import EMAIL_EXIST_ERROR_MSG
 from .models import FavouriteJob
 from settings.models import Settings
 from .serializers import *
@@ -179,7 +172,7 @@ class JobApplicationAPI(APIView):
             Prefetch('references',
                      queryset=Reference.objects.filter(is_archived=False).order_by('created_at'))
         )
-        html = self.template.render({'data': queryset, 'SITE_URL': SITE_URL})
+        html = self.template.render({'data': queryset, 'SITE_URL': settings.SITE_URL})
         options = {
             'page-size': "A4",
             'encoding': "UTF-8",
@@ -197,7 +190,7 @@ class JobApplicationAPI(APIView):
         ## Uploading File to S3 Media Bucket
         path = ''.join(filename)
         path = '/media/' + path
-        if current_settings.MEDIA_SOURCE == 'S3':
+        if settings.MEDIA_SOURCE == 'S3':
             upload_to_s3(path, resume_data)
         req_data['resume'] = resume_data
 

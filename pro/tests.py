@@ -1,8 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from rest_framework.test import RequestsClient
-
-from p7.settings_dev import SITE_URL
+from django.conf import settings
 from pro.models import *
 
 
@@ -130,7 +129,7 @@ class ProfessionalSkillTest(TestCase):
         client.headers.update({'x-test': 'true'})
         skil_id = self.skill.id
         data = {'professional_id': str(id), 'skill_name_id':str(skil_id),'rating':5}
-        response = client.post(SITE_URL + url, json=data, headers={'api-key': '96d56aceeb9049debeab628ac760aa11'})
+        response = client.post(settings.SITE_URL + url, json=data, headers={'api-key': '96d56aceeb9049debeab628ac760aa11'})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(ProfessionalSkill.objects.count(), 1)
 
@@ -146,7 +145,7 @@ class ProfessionalReferenceTest(TestCase):
         id = self.professional.id
         client.headers.update({'x-test': 'true'})
         data = {'professional_id': str(id),'description': 'Mr.Rahim',}
-        response = client.post(SITE_URL + url, json=data, headers={'api-key': '96d56aceeb9049debeab628ac760aa11'})
+        response = client.post(settings.SITE_URL + url, json=data, headers={'api-key': '96d56aceeb9049debeab628ac760aa11'})
         print(response.content)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Reference.objects.count(), 1)
@@ -164,7 +163,7 @@ class ProfessionalProtfolioTest(TestCase):
         id = self.professional.id
         client.headers.update({'x-test': 'true'})
         data = {'professional_id': str(id),'name': 'wonder machine',}
-        response = client.post(SITE_URL + url, json=data, headers={'api-key': '96d56aceeb9049debeab628ac760aa11'})
+        response = client.post(settings.SITE_URL + url, json=data, headers={'api-key': '96d56aceeb9049debeab628ac760aa11'})
         print(response.content)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Portfolio.objects.count(), 1)
@@ -181,7 +180,7 @@ class ProfessionalMembershipTest(TestCase):
         id = self.professional.id
         client.headers.update({'x-test': 'true'})
         data = {'professional_id': str(id),'organization': 'IEEE',}
-        response = client.post(SITE_URL + url, json=data, headers={'api-key': '96d56aceeb9049debeab628ac760aa11'})
+        response = client.post(settings.SITE_URL + url, json=data, headers={'api-key': '96d56aceeb9049debeab628ac760aa11'})
         print(response.content)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Membership.objects.count(), 1)
