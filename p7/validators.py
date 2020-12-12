@@ -35,7 +35,7 @@ def check_valid_password(value):
         raise ValidationError(DEFAULT_INVALID_PASSWORD_ERROR)
 
 def check_valid_phone_number(value):
-    if not re.findall('^(?:\+?88)?01[15-9]\d{8}$', value):
+    if not re.findall('^01[13-9]\d{8}$', value):
         raise ValidationError(DEFAULT_INVALID_PHONE_NUMBER_ERROR)
 
 class ResetPasswordValidator(object):
