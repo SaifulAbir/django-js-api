@@ -4,7 +4,7 @@ from django.db.models.signals import pre_save
 from p7.models import P7Model, populate_time_info
 from resources import strings_job
 
-class SslTransactionHistory(P7Model):
+class TransactionHistory(P7Model):
     tran_date = models.DateTimeField(blank=False,null=False)
     tran_id = models.CharField(max_length=30)
     val_id = models.CharField(max_length=50)
@@ -32,7 +32,7 @@ class SslTransactionHistory(P7Model):
     risk_level = models.PositiveIntegerField(max_length=1)
     risk_title = models.CharField(max_length=50)
     status = models.CharField(max_length=20)
-
+    gateway = models.CharField(max_length=30, null=True, blank=True)
 
     class Meta:
         verbose_name = strings_job.SSLCOMMERZ_TRANSACTION
@@ -41,4 +41,4 @@ class SslTransactionHistory(P7Model):
     def __str__(self):
         return self.tran_id
 
-pre_save.connect(populate_time_info, sender=SslTransactionHistory)
+pre_save.connect(populate_time_info, sender=TransactionHistory)
