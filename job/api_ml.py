@@ -66,8 +66,8 @@ class MlJobUpdateView(UpdateAPIView):
         )
 
 class AdminJobList(ListAPIView):
-    required_privilege = 'job.view_job'
-    permission_classes = [StaffPermission]
+    # required_privilege = 'job.view_job'
+    # permission_classes = [StaffPermission]
     pagination_class = P7Pagination
     serializer_class = JobSerializerAllField
 
@@ -79,9 +79,11 @@ class AdminJobList(ListAPIView):
         dateCreated = request.GET.get('dateCreated')
         status = request.GET.get('status')
         creator_type = request.GET.get('creator_type')
+        not_creator_type = request.GET.get('not_creator_type')
         job_type = request.GET.get('job_type')
         category = request.GET.get('category')
         applicationDeadline = request.GET.get('application_deadline')
+        modified_at = request.GET.get('modified_at')
 
         queryset = Job.objects.all()
 
@@ -97,6 +99,9 @@ class AdminJobList(ListAPIView):
 
         if creator_type:
             queryset = queryset.filter(creator_type=creator_type)
+
+        if not_creator_type:
+            queryset = queryset.exclude(creator_type=creator_type)
 
         if status:
             queryset = queryset.filter(status=status)
@@ -116,6 +121,9 @@ class AdminJobList(ListAPIView):
 
         if job_type:
             queryset = queryset.filter(job_type=job_type)
+
+        if modified_at:
+            queryset = queryset.filter(modified_at=modified_at)
 
         return queryset
 

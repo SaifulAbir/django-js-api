@@ -31,6 +31,21 @@ from pro.serializers import ProfessionalSerializer
 from resources.strings_pro import ARCHIVED_FALSE
 
 
+class AdminCompanyList(generics.ListAPIView):
+    pagination_class = P7Pagination
+    serializer_class = CompanySerializer
+
+    def get_queryset(self):
+        request = self.request
+        dateCreated = request.GET.get('dateCreated')
+        modifiedAt = request.GET.get('modifiedAt')
+        queryset = Company.objects.all().order_by('name')
+        if dateCreated:
+            queryset = queryset.filter(created_at__gt=dateCreated)
+        if modifiedAt:
+            queryset = queryset.filter(modified_at__gt=modifiedAt)
+        return queryset
+
 class CompanyList(generics.ListAPIView):
     pagination_class = P7Pagination
     serializer_class = CompanySerializer

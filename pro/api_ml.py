@@ -23,6 +23,7 @@ class MlProfessionalList(ListAPIView):
     def get_queryset(self):
         request = self.request
         job_search_preference = request.GET.get('job_search_preference')
+        not_job_search_preference = request.GET.get('not_job_search_preference')
         queryset = Professional.objects.all(
         ).prefetch_related(
             Prefetch('skills',
@@ -32,6 +33,8 @@ class MlProfessionalList(ListAPIView):
         )
         if job_search_preference:
             queryset = queryset.filter(job_search_preference=job_search_preference)
+        if not_job_search_preference:
+            queryset = queryset.exclude(job_search_preference=not_job_search_preference)
         return queryset
 
 
