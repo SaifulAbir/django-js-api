@@ -284,6 +284,22 @@ class RecentActivity(P7Model):
         db_table = 'recent_activities'
 
 
+class ViewedProfile(P7Model):
+    viewer = models.ForeignKey(User, on_delete=models.PROTECT, related_name='viewer_profile', null=True)
+    viewer_pro = models.ForeignKey(Professional, on_delete=models.PROTECT, null=True, related_name='pro_viewer')
+    viewer_company = models.ForeignKey(Company, on_delete=models.PROTECT, null=True, related_name='company_viewer')
+    viewer_type = models.CharField(max_length=30, null=True)
+    viewed = models.ForeignKey(User, on_delete=models.PROTECT,related_name='viewed_profile')
+    viewed_pro = models.ForeignKey(Professional, on_delete=models.PROTECT, null=True, related_name='pro_viewed')
+    viewed_company = models.ForeignKey(Company, on_delete=models.PROTECT, null=True, related_name='company_viewed')
+    viewed_type = models.CharField(max_length=30, null=True)
+    anonymous_viewer = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'viewed_profiles'
+
+
+
 def slug_generator(sender, instance, *args, **kwargs):
     if not instance.slug:
         instance.slug = uuid_slug_generator(instance)
