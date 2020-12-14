@@ -101,7 +101,7 @@ class AdminJobList(ListAPIView):
             queryset = queryset.filter(creator_type=creator_type)
 
         if not_creator_type:
-            queryset = queryset.exclude(creator_type=creator_type)
+            queryset = queryset.exclude(creator_type=not_creator_type)
 
         if status:
             queryset = queryset.filter(status=status)
