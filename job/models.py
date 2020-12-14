@@ -331,7 +331,11 @@ class JobQuestionAnswer(P7Model):
     from pro.models import Professional
     job = models.ForeignKey(Job, on_delete=models.PROTECT, db_column='job', related_name='job_question_answers')
     question_by = models.ForeignKey(Professional, on_delete=models.PROTECT, related_name='job_questions')
+    answer_by = models.ForeignKey(User, on_delete=models.PROTECT, related_name='job_answers', blank=True, null=True)
+    company = models.ForeignKey(Company, on_delete=models.PROTECT, related_name='job_companies')
     question = models.TextField()
+    answer = models.TextField(blank=True, null=True)
+    answer_created_at = models.DateTimeField(null=True)
     is_anonymous = models.BooleanField(default=False)
 
     class Meta:

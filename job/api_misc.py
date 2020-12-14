@@ -8,6 +8,7 @@ from django.core.files.base import ContentFile
 from django.db.models import Count, F, Prefetch
 from django.http import HttpResponse, Http404
 from django.template.loader import get_template
+from django.utils import timezone
 from rest_framework import generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import NotFound
@@ -17,9 +18,10 @@ from rest_framework.utils import json
 from rest_framework.views import APIView
 
 from messaging.models import Notification
-from p7.models import populate_user_info, is_professional, populate_user_info_request, populate_user_info_querydict
+from p7.models import populate_user_info, is_professional, populate_user_info_request, populate_user_info_querydict, \
+    is_company
 from p7.pagination import P7Pagination
-from p7.permissions import ProfessionalPermission
+from p7.permissions import ProfessionalPermission, CompanyPermission
 from p7.settings_dev import SITE_URL
 from pro.api_pro_core import profile_create_with_user_create, profile_completeness
 from pro.models import Professional, ProfessionalSkill, ProfessionalEducation, WorkExperience, Portfolio, Membership, \
@@ -248,7 +250,8 @@ class JobQuestionCreateAPI(generics.ListCreateAPIView):
             current_user_id = request.user.id
             pro_obj = Professional.objects.get(user_id=current_user_id)
             job = Job.objects.get(job_id=request.data["job"])
-            request.data.update({"question_by": pro_obj.id})
+            company = job.company
+            request.data.update({"question_by": pro_obj.id, "company": company})
             save_notification('job-question_pro', str(job.company.user_id))
             return super(JobQuestionCreateAPI, self).post(request, *args, **kwargs)
         else:
@@ -275,6 +278,27 @@ class JobQuestionUpdate(generics.RetrieveUpdateAPIView):
             return super(JobQuestionUpdate, self).put(request, *args, **kwargs)
         else:
             return Response({'details': 'Professional is not found.'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+
+class JobAnswerUpdate(generics.RetrieveUpdateAPIView):
+    permission_classes = [CompanyPermission]
+    serializer_class = JobAnswerSerializer
+
+    def get_queryset(self):
+        company = Company.objects.get(user=self.request.user)
+        queryset = JobQuestionAnswer.objects.filter(
+            company = company)
+        return queryset
+
+    def patch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and is_company(request.user):
+            populate_user_info_request(request, True, False)
+            current_user_id = request.user.id
+            request.data.update({"answer_by": current_user_id, "answer_created_at": timezone.now()})
+            return super(JobAnswerUpdate, self).patch(request, *args, **kwargs)
+        else:
+            return Response({'details': 'Company is not found.'},
                             status=status.HTTP_400_BAD_REQUEST)
 
 

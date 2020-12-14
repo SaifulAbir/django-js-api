@@ -270,5 +270,10 @@ class JobQuestionSerializer(serializers.ModelSerializer):
     professional = ProfessionalSerializer(many=False, source='question_by', read_only=True)
     class Meta:
         model = JobQuestionAnswer
-        fields = '__all__'
-        optional_fields = ['question_by', ]
+        exclude = ['answer', 'answer_by', 'answer_created_at']
+
+
+class JobAnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobQuestionAnswer
+        fields = ['answer', 'answer_by', 'answer_created_at']

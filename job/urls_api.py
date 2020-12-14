@@ -16,7 +16,7 @@ from job.api_job_related import get_job_site_list, JobSourceList, get_job_nature
 from job.api_misc import apply_online, save_trending_keywords, \
     toggle_favourite, MarkShortlistUpdateView, JobApplicationQuickApply, get_all_applicants, get_shortlisted_applicants, \
     JobApply, request_for_access, JobApplicationAPI, DownloadAttachmentAPIView, DownloadResumeAPIView, \
-    JobQuestionCreateAPI, JobQuestionUpdate, JobQuestionListAPI
+    JobQuestionCreateAPI, JobQuestionUpdate, JobQuestionListAPI, JobAnswerUpdate
 from job.api_ml import MlJobAPI, AdminJobList, JobCreateView, MlJobUpdateView, SlugRegenerateAPI, JobPublisherList
 
 urlpatterns = [
@@ -101,6 +101,7 @@ urlpatterns = [
     path('job/question/', JobQuestionCreateAPI.as_view()),
     path('job/question-list/<slug:slug>/', JobQuestionListAPI.as_view()),
     path('job/question/update/<str:pk>/', JobQuestionUpdate.as_view()),
+    path('job/answer/update/<str:pk>/', JobAnswerUpdate.as_view()),
     path('job/publisher-list/', JobPublisherList.as_view()),  # Public API
 
 ]
