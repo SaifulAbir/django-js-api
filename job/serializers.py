@@ -276,4 +276,4 @@ class JobQuestionSerializer(serializers.ModelSerializer):
 class JobAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobQuestionAnswer
-        fields = ['answer', 'answer_by', 'answer_created_at']
+        fields = ['id', 'answer', 'answer_by', 'answer_created_at']

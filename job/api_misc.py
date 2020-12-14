@@ -291,12 +291,12 @@ class JobAnswerUpdate(generics.RetrieveUpdateAPIView):
             company = company)
         return queryset
 
-    def patch(self, request, *args, **kwargs):
+    def put(self, request, *args, **kwargs):
         if request.user.is_authenticated and is_company(request.user):
             populate_user_info_request(request, True, False)
             current_user_id = request.user.id
             request.data.update({"answer_by": current_user_id, "answer_created_at": timezone.now()})
-            return super(JobAnswerUpdate, self).patch(request, *args, **kwargs)
+            return super(JobAnswerUpdate, self).put(request, *args, **kwargs)
         else:
             return Response({'details': 'Company is not found.'},
                             status=status.HTTP_400_BAD_REQUEST)
