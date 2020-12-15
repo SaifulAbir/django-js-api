@@ -1,7 +1,7 @@
 import requests
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import AuthenticationFailed
@@ -22,6 +22,7 @@ from p7.models import get_user_address, is_professional, is_company
 from p7.utils import *
 from pro.models import Professional
 from pro.serializers import ProfessionalSerializer
+from django.conf import settings
 
 
 @api_view(["GET"])
@@ -110,7 +111,7 @@ class GoogleSigninProApi(APIView):
             'type': 'professional'
         }
         data['pro'] = ProfessionalSerializer(pro, many=False).data
-        data['token_lifetime'] = SIMPLE_JWT
+        data['token_lifetime'] = settings.SIMPLE_JWT
         return Response(data)
 
 class GoogleSigninCompanyApi(APIView):
@@ -146,7 +147,7 @@ class GoogleSigninCompanyApi(APIView):
             'type': 'company'
         }
         data['company'] = CompanySerializer(company, many=False).data
-        data['token_lifetime'] = SIMPLE_JWT
+        data['token_lifetime'] = settings.SIMPLE_JWT
         return Response(data)
 
 
