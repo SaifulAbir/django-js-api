@@ -336,6 +336,8 @@ class JobQuestionAnswer(P7Model):
     question = models.TextField()
     answer = models.TextField(blank=True, null=True)
     answer_created_at = models.DateTimeField(null=True)
+    answer_modified_at = models.DateTimeField(null=True)
+    question_modified_at = models.DateTimeField(null=True)
     is_anonymous = models.BooleanField(default=False)
 
     class Meta:
