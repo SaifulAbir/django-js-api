@@ -167,3 +167,11 @@ class IpnAPI(APIView):
         return Response(request.data)
 
 
+@api_view(["GET"])
+@permission_classes(())
+def ping(request):
+    data = {
+        'version': settings.APP_VERSION_NUMBER,
+    }
+    response = Response(data)
+    return response
