@@ -3,6 +3,7 @@ import uuid
 from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import Max, Min
 from django.db.models.signals import pre_save, post_save, post_delete
@@ -11,6 +12,7 @@ from django.utils import timezone
 from job.utils import job_slug_generator, save_notification
 from p7.models import P7Model, populate_time_info
 from resources import strings_job
+from resources.strings import DEFAULT_INVALID_COMPANY_NAME_ERROR
 from settings.models import Settings
 
 
@@ -176,7 +178,8 @@ class TrendingKeywords(P7Model):
 
 
 class Company(P7Model):
-    name = models.CharField(max_length=255, primary_key=True)
+    name = models.CharField(max_length=255, primary_key=True,
+                            validators=[RegexValidator(r'^[0-9a-zA-Z]*$', DEFAULT_INVALID_COMPANY_NAME_ERROR)])
     slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
     address = models.CharField(max_length=500, blank=True, null=True)
     area = models.CharField(max_length=255, blank=True, null=True)
