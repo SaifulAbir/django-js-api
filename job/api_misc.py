@@ -225,12 +225,13 @@ class JobApplicationAPI(APIView):
 
 class JobQuestionListAPI(generics.ListAPIView):
     permission_classes = []
-    serializer_class = JobQuestionSerializer
+    serializer_class = JobQuestionAnswerListSerializer
 
     def get_queryset(self):
         slug = self.kwargs['slug']
         queryset = JobQuestionAnswer.objects.filter(
-            job__slug=slug).select_related('question_by').order_by('-created_at')
+            job__slug=slug).select_related(
+            'question_by').select_related('company').order_by('-created_at')
         return queryset
 
 

@@ -273,6 +273,15 @@ class JobQuestionSerializer(serializers.ModelSerializer):
         exclude = ['answer', 'answer_by', 'answer_created_at']
 
 
+class JobQuestionAnswerListSerializer(serializers.ModelSerializer):
+    from pro.serializers import ProfessionalSerializer
+    professional = ProfessionalSerializer(many=False, source='question_by', read_only=True)
+    company_info = CompanyProfilePictureSerializer(source='company')
+    class Meta:
+        model = JobQuestionAnswer
+        fields = '__all__'
+
+
 class JobAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobQuestionAnswer
