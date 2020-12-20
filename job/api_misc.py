@@ -263,7 +263,7 @@ class JobApplicationAPI(APIView):
 
         ## Uploading File to S3 Media Bucket
         path = ''.join(filename)
-        path = '/media/' + path
+        #path = '/media/' + path
         if current_settings.MEDIA_SOURCE == 'S3':
             upload_to_s3(path, resume_data)
         req_data['resume'] = resume_data

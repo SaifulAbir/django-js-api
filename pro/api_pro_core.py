@@ -379,8 +379,8 @@ class ProfessionalUpdatePartial(GenericAPIView, UpdateModelMixin):
 
                 ## Uploading File to S3 Media Bucket
                 path = ''.join(filename)
-                path = '/media/' + path
                 upload_to_s3(path, data)
+                path = '/media/' + path
                 request.data['image'] = path
 
         populate_user_info_request(request, True, request.data.get('is_archived'))

@@ -123,6 +123,7 @@ def send_sms(mobile_num, text):
 
 def upload_to_s3(path, file):
     if current_settings.MEDIA_SOURCE == 'S3':
+        path = '/media/' + path
         client = boto3.client(
             's3',
             region_name=current_settings.AWS_S3_REGION_NAME,

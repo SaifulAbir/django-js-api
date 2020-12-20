@@ -128,8 +128,8 @@ def professional_portfolio_save(request):
             filename = str(uuid.uuid4()) + '-professional.' + ext
             image_data = ContentFile(base64.b64decode(imgstr), name=filename)
             path = ''.join(filename)
-            path = '/media/' + path
             upload_to_s3(path, image_data)
+            path = '/media/' + path
             data['image'] = path
     key_obj = Portfolio(**data)
     populate_user_info(request, key_obj, False, False)
@@ -344,8 +344,8 @@ class PortfolioUpdateDelete(GenericAPIView, UpdateModelMixin):
                 filename = str(uuid.uuid4()) + '-professional.' + ext
                 data = ContentFile(base64.b64decode(imgstr), name=filename)
                 path = ''.join(filename)
-                path = '/media/' + path
                 upload_to_s3(path, data)
+                path = '/media/' + path
                 request.data['image'] = path
         populate_user_info_request(request, True, request.data.get('is_archived'))
         self.partial_update(request, *args, **kwargs)
