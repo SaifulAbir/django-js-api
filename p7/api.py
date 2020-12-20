@@ -1,7 +1,7 @@
 import requests
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import AuthenticationFailed
@@ -11,8 +11,10 @@ from rest_framework.status import (
     HTTP_200_OK,
     HTTP_404_NOT_FOUND
 )
+from rest_framework.utils import json
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+import logging
 
 from job.models import Company
 from job.serializers import CompanySerializer
@@ -20,6 +22,7 @@ from p7.models import get_user_address, is_professional, is_company
 from p7.utils import *
 from pro.models import Professional
 from pro.serializers import ProfessionalSerializer
+from django.conf import settings
 
 
 @api_view(["GET"])
@@ -108,7 +111,7 @@ class GoogleSigninProApi(APIView):
             'type': 'professional'
         }
         data['pro'] = ProfessionalSerializer(pro, many=False).data
-        data['token_lifetime'] = SIMPLE_JWT
+        data['token_lifetime'] = settings.SIMPLE_JWT
         return Response(data)
 
 class GoogleSigninCompanyApi(APIView):
@@ -144,9 +147,31 @@ class GoogleSigninCompanyApi(APIView):
             'type': 'company'
         }
         data['company'] = CompanySerializer(company, many=False).data
-        data['token_lifetime'] = SIMPLE_JWT
+        data['token_lifetime'] = settings.SIMPLE_JWT
         return Response(data)
 
 
 
 
+class IpnAPI(APIView):
+    permission_classes = []
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        status = data['status']
+        amount = data['amount']
+        store_amount = data['store_amount']
+        tran_date = data['tran_date']
+        response = str(request.data)
+        logging.log(logging.INFO, 'ipn response')
+        logging.log(logging.INFO, response)
+        return Response(request.data)
+
+
+@api_view(["GET"])
+@permission_classes(())
+def ping(request):
+    data = {
+        'version': settings.APP_VERSION_NUMBER,
+    }
+    response = Response(data)
+    return response

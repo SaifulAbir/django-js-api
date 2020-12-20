@@ -1,7 +1,7 @@
 from p7.settings_dev import *
 
 DEBUG=True
-ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['*']
 STATIC_ROOT = '/home/ubuntu/Documents/jobxprss/static'
 DATABASES = {
     'default': {
@@ -20,5 +20,5 @@ DATABASES = {
         'COLLATION_CONNECTION':'utf8_general_ci'
     }
 }
-SITE_URL = '127.0.0.1:9000'
+SITE_URL = 'http://localhost'
 

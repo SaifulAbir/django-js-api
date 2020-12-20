@@ -2,7 +2,7 @@ from django.urls import path
 
 from job.api_company import list_company_by_name, CompanyList, CompanyUpdateView, company_info_box_api, \
     company_recent_activity, company_job_application_chart, CompanyListWithoutPagination, FeaturedCompanyList, \
-    CompanyRetrieveView, CompanyRetrieveViewByName, ApplicationCommentAPI, get_application_comments
+    CompanyRetrieveView, CompanyRetrieveViewByName, ApplicationCommentAPI, get_application_comments, AdminCompanyList
 from job.api_job_core import JobAPI, CompanyJobUpdateView, CompanyJobCreateAPI, CompanyJobAPI, \
     CompanyJobUnpublishAPI, CompanyJobPublishAPI, CompanyJobPostAPI
 from job.api_job_kpi import TopFavouriteList, TopCategoryList, TopSkillList, TopCompanyList, TrendingKeywordList, \
@@ -16,7 +16,7 @@ from job.api_job_related import get_job_site_list, JobSourceList, get_job_nature
 from job.api_misc import apply_online, save_trending_keywords, \
     toggle_favourite, MarkShortlistUpdateView, JobApplicationQuickApply, get_all_applicants, get_shortlisted_applicants, \
     JobApply, request_for_access, JobApplicationAPI, DownloadAttachmentAPIView, DownloadResumeAPIView
-from job.api_ml import MlJobAPI, AdminJobList, JobCreateView, MlJobUpdateView, SlugRegenerateAPI, JobPublisherList
+from job.api_ml import MlJobAPI, AdminJobList, JobBulkCreateView, MlJobUpdateView, SlugRegenerateAPI, JobPublisherList
 
 urlpatterns = [
     path('job/search/', JobSearchAPI.as_view()), # Public API
@@ -89,8 +89,9 @@ urlpatterns = [
     path('slug/generate/', SlugRegenerateAPI.as_view()),
 
     path('admin/job/list/', AdminJobList.as_view()),
+    path('admin/company/list', AdminCompanyList.as_view()),
     path('admin/job/get/<str:id>/', MlJobAPI.as_view()),
-    path('admin/job/create/', JobCreateView.as_view()),
+    path('admin/job/create/', JobBulkCreateView.as_view()),
     path('admin/job/update/<str:id>/', MlJobUpdateView.as_view()),
 
     path('company/download-attachment/<int:id>/', DownloadAttachmentAPIView.as_view()),

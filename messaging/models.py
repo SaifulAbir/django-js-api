@@ -64,10 +64,9 @@ class FcmCloudMessaging(P7Model):
         unique_together = ('user', 'fcm_token', 'device_id')
 
 def after_notification_save(sender, instance: Notification, *args, **kwargs):
-    if instance.is_system_generated:
+    if instance.is_system_generated or instance.modified_at:
         return
     userid = instance.recipient
-    message = instance.message
     if userid == '*':
         pro_list = Professional.objects.all()
         for professional in pro_list:
@@ -85,6 +84,7 @@ def after_notification_save(sender, instance: Notification, *args, **kwargs):
     from messaging.serializers import NotificationSerializer
     text = NotificationSerializer(instance, many=False).data
     text['unread_notification_count'] = Notification.objects.filter(is_read=False, recipient=instance.recipient).count()
+
     SocketClient.send({
         "type": "notification",
         "text": json.dumps(text),
@@ -112,6 +112,8 @@ def after_notification_save(sender, instance: Notification, *args, **kwargs):
 
 def after_employer_message_save(sender, instance: EmployerMessage, *args, **kwargs):
     from messaging.serializers import EmployerMessageListSerializer
+    if instance.modified_at:
+        return
     SocketClient.send({
         "type": "message",
         "text": json.dumps(EmployerMessageListSerializer(instance, many=False).data),

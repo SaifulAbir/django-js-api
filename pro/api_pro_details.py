@@ -19,6 +19,7 @@ from job.models import Skill, Company, City
 from job.serializers import SkillSerializer, CompanySerializer
 from p7.models import populate_user_info, populate_user_info_request
 from p7.permissions import ProfessionalPermission
+from p7.utils import upload_to_s3
 from pro.models import Membership, Certification, Portfolio, WorkExperience, ProfessionalEducation, Institute, Major, \
     ProfessionalSkill, Reference, Professional, EducationLevel, MembershipOrganization, CertifyingOrganization, \
     ProfessionalLocationPreference
@@ -126,10 +127,10 @@ def professional_portfolio_save(request):
             ext = format.split('/')[-1]
             filename = str(uuid.uuid4()) + '-professional.' + ext
             image_data = ContentFile(base64.b64decode(imgstr), name=filename)
-            fs = FileSystemStorage()
-            filename = fs.save(filename, image_data)
-            uploaded_file_url = fs.url(filename)
-            data['image'] = uploaded_file_url
+            path = ''.join(filename)
+            path = '/media/' + path
+            upload_to_s3(path, image_data)
+            data['image'] = path
     key_obj = Portfolio(**data)
     populate_user_info(request, key_obj, False, False)
     key_obj.save()
@@ -338,15 +339,14 @@ class PortfolioUpdateDelete(GenericAPIView, UpdateModelMixin):
         if 'image' in request.data:
             img_base64 = request.data['image']
             if img_base64:
-
                 format, imgstr = img_base64.split(';base64,')
                 ext = format.split('/')[-1]
                 filename = str(uuid.uuid4()) + '-professional.' + ext
                 data = ContentFile(base64.b64decode(imgstr), name=filename)
-                fs = FileSystemStorage()
-                filename = fs.save(filename, data)
-                uploaded_file_url = fs.url(filename)
-                request.data['image'] = uploaded_file_url
+                path = ''.join(filename)
+                path = '/media/' + path
+                upload_to_s3(path, data)
+                request.data['image'] = path
         populate_user_info_request(request, True, request.data.get('is_archived'))
         self.partial_update(request, *args, **kwargs)
         prof_obj = PortfolioSerializer(Portfolio.objects.get(pk=pk)).data

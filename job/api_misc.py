@@ -2,6 +2,7 @@ import mimetypes
 import uuid
 from random import randint
 import pdfkit
+from  django.conf import settings as current_settings
 from django.contrib.auth.models import User
 from django.core.files import File
 from django.core.files.base import ContentFile
@@ -20,6 +21,7 @@ from messaging.models import Notification
 from p7.models import populate_user_info, is_professional, populate_user_info_request, populate_user_info_querydict
 from p7.pagination import P7Pagination
 from p7.settings_dev import SITE_URL
+from p7.utils import upload_to_s3
 from pro.api_pro_core import profile_create_with_user_create, profile_completeness
 from pro.models import Professional, ProfessionalSkill, ProfessionalEducation, WorkExperience, Portfolio, Membership, \
     Certification, Reference
@@ -190,7 +192,15 @@ class JobApplicationAPI(APIView):
         req_data = request.data.copy()
         company = Job.objects.get(job_id=req_data['job']).company
         req_data['pro'] = pro_obj.id
-        req_data['resume'] = ContentFile(resume, name=filename)
+        resume_data = ContentFile(resume, name=filename)
+
+        ## Uploading File to S3 Media Bucket
+        path = ''.join(filename)
+        path = '/media/' + path
+        if current_settings.MEDIA_SOURCE == 'S3':
+            upload_to_s3(path, resume_data)
+        req_data['resume'] = resume_data
+
         populate_user_info_querydict(request, req_data, False, False)
         job_application_serializer = JobApplySerializer(data=req_data)
 

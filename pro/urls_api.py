@@ -7,7 +7,8 @@ from pro.api_ml import MlProfessionalList, JobRecommendationBulkCreateView
 from pro.api_pro_core import change_password, profile_completeness, check_professional_exist, \
     profile_create_with_user_create, ProfessionalDetail, ProfessionalPublicRetrieve, ProfessionalUpdateView, \
     ProfessionalUpdatePartial, ApplicantDetail, DownloadApplicantResumeAPIView, SendMobileVerificationCode, \
-    VerifyMobileVerificationCode
+    VerifyMobileVerificationCode, SendMobileVerificationCodeVOnePointZeroPointSixtyFour, \
+    VerifyMobileVerificationCodeVOnePointZeroPointSixtyFour
 from pro.api_pro_details import professional_education_save, EducationUpdateDelete, professional_skill_save, \
     SkillUpdateDelete, professional_workexperience_save, WorkExperienceUpdateDelete, professional_portfolio_save, \
     PortfolioUpdateDelete, professional_membership_save, MembershipUpdateDelete, professional_certification_save, \
@@ -75,5 +76,7 @@ urlpatterns = [
     path('professional/signup-email-verification/<str:token>', professional_signup_email_verification,
          name='code-verify'),
     path('professional/send_verification_code/', SendMobileVerificationCode.as_view()),
-    path('professional/verify_mobile_verification_code/', VerifyMobileVerificationCode.as_view())
+    path('professional/send_verification_code_v1.0.64/', SendMobileVerificationCodeVOnePointZeroPointSixtyFour.as_view()),
+    path('professional/verify_mobile_verification_code/', VerifyMobileVerificationCode.as_view()),
+    path('professional/verify_mobile_verification_code_v1.0.64/', VerifyMobileVerificationCodeVOnePointZeroPointSixtyFour.as_view())
 ]

@@ -145,6 +145,10 @@ class Professional(P7Model):
     is_mobile_verified = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)
     mobile_verification_code = models.CharField(max_length=20, blank=True, null=True)
+    mobile_verification_number = models.CharField(max_length=255, validators=[check_valid_phone_number], blank=True, null=True)
+    membership_type = models.CharField(max_length=30, null=False, blank=False,
+                                       choices=strings_pro.MEMBERSHIP_TYPE_OPTION,
+                                       default=strings_pro.DEFAULT_MEMBERSHIP_TYPE_OPTION)
 
     def __str__(self):
         return self.full_name

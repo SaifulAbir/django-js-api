@@ -274,7 +274,7 @@ class TestSkillList(unittest.TestCase):
 
 class TestSendAppLinkAPI(unittest.TestCase):
     def setUp(self) -> None:
-        self.mobile = "01626296800"  # Test Number
+        self.mobile = "01900000001"  # Test Number
 
     def test__when_mobile_number_empty__should_fail(self):
         json = {}
@@ -293,7 +293,8 @@ class TestSendAppLinkAPI(unittest.TestCase):
             "mobile": self.mobile,
         }
         resp = requests.post(SEND_APP_LINK_API_URL, json=json)
-        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(200, resp.status_code )
 
 
 if __name__ == '__main__':

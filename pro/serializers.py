@@ -23,7 +23,12 @@ class WorkExperienceDetailSerializer(serializers.ModelSerializer):
 class ProfessionalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Professional
-        exclude = ('password','terms_and_condition_status','signup_verification_code',)
+        exclude = ('password','terms_and_condition_status','signup_verification_code')
+
+class MobileNumberVerificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Professional
+        fields =('id','mobile_verification_code','mobile_verification_number')
 
 class ProfessionalLocationPreferenceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -261,7 +266,8 @@ class JobApplicantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Professional
         fields = ('application_id','full_name','image','application_notes','application_status','application_status_name',
-                  'is_shortlisted', 'user', 'current_designation', 'current_company', 'experience', 'skills', 'slug')
+                  'is_shortlisted', 'user', 'current_designation', 'current_company', 'experience', 'skills', 'slug',
+                  'phone', 'email')
 
 class TokenObtainCustomPairSerializer(TokenObtainCustomSerializer):
     @classmethod
