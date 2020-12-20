@@ -3,6 +3,7 @@ import uuid
 from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.validators import MinLengthValidator
 from django.db import models
 from django.db.models import Max, Min
 from django.db.models.signals import pre_save, post_save, post_delete
@@ -326,6 +327,22 @@ class FavouriteJob(P7Model):
         return self.job.title
 
 
+class JobQuestionAnswer(P7Model):
+    from pro.models import Professional
+    job = models.ForeignKey(Job, on_delete=models.PROTECT, db_column='job', related_name='job_question_answers')
+    question_by = models.ForeignKey(Professional, on_delete=models.PROTECT, related_name='job_questions')
+    question = models.TextField()
+    is_anonymous = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = strings_job.JOB_QUESTION_ANSWER_VERBOSE_NAME
+        verbose_name_plural = strings_job.JOB_QUESTION_ANSWER_VERBOSE_NAME_PLURAL
+        db_table = 'job_question_answers'
+
+    def __str__(self):
+        return self.question
+
+
 class JobApplication(P7Model):
     from pro.models import Professional
     job = models.ForeignKey(Job, on_delete=models.PROTECT, db_column='job', related_name='applied_jobs')
@@ -472,6 +489,7 @@ pre_save.connect(populate_time_info, sender=Skill)
 pre_save.connect(populate_time_info, sender=TrendingKeywords)
 pre_save.connect(populate_time_info, sender=FavouriteJob)
 pre_save.connect(populate_time_info, sender=JobApplication)
+pre_save.connect(populate_time_info, sender=JobQuestionAnswer)
 pre_save.connect(populate_time_info, sender=City)
 post_save.connect(after_job_save, sender=Job)
 post_delete.connect(applied_job_counter, sender=JobApplication)
