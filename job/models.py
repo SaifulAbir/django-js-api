@@ -349,6 +349,18 @@ class JobQuestionAnswer(P7Model):
         return self.question
 
 
+class JobQuestionAnswerHistory(P7Model):
+    job_question_answer = models.ForeignKey(JobQuestionAnswer, on_delete=models.PROTECT, db_column='job')
+    answer = models.TextField(blank=True, null=True)
+    question = models.TextField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'job_question_answer_histories'
+
+    def __str__(self):
+        return self.question
+
+
 class JobApplication(P7Model):
     from pro.models import Professional
     job = models.ForeignKey(Job, on_delete=models.PROTECT, db_column='job', related_name='applied_jobs')

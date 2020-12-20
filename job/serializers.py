@@ -59,6 +59,11 @@ class CompanyProfilePictureSerializer(serializers.ModelSerializer):
         model = Company
         fields = ['profile_picture']
 
+class JobQuestionAnswerCompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = ['name', 'profile_picture']
+
 class IndustrySerializer(serializers.ModelSerializer):
     class Meta:
         model = Industry
@@ -283,6 +288,7 @@ class JobQuestionAnswerListSerializer(serializers.ModelSerializer):
 
 
 class JobAnswerSerializer(serializers.ModelSerializer):
+    company_info = JobQuestionAnswerCompanySerializer(source='company', read_only=True)
     class Meta:
         model = JobQuestionAnswer
-        fields = ['id', 'answer', 'answer_by', 'answer_created_at']
+        fields = ['id', 'answer', 'answer_by', 'answer_created_at', 'company_info']
