@@ -3,6 +3,8 @@ import time
 from threading import Thread
 from django.conf import settings
 import socketio
+from django.db import connection
+
 
 class SocketClient:
     socket = socketio.Client(ssl_verify=False, reconnection=False)
@@ -52,3 +54,7 @@ class SocketClient:
             msg = json.dumps(data)
             cls.socket.emit('send', msg)
 
+        try:
+            connection.close()
+        except:
+            print('connection not found')
