@@ -296,7 +296,11 @@ class JobAnswerUpdate(generics.RetrieveUpdateAPIView):
         if request.user.is_authenticated and is_company(request.user):
             populate_user_info_request(request, True, False)
             current_user_id = request.user.id
-            request.data.update({"answer_by": current_user_id, "answer_created_at": timezone.now()})
+            instance = self.get_object()
+            if instance.answer_created_at:
+                request.data.update({"answer_modified_at": timezone.now()})
+            else:
+                request.data.update({"answer_by": current_user_id, "answer_created_at": timezone.now()})
             return super(JobAnswerUpdate, self).put(request, *args, **kwargs)
         else:
             return Response({'details': 'Company is not found.'},

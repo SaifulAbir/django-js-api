@@ -339,6 +339,7 @@ class JobQuestionAnswer(P7Model):
     answer_modified_at = models.DateTimeField(null=True)
     question_modified_at = models.DateTimeField(null=True)
     is_anonymous = models.BooleanField(default=False)
+    is_hidden = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = strings_job.JOB_QUESTION_ANSWER_VERBOSE_NAME

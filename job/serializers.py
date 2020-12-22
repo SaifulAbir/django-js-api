@@ -291,4 +291,4 @@ class JobAnswerSerializer(serializers.ModelSerializer):
     company_info = JobQuestionAnswerCompanySerializer(source='company', read_only=True)
     class Meta:
         model = JobQuestionAnswer
-        fields = ['id', 'answer', 'answer_by', 'answer_created_at', 'company_info']
+        fields = ['id', 'answer', 'answer_by', 'answer_created_at', 'is_hidden', 'answer_modified_at', 'company_info']
