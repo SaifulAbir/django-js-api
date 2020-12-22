@@ -21,6 +21,7 @@ from rest_framework.views import APIView
 from messaging.models import Notification
 from p7.models import populate_user_info, is_professional, populate_user_info_request, populate_user_info_querydict
 from p7.pagination import P7Pagination
+from p7.permissions import ProfessionalPermission
 from p7.settings_dev import SITE_URL
 from p7.utils import upload_to_s3
 from pro.api_pro_core import profile_create_with_user_create, profile_completeness
@@ -298,6 +299,63 @@ class JobApplicationAPI(APIView):
             return Response(response_obj, status=status.HTTP_201_CREATED)
         else:
             return Response(job_application_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class JobQuestionListAPI(generics.ListAPIView):
+    permission_classes = []
+    serializer_class = JobQuestionSerializer
+
+    def get_queryset(self):
+        slug = self.kwargs['slug']
+        queryset = JobQuestionAnswer.objects.filter(
+            job__slug=slug).select_related('question_by').order_by('-created_at')
+        return queryset
+
+
+class JobQuestionCreateAPI(generics.ListCreateAPIView):
+    permission_classes = [ProfessionalPermission]
+    serializer_class = JobQuestionSerializer
+
+    def get_queryset(self):
+        slug = self.kwargs['slug']
+        queryset = JobQuestionAnswer.objects.filter(
+            job__slug = slug).select_related('question_by').order_by('-created_at')
+        return queryset
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated and is_professional(request.user):
+            populate_user_info_request(request, False, False)
+            current_user_id = request.user.id
+            pro_obj = Professional.objects.get(user_id=current_user_id)
+            job = Job.objects.get(job_id=request.data["job"])
+            request.data.update({"question_by": pro_obj.id})
+            save_notification('job-question_pro', str(job.company.user_id))
+            return super(JobQuestionCreateAPI, self).post(request, *args, **kwargs)
+        else:
+            return Response({'details': 'Professional is not found.'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+
+class JobQuestionUpdate(generics.RetrieveUpdateAPIView):
+    permission_classes = [ProfessionalPermission]
+    serializer_class = JobQuestionSerializer
+
+    def get_queryset(self):
+        professional = Professional.objects.get(user=self.request.user)
+        queryset = JobQuestionAnswer.objects.filter(
+            question_by = professional).select_related('question_by')
+        return queryset
+
+    def put(self, request, *args, **kwargs):
+        if request.user.is_authenticated and is_professional(request.user):
+            populate_user_info_request(request, True, False)
+            current_user_id = request.user.id
+            pro_obj = Professional.objects.get(user_id=current_user_id)
+            request.data.update({"question_by": pro_obj.id})
+            return super(JobQuestionUpdate, self).put(request, *args, **kwargs)
+        else:
+            return Response({'details': 'Professional is not found.'},
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
 # No Uses. Will be reviewed
