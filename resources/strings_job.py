@@ -74,6 +74,11 @@ BOOKMARK_JOB_VERBOSE_NAME = 'Favorite Job'
 BOOKMARK_JOB_VERBOSE_NAME_PLURAL = 'Favorite Jobs'
 # Bookmark Job Strings #
 
+# Job Question Answer Strings #
+JOB_QUESTION_ANSWER_VERBOSE_NAME = 'Job Question Answer'
+JOB_QUESTION_ANSWER_VERBOSE_NAME_PLURAL = 'Job Question Answers'
+# Job Question Answer Strings #
+
 # Apply Online Strings #
 JOB_APPLICATION_VERBOSE_NAME = 'Job Application'
 JOB_APPLICATION_VERBOSE_NAME_PLURAL = 'Job Applications'

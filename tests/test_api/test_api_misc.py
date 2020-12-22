@@ -7,7 +7,10 @@ TOGGLE_FAVOURITE_URL = f'{MAIN_URL}/api/job/favourite/toggle'
 GET_ALL_APPLICANTS_URL = f'{MAIN_URL}/api/application/list/'
 GET_SHORTLIST_APPLICANTS_URL = f'{MAIN_URL}/api/application/shortlist/'
 TRENDING_KEYWORDS_SAVE_URL = f'{MAIN_URL}/api/job/trending_keywords/save/'
+JOB_QUESTION_CREATE_URL = f'{MAIN_URL}/api/job/question/'
+JOB_QUESTION_LIST_URL = f'{MAIN_URL}/api/job/question-list/'
 JOB_ID = "0711248315e942adbf1c75fa9c64ad66"
+JOB_SLUG = "job-post-example-one-7b147709"
 
 
 class TestToggleFavourite(unittest.TestCase):
@@ -169,6 +172,54 @@ class TestToggleFavourite(unittest.TestCase):
         }
         resp = requests.post(TOGGLE_FAVOURITE_URL, json=json, )
         self.assertEqual(resp.status_code, 401)
+
+
+class TestJobQuestionCreate(unittest.TestCase):
+    def setUp(self) -> None:
+        data = signin_as_pro()
+        self.access_token = data['access']
+        self.question = "This is an example question"
+        self.anonymous_off = False
+
+    def test__when_everything_valid__should_pass(self):
+        json = {
+            "job": JOB_ID,
+            "question": self.question,
+            "is_anonymous": self.anonymous_off
+        }
+        resp = requests.post(JOB_QUESTION_CREATE_URL, json=json, headers={'Authorization': 'Bearer ' + self.access_token})
+        self.assertEqual(resp.status_code, 201)
+
+    def test__when_empty_job__should_fail(self):
+        json = {
+            "job": '',
+            "question": self.question,
+            "is_anonymous": self.anonymous_off
+        }
+        resp = requests.post(JOB_QUESTION_CREATE_URL, json=json, headers={'Authorization': 'Bearer ' + self.access_token})
+        self.assertNotEqual(resp.status_code, 201)
+
+    def test__when_empty_question__should_fail(self):
+        json = {
+            "job": JOB_ID,
+            "question": '',
+            "is_anonymous": self.anonymous_off
+        }
+        resp = requests.post(JOB_QUESTION_CREATE_URL, json=json, headers={'Authorization': 'Bearer ' + self.access_token})
+        data = resp.json()
+        self.assertNotEqual(resp.status_code, 201)
+
+
+class TestJobQuestionList(unittest.TestCase):
+    def setUp(self) -> None:
+        data = signin_as_pro()
+        self.access_token = data['access']
+
+    def test__without_access_token__should_pass(self):
+        resp = requests.get(JOB_QUESTION_LIST_URL + JOB_SLUG)
+        data = resp.json()
+        self.assertEqual(resp.status_code, 200)
+        self.assertIsNotNone(data)
 
 
 class TestAllApplicants(unittest.TestCase):

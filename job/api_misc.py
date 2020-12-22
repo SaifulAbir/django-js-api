@@ -9,6 +9,7 @@ from django.core.files.base import ContentFile
 from django.db.models import Count, F, Prefetch
 from django.http import HttpResponse, Http404
 from django.template.loader import get_template
+from django.utils import timezone
 from rest_framework import generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.exceptions import NotFound
@@ -20,6 +21,7 @@ from rest_framework.views import APIView
 from messaging.models import Notification
 from p7.models import populate_user_info, is_professional, populate_user_info_request, populate_user_info_querydict
 from p7.pagination import P7Pagination
+from p7.permissions import ProfessionalPermission
 from p7.settings_dev import SITE_URL
 from p7.utils import upload_to_s3
 from pro.api_pro_core import profile_create_with_user_create, profile_completeness
@@ -152,7 +154,73 @@ class JobApplicationAPI(APIView):
         user_profile_completeness = resp.data['percent_of_profile_completeness']
         settings_minimum_profile_completeness = Settings.objects.values('minimum_profile_completeness')[0][
             'minimum_profile_completeness']
+        print(pro_obj.membership_type)
 
+        remaining_application_message = ''
+        if pro_obj.membership_type == "REGULAR":
+            regular_member_apply_limit_per_month = Settings.objects.values('regular_member_apply_limit_per_month')[0]['regular_member_apply_limit_per_month']
+            print('ok')
+            if regular_member_apply_limit_per_month:
+                monthly_apply_count = JobApplication.objects.filter(pro = pro_obj, created_at__gte=timezone.now()
+                        .replace(day=1, hour=0, minute=0, second=0, microsecond=0)).count()
+                if monthly_apply_count >= regular_member_apply_limit_per_month:
+                    return Response({'details': 'Your Monthly Job Application Limit Reached.'}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    regular_member_apply_limit_per_day = Settings.objects.values('regular_member_apply_limit_per_day')[0]['regular_member_apply_limit_per_day']
+                    if regular_member_apply_limit_per_day:
+                        daily_apply_count = JobApplication.objects.filter(pro=pro_obj, created_at__gte=timezone.now()
+                                                                        .replace(hour=0, minute=0, second=0,microsecond=0)).count()
+                        if daily_apply_count >= regular_member_apply_limit_per_day:
+                            return Response({'details': 'Your Daily Job Application Limit Reached.'},
+                                            status=status.HTTP_400_BAD_REQUEST)
+                        else:
+                            remaining_application_message = 'As a Free Member, you can apply for %d more job(s) today and %d more job(s) this month.'\
+                                                            % ((regular_member_apply_limit_per_day - daily_apply_count),(regular_member_apply_limit_per_month-monthly_apply_count))
+            else:
+                regular_member_apply_limit_per_day = Settings.objects.values('regular_member_apply_limit_per_day')[0][
+                    'regular_member_apply_limit_per_day']
+                if regular_member_apply_limit_per_day:
+                    daily_apply_count = JobApplication.objects.filter(pro=pro_obj, created_at__gte=timezone.now()
+                                                                      .replace(hour=0, minute=0, second=0,
+                                                                               microsecond=0)).count()
+                    if daily_apply_count >= regular_member_apply_limit_per_day:
+                        return Response({'details': 'Your Daily Job Application Limit Reached.'},
+                                        status=status.HTTP_400_BAD_REQUEST)
+                    else:
+                        remaining_application_message = 'As a Free Member, you can apply for %d more job(s) today' \
+                                                        % ((regular_member_apply_limit_per_day - daily_apply_count))
+
+        if pro_obj.membership_type == "STANDARD":
+            standard_member_apply_limit_per_month = Settings.objects.values('standard_member_apply_limit_per_month')[0]['standard_member_apply_limit_per_month']
+            if standard_member_apply_limit_per_month:
+                monthly_apply_count = JobApplication.objects.filter(pro = pro_obj, created_at__gte=timezone.now()
+                        .replace(day=1, hour=0, minute=0, second=0, microsecond=0)).count()
+                if monthly_apply_count >= standard_member_apply_limit_per_month:
+                    return Response({'details': 'Your Monthly Job Application Limit Reached.'}, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    standard_member_apply_limit_per_day = Settings.objects.values('standard_member_apply_limit_per_day')[0]['standard_member_apply_limit_per_day']
+                    if standard_member_apply_limit_per_day:
+                        daily_apply_count = JobApplication.objects.filter(pro=pro_obj, created_at__gte=timezone.now()
+                                                                        .replace(hour=0, minute=0, second=0,microsecond=0)).count()
+                        if daily_apply_count >= standard_member_apply_limit_per_day:
+                            return Response({'details': 'Your Daily Job Application Limit Reached.'},
+                                            status=status.HTTP_400_BAD_REQUEST)
+                        else:
+                            remaining_application_message = 'As a Valued Standard Member, you can apply for %d more job(s) today and %d more job(s) this month.'\
+                                                            % ((standard_member_apply_limit_per_day - daily_apply_count),(standard_member_apply_limit_per_month-monthly_apply_count))
+            else:
+                standard_member_apply_limit_per_day = Settings.objects.values('standard_member_apply_limit_per_day')[0][
+                    'standard_member_apply_limit_per_day']
+                if standard_member_apply_limit_per_day:
+                    daily_apply_count = JobApplication.objects.filter(pro=pro_obj, created_at__gte=timezone.now()
+                                                                      .replace(hour=0, minute=0, second=0,
+                                                                               microsecond=0)).count()
+                    if daily_apply_count >= standard_member_apply_limit_per_day:
+                        return Response({'details': 'Your Daily Job Application Limit Reached.'},
+                                        status=status.HTTP_400_BAD_REQUEST)
+                    else:
+                        remaining_application_message = 'As a Valued Standard Member, you can apply for %d more job(s) today' \
+                                                        % ((standard_member_apply_limit_per_day - daily_apply_count))
         if pro_obj.is_mobile_verified == False:
             return Response({'details': 'Please verify your mobile number.'},
                             status=status.HTTP_400_BAD_REQUEST)
@@ -225,9 +293,69 @@ class JobApplicationAPI(APIView):
             if job.company.user_id:
                 save_recent_activity(request, job.company.user_id, 'apply_com', pro_obj.id, request.data["job"])
                 save_notification('apply_pro', str(job.company.user_id))
-            return Response(job_application_serializer.data, status=status.HTTP_201_CREATED)
+
+            response_obj = {'remaining_application': remaining_application_message}
+            response_obj.update(job_application_serializer.data)
+            return Response(response_obj, status=status.HTTP_201_CREATED)
         else:
             return Response(job_application_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class JobQuestionListAPI(generics.ListAPIView):
+    permission_classes = []
+    serializer_class = JobQuestionSerializer
+
+    def get_queryset(self):
+        slug = self.kwargs['slug']
+        queryset = JobQuestionAnswer.objects.filter(
+            job__slug=slug).select_related('question_by').order_by('-created_at')
+        return queryset
+
+
+class JobQuestionCreateAPI(generics.ListCreateAPIView):
+    permission_classes = [ProfessionalPermission]
+    serializer_class = JobQuestionSerializer
+
+    def get_queryset(self):
+        slug = self.kwargs['slug']
+        queryset = JobQuestionAnswer.objects.filter(
+            job__slug = slug).select_related('question_by').order_by('-created_at')
+        return queryset
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated and is_professional(request.user):
+            populate_user_info_request(request, False, False)
+            current_user_id = request.user.id
+            pro_obj = Professional.objects.get(user_id=current_user_id)
+            job = Job.objects.get(job_id=request.data["job"])
+            request.data.update({"question_by": pro_obj.id})
+            save_notification('job-question_pro', str(job.company.user_id))
+            return super(JobQuestionCreateAPI, self).post(request, *args, **kwargs)
+        else:
+            return Response({'details': 'Professional is not found.'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+
+class JobQuestionUpdate(generics.RetrieveUpdateAPIView):
+    permission_classes = [ProfessionalPermission]
+    serializer_class = JobQuestionSerializer
+
+    def get_queryset(self):
+        professional = Professional.objects.get(user=self.request.user)
+        queryset = JobQuestionAnswer.objects.filter(
+            question_by = professional).select_related('question_by')
+        return queryset
+
+    def put(self, request, *args, **kwargs):
+        if request.user.is_authenticated and is_professional(request.user):
+            populate_user_info_request(request, True, False)
+            current_user_id = request.user.id
+            pro_obj = Professional.objects.get(user_id=current_user_id)
+            request.data.update({"question_by": pro_obj.id})
+            return super(JobQuestionUpdate, self).put(request, *args, **kwargs)
+        else:
+            return Response({'details': 'Professional is not found.'},
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
 # No Uses. Will be reviewed
