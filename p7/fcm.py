@@ -1,7 +1,6 @@
 import os
 
-from p7.settings_dev import FIREBASE_CLOUD_MESSAGING_TOPIC
-
+from django.conf import settings
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 import firebase_admin
@@ -38,7 +37,7 @@ def build_single_message(token, msg):
 
 def build_topic_message(msg):
 
-    topic = FIREBASE_CLOUD_MESSAGING_TOPIC
+    topic = settings.FIREBASE_CLOUD_MESSAGING_TOPIC
     message = messaging.Message(
         data={
             'type': 'notification'

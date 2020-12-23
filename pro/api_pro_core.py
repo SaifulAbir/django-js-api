@@ -27,7 +27,7 @@ from job.serializers import SkillSerializer
 from p7.auth import ProfessionalAuthentication
 from p7.models import is_professional_registered, get_user_address, populate_user_info_request
 from p7.permissions import ProfessionalPermission, CompanyPermission
-from p7.settings_dev import SITE_URL
+from django.conf import settings
 from p7.utils import send_email, send_sms, upload_to_s3
 from resources.strings_pro import EMAIL_EXIST_ERROR_MSG, USER_ID_NOT_EXIST, WRONG_OLD_PASSWORD_MSG, SITE_SHORTCUT_NAME, \
     ON_TXT, PASSWORD_CHANGED_SUCCESS_MSG, FAILED_TXT, EMAIL_BLANK_ERROR_MSG, MOBILE_BLANK_ERROR_MSG, \
@@ -423,9 +423,9 @@ class CustomPasswordResetView:
             'current_user': reset_password_token.user,
             'username': reset_password_token.user.username,
             'email': reset_password_token.user.email,
-            'reset_password_url': "{}/password/reset/{}".format(SITE_URL, reset_password_token.key),
+            'reset_password_url': "{}/password/reset/{}".format(settings.SITE_URL, reset_password_token.key),
             'site_name': SITE_SHORTCUT_NAME,
-            'site_domain': SITE_URL,
+            'site_domain': settings.SITE_URL,
             'name': name,
         }
 
@@ -550,7 +550,7 @@ class DownloadApplicantResumeAPIView(generics.RetrieveAPIView):
             Prefetch('references',
                      queryset=Reference.objects.filter(is_archived=False).order_by('created_at'))
         )
-        html = self.template.render({'data': queryset, 'SITE_URL': SITE_URL})
+        html = self.template.render({'data': queryset, 'SITE_URL': settings.SITE_URL})
         options = {
             'page-size': "A4",
             'encoding': "UTF-8",

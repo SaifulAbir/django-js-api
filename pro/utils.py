@@ -24,8 +24,7 @@ from django.core.mail import send_mail
 from django.template import loader
 
 from p7.models import is_professional, populate_user_info
-from p7.settings_dev import *
-
+from django.conf import settings
 from pro.models import Professional, RecentActivity
 from resources.strings_pro import *
 from difflib import SequenceMatcher
