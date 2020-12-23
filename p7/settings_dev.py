@@ -213,7 +213,7 @@ SITE_URL = 'https://jobxprss.com'
 SOCKET_BASE_URL = "https://iss.ishraak.com:443"
 SOCKET_SERVER_TOKEN = "xNTk3ODk0ODE5LCJqdGkiOiJiMGYxODEyOWI0Mjk0OGU4YmFjMmQwMWRmNDdlNTM0YyIsInVzZXJfaWQiOjUwfQ"
 SOCKET_MAX_THREAD = 5
-APP_VERSION_NUMBER = 'v1.0.70'
+APP_VERSION_NUMBER = 'v1.0.71'
 ## ToDo Shohag news_dev for testing news for production
 FIREBASE_CLOUD_MESSAGING_TOPIC = 'news'
 
