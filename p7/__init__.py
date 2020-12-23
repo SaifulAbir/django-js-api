@@ -1,4 +1,7 @@
-from django.conf import settings
+LOG_TO_AWS_CLOUD_WATCH = False
+
+from p7.settings_prod import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_S3_REGION_NAME, CLOUD_WATCH_LOG_GROUP, \
+    CLOUD_WATCH_LOG_STREAM
 import logging
 from cloudwatch import cloudwatch
 
@@ -10,10 +13,9 @@ logger = logging.getLogger()
 logging.basicConfig(filename=f'jobxprss_api.log', format=format_string,
                     datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
 
-
-if not settings.dev_mode:
+if LOG_TO_AWS_CLOUD_WATCH:
     logger.setLevel(logging.WARNING)
-    aws_handler = cloudwatch.CloudwatchHandler(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY, settings.AWS_S3_REGION_NAME, settings.AWS_SECRET_ACCESS_KEY,
-                                               settings.CLOUD_WATCH_LOG_GROUP, settings.CLOUD_WATCH_LOG_STREAM)
+    aws_handler = cloudwatch.CloudwatchHandler(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_S3_REGION_NAME,
+                                               CLOUD_WATCH_LOG_GROUP, CLOUD_WATCH_LOG_STREAM)
     aws_handler.setFormatter(formatter)
     logger.addHandler(aws_handler)
