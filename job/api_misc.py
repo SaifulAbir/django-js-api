@@ -157,7 +157,7 @@ class JobApplicationAPI(APIView):
         print(pro_obj.membership_type)
 
         remaining_application_message = ''
-        if pro_obj.membership_type == "REGULAR":
+        if pro_obj.membership_type == "Regular":
             regular_member_apply_limit_per_month = Settings.objects.values('regular_member_apply_limit_per_month')[0]['regular_member_apply_limit_per_month']
             print('ok')
             if regular_member_apply_limit_per_month:
@@ -190,7 +190,7 @@ class JobApplicationAPI(APIView):
                         remaining_application_message = 'As a Free Member, you can apply for %d more job(s) today' \
                                                         % ((regular_member_apply_limit_per_day - daily_apply_count))
 
-        if pro_obj.membership_type == "STANDARD":
+        if pro_obj.membership_type == "Standard":
             standard_member_apply_limit_per_month = Settings.objects.values('standard_member_apply_limit_per_month')[0]['standard_member_apply_limit_per_month']
             if standard_member_apply_limit_per_month:
                 monthly_apply_count = JobApplication.objects.filter(pro = pro_obj, created_at__gte=timezone.now()
