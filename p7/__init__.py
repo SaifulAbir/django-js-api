@@ -1,27 +1,23 @@
-import atexit
-import io
 import logging
-import boto3
-from django.conf import settings
+from cloudwatch import cloudwatch
 
-# Internal Log Code Start
-logging.basicConfig(
-    filename=f'jobxprss_api.log',
-    format='%(levelname)s [%(asctime)s]: %(message)s \nat %(funcName)s() in %(filename)s line %(lineno)s ',
-    datefmt='%Y-%m-%d %H:%M:%S',
-    level=logging.INFO
-)
-#
-#
-#
-# def write_logs(body, bucket, key):
-#     s3 = boto3.client("s3")
-#     s3.put_object(Body=body, Bucket=bucket, Key=key)
-#
-#
-# log = logging.getLogger("jobxprss")  ## Log file name
-# log_stringio = io.StringIO()
-# handler = logging.StreamHandler(log_stringio)
-# log.addHandler(handler)
-# atexit.register(write_logs, body=log_stringio.getvalue(), bucket=settings.AWS_LOG_BUCKET_NAME, key=settings.AWS_SECRET_ACCESS_KEY)
-#
+format_string = '%(levelname)s [%(asctime)s] %(filename)s:%(lineno)s %(funcName)s %(message)s'
+formatter = logging.Formatter(format_string)
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+dev_mode = False
+if dev_mode:
+    # File
+    logging.basicConfig(filename=f'jobxprss_api.log', format=format_string,
+                        datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
+    # Console
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
+else:
+    # TODO read from prod setting
+    aws_handler = cloudwatch.CloudwatchHandler('AKIA4EJCWTQ4QOSYSAWI', 'a9b3YULZNFxYkg0HvcTIGyUfANIbsSRVmeiTIpKW', 'us-east-2', 'JobXprss',
+                                               'jobxprss_api')
+    aws_handler.setFormatter(formatter)
+    logger.addHandler(aws_handler)
