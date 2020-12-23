@@ -175,7 +175,7 @@ class JobApplicationAPI(APIView):
                                             status=status.HTTP_400_BAD_REQUEST)
                         else:
                             remaining_application_message = 'As a Free Member, you can apply for %d more job(s) today and %d more job(s) this month.'\
-                                                            % ((regular_member_apply_limit_per_day - daily_apply_count),(regular_member_apply_limit_per_month-monthly_apply_count))
+                                                            % ((regular_member_apply_limit_per_day - (daily_apply_count+1)),(regular_member_apply_limit_per_month-(monthly_apply_count+1)))
             else:
                 regular_member_apply_limit_per_day = Settings.objects.values('regular_member_apply_limit_per_day')[0][
                     'regular_member_apply_limit_per_day']
@@ -207,7 +207,7 @@ class JobApplicationAPI(APIView):
                                             status=status.HTTP_400_BAD_REQUEST)
                         else:
                             remaining_application_message = 'As a Valued Standard Member, you can apply for %d more job(s) today and %d more job(s) this month.'\
-                                                            % ((standard_member_apply_limit_per_day - daily_apply_count),(standard_member_apply_limit_per_month-monthly_apply_count))
+                                                            % ((standard_member_apply_limit_per_day - (daily_apply_count+1)),(standard_member_apply_limit_per_month- (monthly_apply_count+1)))
             else:
                 standard_member_apply_limit_per_day = Settings.objects.values('standard_member_apply_limit_per_day')[0][
                     'standard_member_apply_limit_per_day']
