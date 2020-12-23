@@ -209,7 +209,7 @@ MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 SESSION_COOKIE_AGE = 6000
-SITE_URL = 'https://jobxprss.com'
+SITE_URL = 'http://localhost'
 SOCKET_BASE_URL = "https://iss.ishraak.com:443"
 SOCKET_SERVER_TOKEN = "xNTk3ODk0ODE5LCJqdGkiOiJiMGYxODEyOWI0Mjk0OGU4YmFjMmQwMWRmNDdlNTM0YyIsInVzZXJfaWQiOjUwfQ"
 SOCKET_MAX_THREAD = 5
