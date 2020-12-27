@@ -1,4 +1,5 @@
 import json
+import logging
 
 from django.contrib.auth.models import User
 from django.db.models import Q, Count, Max, FilteredRelation
@@ -66,12 +67,13 @@ class MlJobUpdateView(UpdateAPIView):
         )
 
 class AdminJobList(ListAPIView):
-    # required_privilege = 'job.view_job'
-    # permission_classes = [StaffPermission]
+    required_privilege = 'job.view_job'
+    permission_classes = [StaffPermission]
     pagination_class = P7Pagination
     serializer_class = JobSerializerAllField
 
     def get_queryset(self):
+        logging.warning('Calling from ml team. Endpoint [admin/job/list/]')
         request = self.request
         query = request.GET.get('q')
         datePosted = request.GET.get('datePosted')

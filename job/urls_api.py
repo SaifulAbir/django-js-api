@@ -95,7 +95,7 @@ urlpatterns = [
     path('admin/job/get/<str:id>/', MlJobAPI.as_view()),
     ##ToDo need to optimize
     path('admin/job/create/', JobBulkCreateView.as_view()),
-    path('admin/job/update/<str:id>/', MlJobUpdateView.as_view()),
+   ## path('admin/job/update/<str:id>/', MlJobUpdateView.as_view()),
 
     path('company/download-attachment/<int:id>/', DownloadAttachmentAPIView.as_view()),
     path('company/download-resume/<int:id>/', DownloadResumeAPIView.as_view()),
