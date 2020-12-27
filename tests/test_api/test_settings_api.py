@@ -15,10 +15,6 @@ class TestSettingsList(unittest.TestCase):
     def test__when_valid__should__pass(self):
         resp = requests.get(SETTINGS_LIST_URL)
         data = resp.json()
-        self.assertIsNotNone(data[0]['id'])
-        self.assertIsNotNone(data[0]['created_by'])
-        self.assertIsNotNone(data[0]['created_at'])
-        self.assertIsNotNone(data[0]['created_from'])
         self.assertIsNotNone(data[0]['facebook_url'])
         self.assertIsNotNone(data[0]['linkedin_url'])
         self.assertIsNotNone(data[0]['twitter_url'])
@@ -33,10 +29,6 @@ class TestSettingsList(unittest.TestCase):
     def test__when_access_token__should__pass(self):
         resp = requests.get(SETTINGS_LIST_URL,headers = {'Authorization':'Bearer' + self.access_token})
         data = resp.json()
-        self.assertIsNotNone(data[0]['id'])
-        self.assertIsNotNone(data[0]['created_by'])
-        self.assertIsNotNone(data[0]['created_at'])
-        self.assertIsNotNone(data[0]['created_from'])
         self.assertIsNotNone(data[0]['facebook_url'])
         self.assertIsNotNone(data[0]['linkedin_url'])
         self.assertIsNotNone(data[0]['twitter_url'])
