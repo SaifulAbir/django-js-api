@@ -46,7 +46,7 @@ def sendSignupEmail(name, email, id, date):
     html_message = loader.render_to_string(
         'account_activation_email.html',
         {
-            'activation_url': "{}/professional/signup-email-verification/email={}&token={}".format(SITE_URL, email, activation_link),
+            'activation_url': "{}/professional/signup-email-verification/email={}&token={}".format(settings.SITE_URL, email, activation_link),
             'activation_email': email,
             'name': name,
             'subject': 'Thank you from' + data,
