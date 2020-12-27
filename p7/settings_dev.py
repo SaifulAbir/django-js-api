@@ -216,7 +216,7 @@ SOCKET_MAX_THREAD = 5
 
 #SITE_URL = 'http://localhost'
 
-APP_VERSION_NUMBER = 'v1.0.71'
+APP_VERSION_NUMBER = 'v1.0.72'
 ## ToDo Shohag news_dev for testing news for production
 FIREBASE_CLOUD_MESSAGING_TOPIC = 'news'
 
