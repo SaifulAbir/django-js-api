@@ -73,7 +73,7 @@ urlpatterns = [
     path('job/top-skills/', TopSkillList.as_view()), # Public API
     path('job/top-companies/', TopCompanyList.as_view()), # Public API
     path('job/trending_keywords/', TrendingKeywordList.as_view()), # Public API
-
+    ## ToDO need to optimize
     path('skill/list/', SkillList.as_view()), # Public API
     path('skill/search/', SkillSearch.as_view()), # Public API
     path('job/salary-range/', get_salary_range), # Public API
@@ -93,6 +93,7 @@ urlpatterns = [
     path('admin/job/list/', AdminJobList.as_view()),
     path('admin/company/list', AdminCompanyList.as_view()),
     path('admin/job/get/<str:id>/', MlJobAPI.as_view()),
+    ##ToDo need to optimize
     path('admin/job/create/', JobBulkCreateView.as_view()),
     path('admin/job/update/<str:id>/', MlJobUpdateView.as_view()),
 
