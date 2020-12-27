@@ -318,3 +318,9 @@ class EmailSubscriptionUpdateSerializer(serializers.ModelSerializer):
 
 class SendAppLinkSerializer(serializers.Serializer):
    mobile = serializers.CharField(required=True)
+
+
+class SubscriptionInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubscriptionInfo
+        fields = '__all__'

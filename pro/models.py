@@ -283,6 +283,17 @@ class RecentActivity(P7Model):
     class Meta:
         db_table = 'recent_activities'
 
+class SubscriptionInfo(P7Model):
+    professional = models.ForeignKey(Professional, on_delete=models.PROTECT, related_name='subscriptions')
+    subscription_duration = models.PositiveIntegerField()
+    subscription_duration_type = models.CharField(max_length=30, null=False, blank=False,
+                                       choices=strings_pro.SUBSCRIPTION_DURATION_TYPE_OPTION,
+                                       default=strings_pro.DEFAULT_SUBSCRIPTION_DURATION_TYPE_OPTION)
+
+    is_payment_successful = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'subscription_infos'
 
 def slug_generator(sender, instance, *args, **kwargs):
     if not instance.slug:
