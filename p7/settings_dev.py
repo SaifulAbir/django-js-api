@@ -334,3 +334,7 @@ ADMIN_REORDER = (
 
 # For production MEDIA_SOURCE = 'S3'
 MEDIA_SOURCE = 'Local'
+PAYMENT_GATEWAY_URL = 'https://sandbox.sslcommerz.com/gwprocess/v4/api.php'
+PAYMENT_GATEWAY_STORE_ID = 'jobxp5fcdcfa69d176'
+PAYMENT_GATEWAY_STORE_PASSWORD = 'jobxp5fcdcfa69d176@ssl'
+IS_SANDBOX = True
