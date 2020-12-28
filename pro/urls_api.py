@@ -17,7 +17,7 @@ from pro.api_pro_details import professional_education_save, EducationUpdateDele
 from pro.api_pro_related import EmailSubscriptionUpdateView, ReligionList, NationalityList, OrganizationList, MajorList, \
     InstituteList, CertificateNameList, InstituteSearch, EducationLevelList, MembershipOrganizationList, \
     CertifyingOrganizationList, MembershipOrganizationSearch, CertifyingOrganizationSearch, SendAppLinkAPI
-from pro.api_subscription import SubscriptionInfoCreate
+from pro.api_subscription import CartCreate
 from pro.views import professional_signup_email_verification
 
 urlpatterns = [
@@ -80,5 +80,5 @@ urlpatterns = [
     path('professional/send_verification_code_v1.0.64/', SendMobileVerificationCodeVOnePointZeroPointSixtyFour.as_view()),
     path('professional/verify_mobile_verification_code/', VerifyMobileVerificationCode.as_view()),
     path('professional/verify_mobile_verification_code_v1.0.64/', VerifyMobileVerificationCodeVOnePointZeroPointSixtyFour.as_view()),
-    path('professional/subscription_info_create/', SubscriptionInfoCreate.as_view()),
+    path('professional/cart_create/', CartCreate.as_view()),
 ]

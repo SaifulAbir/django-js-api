@@ -320,7 +320,7 @@ class SendAppLinkSerializer(serializers.Serializer):
    mobile = serializers.CharField(required=True)
 
 
-class SubscriptionInfoSerializer(serializers.ModelSerializer):
+class CartCreateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = SubscriptionInfo
+        model = Cart
         fields = '__all__'
