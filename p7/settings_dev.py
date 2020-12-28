@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django_bot_crawler_blocker',
     'feedback',
     'storages',
+    'account',
 ]
 
 MIDDLEWARE = [
