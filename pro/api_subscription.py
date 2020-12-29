@@ -70,7 +70,7 @@ class PaymentSession(APIView):
 
 
 class TransactionCreate(generics.CreateAPIView):
-    permission_classes = [ProfessionalPermission]
+    permission_classes = []
     serializer_class = TransactionCreateSerializer
 
     def post(self, request, *args, **kwargs):
