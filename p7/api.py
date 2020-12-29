@@ -16,6 +16,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 import logging
 
+from account.models import TransactionHistory
 from job.models import Company
 from job.serializers import CompanySerializer
 from p7.models import get_user_address, is_professional, is_company
@@ -161,9 +162,11 @@ class IpnAPI(APIView):
         amount = data['amount']
         store_amount = data['store_amount']
         tran_date = data['tran_date']
+        tran_histories = TransactionHistory(**data)
+        tran_histories.save()
         response = str(request.data)
-        logging.log(logging.INFO, 'ipn response')
-        logging.log(logging.INFO, response)
+        logging.warning(logging.INFO, 'ipn response')
+        logging.warning(logging.INFO, response)
         return Response(request.data)
 
 
