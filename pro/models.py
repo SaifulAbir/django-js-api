@@ -5,6 +5,7 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.utils import timezone
 
+from account.models import TransactionHistory
 from job.models import Industry, Gender, JobType, Experience, Qualification, Company, Skill, City, Job
 from p7.models import P7Model, populate_time_info
 from p7.utils import uuid_slug_generator
@@ -149,6 +150,8 @@ class Professional(P7Model):
     membership_type = models.CharField(max_length=30, null=False, blank=False,
                                        choices=strings_pro.MEMBERSHIP_TYPE_OPTION,
                                        default=strings_pro.DEFAULT_MEMBERSHIP_TYPE_OPTION)
+    last_subscription_start_date = models.DateTimeField(null= True)
+    last_subscription_expire_date = models.DateTimeField(null= True)
 
     def __str__(self):
         return self.full_name
@@ -262,6 +265,8 @@ class Certification(P7Model):
 """ 
 ProfessionalReference
 """
+
+
 class Reference(P7Model):
     professional = models.ForeignKey(Professional, on_delete=models.PROTECT, related_name='references')
     description = models.TextField(blank=False, null=False)
@@ -282,6 +287,34 @@ class RecentActivity(P7Model):
 
     class Meta:
         db_table = 'recent_activities'
+
+
+class SubscriptionInfo(P7Model):
+    professional = models.ForeignKey(Professional, on_delete=models.PROTECT, related_name='subscriptions')
+    subscription_duration = models.PositiveIntegerField()
+    subscription_duration_type = models.CharField(max_length=30, null=False, blank=False,
+                                                  choices=strings_pro.SUBSCRIPTION_DURATION_TYPE_OPTION,
+                                                  default=strings_pro.DEFAULT_SUBSCRIPTION_DURATION_TYPE_OPTION)
+
+    is_payment_successful = models.BooleanField(default=False)
+    payment_reference = models.ForeignKey(TransactionHistory, on_delete=models.PROTECT, null=True)
+    start_date = models.DateTimeField(null= True)
+    end_date = models.DateTimeField(null= True)
+
+    class Meta:
+        db_table = 'subscription_infos'
+
+
+class Cart(P7Model):
+    invoice_id = models.CharField(max_length=64,)
+    professional = models.ForeignKey(Professional, on_delete=models.PROTECT, related_name='carts')
+    subscription_duration = models.PositiveIntegerField()
+    subscription_duration_type = models.CharField(max_length=30, null=False, blank=False,
+                                                  choices=strings_pro.SUBSCRIPTION_DURATION_TYPE_OPTION,
+                                                  default=strings_pro.DEFAULT_SUBSCRIPTION_DURATION_TYPE_OPTION)
+    class Meta:
+        db_table = "carts"
+
 
 
 def slug_generator(sender, instance, *args, **kwargs):
@@ -306,3 +339,4 @@ pre_save.connect(populate_time_info, sender=CertificateName)
 pre_save.connect(populate_time_info, sender=Certification)
 pre_save.connect(populate_time_info, sender=Reference)
 pre_save.connect(populate_time_info, sender=RecentActivity)
+pre_save.connect(populate_time_info, sender=Cart)

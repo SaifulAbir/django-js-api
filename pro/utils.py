@@ -5,6 +5,7 @@
 #     user_obj = User.objects.get(username=email)
 #     status = check_password(password, user_obj.password)
 #     return status
+import datetime
 import random
 import socket
 import uuid
@@ -88,3 +89,6 @@ def save_recent_activity(request, user_id, activity_type,releted_professional = 
     obj.updated_section = updated_section
     populate_user_info(request, obj, False, False)
     obj.save()
+
+def invoice_id_generator(pro_id):
+    return str(pro_id)+"-"+datetime.datetime.now().strftime('%d%m%y-%H%M%S')

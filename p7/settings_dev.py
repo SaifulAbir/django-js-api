@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django_bot_crawler_blocker',
     'feedback',
     'storages',
+    'account',
 ]
 
 MIDDLEWARE = [
@@ -209,13 +210,10 @@ MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 SESSION_COOKIE_AGE = 6000
-SITE_URL = 'https://jobxprss.com'
+SITE_URL = 'http://localhost'
 SOCKET_BASE_URL = "https://iss.ishraak.com:443"
 SOCKET_SERVER_TOKEN = "xNTk3ODk0ODE5LCJqdGkiOiJiMGYxODEyOWI0Mjk0OGU4YmFjMmQwMWRmNDdlNTM0YyIsInVzZXJfaWQiOjUwfQ"
 SOCKET_MAX_THREAD = 5
-
-#SITE_URL = 'http://localhost'
-
 APP_VERSION_NUMBER = 'v1.0.72'
 ## ToDo Shohag news_dev for testing news for production
 FIREBASE_CLOUD_MESSAGING_TOPIC = 'news'
@@ -337,3 +335,7 @@ ADMIN_REORDER = (
 # For production MEDIA_SOURCE = 'S3'
 MEDIA_SOURCE = 'Local'
 dev_mode = True
+PAYMENT_GATEWAY_URL = 'https://sandbox.sslcommerz.com/gwprocess/v4/api.php'
+PAYMENT_GATEWAY_STORE_ID = 'jobxp5fcdcfa69d176'
+PAYMENT_GATEWAY_STORE_PASSWORD = 'jobxp5fcdcfa69d176@ssl'
+IS_SANDBOX = True
