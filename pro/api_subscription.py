@@ -74,4 +74,5 @@ class TransactionCreate(generics.CreateAPIView):
     serializer_class = TransactionCreateSerializer
 
     def post(self, request, *args, **kwargs):
+        print(request.data)
         return super(TransactionCreate, self).post(request, *args, **kwargs)
