@@ -158,7 +158,7 @@ class IpnAPI(APIView):
     permission_classes = []
     def post(self, request, *args, **kwargs):
         data = request.data
-        response = str(request.data)
+        response = request.data
         logging.warning(logging.INFO, 'ipn response')
         logging.warning(logging.INFO, response)
         # status = data['status']
