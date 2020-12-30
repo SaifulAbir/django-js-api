@@ -158,19 +158,40 @@ class IpnAPI(APIView):
     permission_classes = []
     def post(self, request, *args, **kwargs):
         data = request.data
-        response = request.data
-        logging.warning(logging.INFO, 'ipn response')
-        logging.warning(logging.INFO, response)
-        # status = data['status']
-        # amount = data['amount']
-        # store_amount = data['store_amount']
-        # tran_date = data['tran_date']
+        amount = data['amount']
+        bank_tran_id = data['bank_tran_id']
+        card_brand = data['card_brand']
+        card_issuer = data['card_issuer']
+        card_issuer_country = data['card_issuer_country']
+        card_issuer_country_code = data['card_issuer_country_code']
+        card_no = data['card_no']
+        card_type = data['card_type']
+        currency = data['currency']
+        currency_amount = data['currency_amount']
+        currency_type = data['currency_type']
+        risk_level = data['risk_level']
+        risk_title = data['risk_title']
+        status = data['status']
+        store_amount = data['store_amount']
+        store_id = data['store_id']
+        tran_date = data['tran_date']
+        tran_id = data['tran_id']
         # tran_histories = TransactionHistory(**data)
         # tran_histories.save()
 
         return Response(request.data)
 
 
+
+<QueryDict: {'amount': ['3.00'], 'bank_tran_id': ['2012301848220s2dvMXwnqmJT3x'],
+             'base_fair': ['0.00'], 'card_brand': ['MOBILEBANKING'],
+             'card_issuer': ['BKash Mobile Banking'], 'card_issuer_country': ['Bangladesh'],
+             'card_issuer_country_code': ['BD'], 'card_no': [''], 'card_sub_brand': ['Classic'],
+             'card_type': ['BKASH-BKash'], 'currency': ['BDT'], 'currency_amount': ['3.00'],
+             'currency_rate': ['1.0000'], 'currency_type': ['BDT'], 'error': [''],
+             'risk_level': ['0'], 'risk_title': ['Safe'], 'status': ['VALID'], 'store_amount': ['2.93'],
+             'store_id': ['jobxp5fcdcfa69d176'], 'tran_date': ['2020-12-30 18:47:57'],
+             'tran_id': ['82deb504-bc71-4b00-85c4-fbd6277efff4-301220-184433'], 'val_id': ['2012301848226v3nifmc7S7EhOz'], 'value_a': [''], 'value_b': [''], 'value_c': [''], 'value_d': [''], 'verify_sign': ['a40563f69f6570cadb047f03f517ef73'], 'verify_sign_sha2': ['5a34d1b52cc440df9a09f363d85ebdc7a85495ba00e98310726e857bb88ae498'], 'verify_key': ['amount,bank_tran_id,base_fair,card_brand,card_issuer,card_issuer_country,card_issuer_country_code,card_no,card_sub_brand,card_type,currency,currency_amount,currency_rate,currency_type,error,risk_level,risk_title,status,store_amount,store_id,tran_date,tran_id,val_id,value_a,value_b,value_c,value_d']}>
 @api_view(["GET"])
 @permission_classes(())
 def ping(request):
