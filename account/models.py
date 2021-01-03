@@ -27,7 +27,7 @@ class TransactionHistory(P7Model):
     store_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     store_id = models.CharField(max_length=50)
     tran_date = models.DateTimeField(blank=False, null=False)
-    tran_id = models.CharField(max_length=30)
+    tran_id = models.CharField(max_length=50)
     val_id = models.CharField(max_length=50)
     value_a = models.CharField(max_length=255, null=True, blank=True)
     value_b = models.CharField(max_length=255, null=True, blank=True)

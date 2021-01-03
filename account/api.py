@@ -38,65 +38,64 @@ class IpnAPI(APIView):
             value_c = data['value_c']
             value_d = data['value_d']
             verify_sign = data['verify_sign']
-            val_id = data['val_id']
             verify_sign_sha2 = data['verify_sign_sha2']
             tran_histories = TransactionHistory()
             if bank_tran_id:
                 tran_histories.bank_tran_id = bank_tran_id
             else:
-                return HTTP_400_BAD_REQUEST
+                return Response(status=HTTP_400_BAD_REQUEST)
             if card_brand:
                 tran_histories.card_brand = card_brand
             else:
-                return HTTP_400_BAD_REQUEST
+                return Response(status=HTTP_400_BAD_REQUEST)
             if card_issuer:
                 tran_histories.card_issuer = card_issuer
             else:
-                return HTTP_400_BAD_REQUEST
+                return Response(status=HTTP_400_BAD_REQUEST)
             if card_issuer_country:
                 tran_histories.card_issuer_country = card_issuer_country
             else:
-                return HTTP_400_BAD_REQUEST
+                return Response(status=HTTP_400_BAD_REQUEST)
             if card_issuer_country_code:
                 tran_histories.card_issuer_country_code = card_issuer_country_code
             else:
-                return HTTP_400_BAD_REQUEST
+                return Response(status=HTTP_400_BAD_REQUEST)
             if currency:
                 tran_histories.currency = currency
             else:
-                return HTTP_400_BAD_REQUEST
+                return Response(status=HTTP_400_BAD_REQUEST)
             if currency_rate:
                 tran_histories.currency_rate = currency_rate
             else:
-                return HTTP_400_BAD_REQUEST
+                return Response(status=HTTP_400_BAD_REQUEST)
             if currency_type:
                 tran_histories.currency_type = currency_type
             else:
-                return HTTP_400_BAD_REQUEST
+                return Response(status=HTTP_400_BAD_REQUEST)
             if status:
                 tran_histories.status = status
             else:
-                return HTTP_400_BAD_REQUEST
+                return Response(status=HTTP_400_BAD_REQUEST)
             if store_id:
                 tran_histories.store_id = store_id
             else:
-                return HTTP_400_BAD_REQUEST
+                return Response(status=HTTP_400_BAD_REQUEST)
             if tran_id:
                 tran_histories.tran_id = tran_id
             else:
-                return HTTP_400_BAD_REQUEST
+                return Response(status=HTTP_400_BAD_REQUEST)
             if val_id:
                 tran_histories.val_id = val_id
             else:
-                return HTTP_400_BAD_REQUEST
+                return Response(status=HTTP_400_BAD_REQUEST)
             if verify_sign:
                 tran_histories.verify_sign = verify_sign
             else:
-                return HTTP_400_BAD_REQUEST
+                return Response(status=HTTP_400_BAD_REQUEST)
             if verify_sign_sha2:
                 tran_histories.verify_sign_sha2 = verify_sign_sha2
             else:
-                return HTTP_400_BAD_REQUEST
+                return Response(status=HTTP_400_BAD_REQUEST)
 
             tran_histories.amount = amount
             tran_histories.base_fair = base_fair
@@ -117,4 +116,4 @@ class IpnAPI(APIView):
             subscription_info_save(tran_histories)
             return Response(request.data)
         else:
-            return HTTP_400_BAD_REQUEST
+            return Response(status=HTTP_400_BAD_REQUEST)
