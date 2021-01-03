@@ -2,6 +2,7 @@ from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from account.models import TransactionHistory
+from account.utils import subscription_info_save
 
 
 class IpnAPI(APIView):
@@ -113,7 +114,7 @@ class IpnAPI(APIView):
             tran_histories.value_c = value_c
             tran_histories.value_d = value_d
             tran_histories.save()
-            subscription_info_save(request.data)
+            subscription_info_save(tran_histories)
             return Response(request.data)
         else:
             return HTTP_400_BAD_REQUEST
