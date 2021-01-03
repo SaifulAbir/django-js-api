@@ -66,7 +66,7 @@ class PaymentSession(APIView):
         post_body['product_category'] = "Test Category"  ## Required
         post_body['product_profile'] = "non-physical-goods"  ## Required [Please use the below keys: general,physical-goods,non-physical-goods,airline-tickets,]
         response = sslcommez.createSession(post_body)
-        return Response(response['GatewayPageURL'])
+        return Response(response)
 
 
 class TransactionCreate(generics.CreateAPIView):
