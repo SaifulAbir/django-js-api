@@ -192,14 +192,11 @@ class JobAdmin(P7Admin):
             return redirect('/admin/login/')
 
     def request_assignment(self, request):
-        remaining = Job.objects.filter(
+        job = Job.objects.filter(
             status="DRAFT",
+            is_archived=False,
             assign_to__isnull= True
-        )
-
-        count = remaining.aggregate(count=Count('job_id'))['count']
-        random_index = randint(0, count - 1)
-        job = remaining[random_index]
+        ).order_by('-created_at').first()
 
         job.assign_to = request.user
         job.save()
