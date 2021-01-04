@@ -17,7 +17,6 @@ from p7.models import populate_user_info, is_professional, populate_user_info_re
 from p7.pagination import P7Pagination
 from django.conf import settings
 from p7.permissions import ProfessionalPermission
-from p7.settings_dev import SITE_URL
 from p7.utils import upload_to_s3
 from pro.api_pro_core import profile_create_with_user_create, profile_completeness
 from pro.models import Professional, ProfessionalSkill, ProfessionalEducation, WorkExperience, Portfolio, Membership, \
@@ -241,7 +240,8 @@ class JobApplicationAPI(APIView):
             Prefetch('references',
                      queryset=Reference.objects.filter(is_archived=False).order_by('created_at'))
         )
-        html = self.template.render({'data': queryset, 'SITE_URL': settings.SITE_URL})
+        html = self.template.render({'data': queryset, 'SITE_URL': settings.SITE_URL,
+                                     'SITE_URL': settings.SITE_URL, 'SITE_URL': settings.SITE_URL})
         options = {
             'page-size': "A4",
             'encoding': "UTF-8",
