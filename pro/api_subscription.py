@@ -61,9 +61,9 @@ class PaymentSession(APIView):
         post_body['cus_country'] = "Bangladesh"  ## Required
         post_body['shipping_method'] = "NO" ## Required [Example: YES or NO or Courier]
         post_body['multi_card_name'] = ""
-        post_body['num_of_item'] = 1 ## Required [Example: 1 or 2 or etc]
-        post_body['product_name'] = "Test" ## Required [Mention the product name by coma separate. Example: Computer,Speaker]
-        post_body['product_category'] = "Test Category"  ## Required
+        post_body['num_of_item'] = cart_info.subscription_duration ## Required [Example: 1 or 2 or etc]
+        post_body['product_name'] ="JobXprss Yearly Subscription" if cart_info.subscription_duration_type =='YEARLY' else "JobXprss Monthly Subscription" ## Required [Mention the product name by coma separate. Example: Computer,Speaker]
+        post_body['product_category'] = "JobXprss Subscription"  ## Required
         post_body['product_profile'] = "non-physical-goods"  ## Required [Please use the below keys: general,physical-goods,non-physical-goods,airline-tickets,]
         response = sslcommez.createSession(post_body)
         return Response(response)
