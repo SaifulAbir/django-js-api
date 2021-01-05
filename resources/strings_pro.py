@@ -52,12 +52,11 @@ Contact_US_MAIL_SUBJECT_STR  = "Contact Us"
 
 
 MEMBERSHIP_TYPE_OPTION = (
-    ('REGULAR', 'Regular'),
-    ('STANDARD','Standard')
+    ('Regular', 'Regular'),
+    ('Standard','Standard')
 )
 
 DEFAULT_MEMBERSHIP_TYPE_OPTION = 'Regular'
-
 SUBSCRIPTION_DURATION_TYPE_OPTION = (
     ('YEARLY','Yearly'),
     ('MONTHLY','Monthly')
