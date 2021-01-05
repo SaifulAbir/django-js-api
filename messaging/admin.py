@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django_admin_listfilter_dropdown.filters import RelatedDropdownFilter
+from django_filters import DateRangeFilter
 
 from messaging.models import Notification, EmployerMessage, FcmCloudMessaging
 from p7.admin import P7Admin
@@ -17,5 +19,8 @@ class EmployerMessageAdmin(P7Admin):
     fields = ['message', 'receiver', 'is_read', 'created_by', 'created_at', 'modified_by', 'modified_at']
 
 @admin.register(FcmCloudMessaging)
-class EmployerMessageAdmin(P7Admin):
+class FcmCloudMessagingAdmin(P7Admin):
     list_per_page = 15
+    search_fields = ['fcm_token__icontains', 'device_id__icontains', 'app_version__icontains']
+    list_display = ['user', 'fcm_token', 'device_id', 'app_version']
+    fields = ['user', 'fcm_token', 'device_id', 'app_version']

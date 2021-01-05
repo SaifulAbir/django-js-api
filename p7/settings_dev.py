@@ -259,6 +259,7 @@ ADMIN_REORDER = (
         'models': (
             'messaging.EmployerMessage',
             'messaging.Notification',
+            'messaging.FcmCloudMessaging',
         )
     },
     {
