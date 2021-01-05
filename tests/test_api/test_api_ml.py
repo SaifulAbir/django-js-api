@@ -355,56 +355,57 @@ class TestMlJobUpdateAPI(unittest.TestCase):
         # self.publish_date = data['access']
         self.featured = True
 
-    def test__when_valid__auth_and_data_job_update__should_pass(self):
-        json = {
-            'title': self.title,
-            'address': self.address,
-            'job_area': self.job_area,
-            'job_city': self.job_city,
-            'salary': self.salary,
-            'salary_min': self.salary_min,
-            'salary_max': self.salary_max,
-            'currency': self.currency,
-            'other_benefits': self.other_benefits,
-            'experience': self.experience,
-            'description': self.description,
-            'qualification': self.qualification,
-            'responsibilities': self.responsibilities,
-            'additional_requirements': self.additional_requirements,
-            'education': self.education,
-            'vacancy': self.vacancy,
-            'application_deadline': self.application_deadline,
-            'company': self.company,
-            'company_profile': self.company_profile,
-            'company_address': self.company_address,
-            'company_area': self.company_area,
-            'company_city': self.company_city,
-            'latitude': self.latitude,
-            'longitude': self.longitude,
-            'raw_content': self.raw_content,
-            'terms_and_condition': self.terms_and_condition,
-            'job_skills': self.job_skills,
-            'status': self.status,
-            'job_site': self.job_site,
-            'job_nature': self.job_nature,
-            'job_type': self.job_type,
-            'creator_type': self.creator_type,
-            'job_source_1': self.job_source_1,
-            'job_url_1': self.job_url_1,
-            'job_source_2': self.job_source_2,
-            'job_url_2': self.job_url_2,
-            'job_source_3': self.job_source_3,
-            'job_url_3': self.job_url_3,
-            'job_category': self.job_category,
-            'job_gender': self.job_gender,
-            'post_date': str(self.post_date),
-            'featured': self.featured
-
-        }
-        resp = requests.put(ML_JOB_UPDATE_URL + JOB_ID_UPDATE + '/', json=json,
-                            headers={'Authorization': 'Bearer ' + self.access_token})
-        data = resp.json()
-        self.assertIsNotNone(data['job_id'])
+    # This API deleted
+    # def test__when_valid__auth_and_data_job_update__should_pass(self):
+    #     json = {
+    #         'title': self.title,
+    #         'address': self.address,
+    #         'job_area': self.job_area,
+    #         'job_city': self.job_city,
+    #         'salary': self.salary,
+    #         'salary_min': self.salary_min,
+    #         'salary_max': self.salary_max,
+    #         'currency': self.currency,
+    #         'other_benefits': self.other_benefits,
+    #         'experience': self.experience,
+    #         'description': self.description,
+    #         'qualification': self.qualification,
+    #         'responsibilities': self.responsibilities,
+    #         'additional_requirements': self.additional_requirements,
+    #         'education': self.education,
+    #         'vacancy': self.vacancy,
+    #         'application_deadline': self.application_deadline,
+    #         'company': self.company,
+    #         'company_profile': self.company_profile,
+    #         'company_address': self.company_address,
+    #         'company_area': self.company_area,
+    #         'company_city': self.company_city,
+    #         'latitude': self.latitude,
+    #         'longitude': self.longitude,
+    #         'raw_content': self.raw_content,
+    #         'terms_and_condition': self.terms_and_condition,
+    #         'job_skills': self.job_skills,
+    #         'status': self.status,
+    #         'job_site': self.job_site,
+    #         'job_nature': self.job_nature,
+    #         'job_type': self.job_type,
+    #         'creator_type': self.creator_type,
+    #         'job_source_1': self.job_source_1,
+    #         'job_url_1': self.job_url_1,
+    #         'job_source_2': self.job_source_2,
+    #         'job_url_2': self.job_url_2,
+    #         'job_source_3': self.job_source_3,
+    #         'job_url_3': self.job_url_3,
+    #         'job_category': self.job_category,
+    #         'job_gender': self.job_gender,
+    #         'post_date': str(self.post_date),
+    #         'featured': self.featured
+    #
+    #     }
+    #     resp = requests.put(ML_JOB_UPDATE_URL + JOB_ID_UPDATE + '/', json=json,
+    #                         headers={'Authorization': 'Bearer ' + self.access_token})
+    #     data = resp.json()
+    #     self.assertIsNotNone(data['job_id'])
 
     def test__when_required_filed__title_and_company_empty__should_fail(self):
         json = [{
