@@ -5,19 +5,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Resume</title>
-    <base href="{{ SITE_URL }}">
+    <base href="{{ STATIC_URL }}">
     <link rel="stylesheet" href="{% static '/assets/css/bootstrap.min.css' %}" />
     <link rel="stylesheet" href="{% static '/assets/css/toastr.min.css' %}" />
     <link rel="stylesheet" href="{% static 'assets/fontawesome/css/all.css'%}"/>
     <link rel="stylesheet" href="{% static 'assets/icofont/icofont.min.css'%}"/>
-
     <link rel="stylesheet" href="{% static '/assets/css/bootstrap-select.min.css' %}" />
-
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/common.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/yellow.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'dashboard/css/dashboard.css' %}">
-
     <style>
         .row, .edu-list, .exp-list, .cer-list, .mem-list, .por-list{
             display: -webkit-box; /* wkhtmltopdf uses this one */
@@ -67,8 +64,6 @@
         <div class="col">
             <div class="dashboard-container" style="width: 100%;">
                 <div class="dashboard-content-wrapper" style="width: 100%;">
-
-
                     <div class="skill-and-profile dashboard-section float-right">
                         {% for obj in data %}
                             <div class="social-profile ">
@@ -82,9 +77,8 @@
                                 {% if obj.current_designation %}
                                     <li id="current-designation" style="list-style-type: none;font-family: Poppins, sans-serif;font-size: 1.4rem;"><strong>Designation:</strong><span id="c_designation" > {{ obj.current_designation }}</span> </li>
                                 {% endif %}
-
                             </div>
-                            </div>
+                        </div>
                             <div class="col-sm-6">
                                 <div class="dashboard-section upload-profile-photo">
                                     <div class="update-photo">
@@ -107,12 +101,9 @@
                                             <div class="col-sm-6" id="loc">
                                                     <span><h8>Location: </h8></span> <span id="address">Dhaka</span>
                                                 </div>
-
-
                                             <div class="col-sm-6">
                                                     <span><h8>Industry: </h8></span> <span id="industry_expertise">{% if obj.industry_expertise %}{{ obj.industry_expertise }}{% endif %}</span>
                                                 </div>
-
                                             </div>
                                             <div class="row">
                                             <div class="col-sm-6">
@@ -127,12 +118,6 @@
                                                         <span><h8>Experience:</h8></span> <span id="experience">{{ obj.experience }} Years</span>
                                                     {% endifequal %}
                                                 </div>
-
-
-
-
-
-
                                             </div>
                                             <div class="row">
 
@@ -140,7 +125,6 @@
                                                     <span><h8>Qualification:</h8></span> <span id="qualification">{% if obj.qualification %}{{ obj.qualification }}{% endif %}</span>
                                                 </div>
                                             </div>
-
                                         </ul>
                                     </div>
                                 </div>
@@ -156,7 +140,7 @@
                                                 <p> {% if edu.description %}{{ edu.description | safe | escape }}{% endif %}</p>
                                             </div>
                                             <div class="thumb">
-                                                <img  {% if edu.institution.image %} src="media/{{ edu.institution.image }}" {% else %} src="/static/images/candidate/Institute.png" {% endif %} class="img-fluid" alt="">
+                                                <img  {% if edu.institution.image %} src="{{ MEDIA_BUCKET_URL_PREFIX }}/media/{{ edu.institution.image }}" {% else %} src="{{ STATIC_URL }}/images/candidate/Institute.png" {% endif %} class="img-fluid" alt="">
                                             </div>
                                         </div>
                                     {% endfor %}
@@ -172,7 +156,7 @@
                                                 <h5>{% if work.designation %} {{ work.designation }}{% endif %}<span>@{% if work.company_text %}{{ work.company_text }}{% endif %}</span></h5>
                                                 <p> {% if work.description %}{{ work.description | safe | escape }}{% endif %}</p></div>
                                             <div class="thumb">
-                                                <img {% if work.company %} {% if work.company.profile_picture  %} src="media/{{ work.company.profile_picture }}" {% else %} src="/static/images/company/company-logo.png" {% endif %} {% else %} src="/static/images/company/company-logo-2.png" {% endif %} class="img-fluid" alt="">
+                                                <img {% if work.company %} {% if work.company.profile_picture  %} src="{{ MEDIA_BUCKET_URL_PREFIX }}/media/{{ work.company.profile_picture }}" {% else %} src="/static/images/company/company-logo.png" {% endif %} {% else %} src="/static/images/company/company-logo-2.png" {% endif %} class="img-fluid" alt="">
                                             </div>
                                         </div>
                                     {% endfor %}
@@ -193,19 +177,9 @@
                                                 <p class="progress-to"> {% if skill.rating %} {{ skill.rating|stringformat:'d' }}/10 {% endif %}</p>
                                             </div>
                                         </div>
-
-
                                     {% endfor %}
-
                                 </div>
-
-
                             </div>
-
-
-
-
-
                             {%  if obj.certifications.all %}
                                 <div class="certification dashboard-section details-section keep-pdf-content-together" id="work">
                                     <h4><img id="certification-logo" src="{% static 'images/certification-file.svg' %}">Certification</h4>
@@ -217,7 +191,7 @@
 
                                             </div>
                                             <div class="thumb">
-                                                <img  {% if cer.organization_key.image %} src="/media/{{ cer.organization_key.image }}" {% else %} src="/static/images/candidate/Organization.png" {% endif %} class="img-fluid" alt="">
+                                                <img  {% if cer.organization_key.image %} src="{{ MEDIA_BUCKET_URL_PREFIX }}/media/{{ cer.organization_key.image }}" {% else %} src="/static/images/candidate/Organization.png" {% endif %} class="img-fluid" alt="">
                                             </div>
                                         </div>
                                     {% endfor %}
@@ -235,7 +209,7 @@
                                                 <p>{% if mem.description %}{{ mem.description | safe | escape }}{% endif %}</p>
                                             </div>
                                             <div class="thumb">
-                                                <img  {% if mem.organization_key.image %} src="/media/{{ mem.organization_key.image }}"{% else %}src="/static/images/candidate/Organization.png"{% endif %} class="img-fluid" alt="">
+                                                <img  {% if mem.organization_key.image %} src="{{ MEDIA_BUCKET_URL_PREFIX }}/media/{{ mem.organization_key.image }}"{% else %}src="{{ STATIC_URL }}/images/candidate/Organization.png"{% endif %} class="img-fluid" alt="">
                                             </div>
                                         </div>
                                     {% endfor %}
@@ -252,7 +226,7 @@
                                                 <p>{% if port.description %}{{ port.description | safe | escape }}{% endif %}</p>
                                             </div>
                                             <div class="thumb">
-                                                <img src="{% if port.image %}{{ port.image }}{% else %}/static/images/candidate/Portfolio.png{% endif %}" class="img-fluid" alt="">
+                                                <img src="{% if port.image %}{{ port.image }}{% else %}{{ STATIC_URL }}/images/candidate/Portfolio.png{% endif %}" class="img-fluid" alt="">
                                             </div>
                                         </div>
                                     {% endfor %}
