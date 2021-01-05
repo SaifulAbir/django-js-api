@@ -140,7 +140,7 @@
                                                 <p> {% if edu.description %}{{ edu.description | safe | escape }}{% endif %}</p>
                                             </div>
                                             <div class="thumb">
-                                                <img  {% if edu.institution.image %} src="{{ MEDIA_BUCKET_URL_PREFIX }}media/{{ edu.institution.image }}" {% else %} src="{{ STATIC_URL }}images/candidate/Institute.png" {% endif %} class="img-fluid" alt="">
+                                                <img  {% if edu.institution.image %} src="{{ MEDIA_BUCKET_URL_PREFIX }}{{ edu.institution.image }}" {% else %} src="{{ STATIC_URL }}images/candidate/Institute.png" {% endif %} class="img-fluid" alt="">
                                             </div>
                                         </div>
                                     {% endfor %}
