@@ -156,7 +156,7 @@
                                                 <h5>{% if work.designation %} {{ work.designation }}{% endif %}<span>@{% if work.company_text %}{{ work.company_text }}{% endif %}</span></h5>
                                                 <p> {% if work.description %}{{ work.description | safe | escape }}{% endif %}</p></div>
                                             <div class="thumb">
-                                                <img {% if work.company %} {% if work.company.profile_picture  %} src="{{ MEDIA_BUCKET_URL_PREFIX }}media/{{ work.company.profile_picture }}" {% else %} src="{{ STATIC_URL }}images/company/company-logo.png" {% endif %} {% else %} src="{{ STATIC_URL }}images/company/company-logo-2.png" {% endif %} class="img-fluid" alt="">
+                                                <img {% if work.company %} {% if work.company.profile_picture  %} src="{{ MEDIA_BUCKET_URL_PREFIX }}{{ work.company.profile_picture }}" {% else %} src="{{ STATIC_URL }}images/company/company-logo.png" {% endif %} {% else %} src="{{ STATIC_URL }}images/company/company-logo-2.png" {% endif %} class="img-fluid" alt="">
                                             </div>
                                         </div>
                                     {% endfor %}
