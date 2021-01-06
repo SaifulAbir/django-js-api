@@ -105,7 +105,7 @@ def after_notification_save(sender, instance: Notification, *args, **kwargs):
             for message in messaging_obj:
                 try:
                     print(message.fcm_token)
-                    param = build_single_message(message.fcm_token, 'hello rashed')
+                    param = build_single_message(message.fcm_token, instance.message)
                     messaging.send(param)
                 except:
                     message.delete()
