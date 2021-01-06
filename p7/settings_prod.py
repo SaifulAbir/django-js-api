@@ -13,6 +13,7 @@ AWS_S3_REGION_NAME = 'us-east-2'
 
 CLOUD_FRONT_ROOT_DOMAIN = 'd73v8sr570q51.cloudfront.net'
 STATIC_URL = 'https://%s/' % (CLOUD_FRONT_ROOT_DOMAIN)
+STATIC_BASE_URL_PREFIX = 'https://%s/' % (CLOUD_FRONT_ROOT_DOMAIN)
 ## AWS S3 bucket static file read code end
 MEDIA_BUCKET_URL = 'jobxprss-media.s3.us-east-2.amazonaws.com'
 MEDIA_BUCKET_URL_PREFIX = 'https://%s/' % (MEDIA_BUCKET_URL)
