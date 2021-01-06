@@ -73,6 +73,12 @@ def after_notification_save(sender, instance: Notification, *args, **kwargs):
             notification_obj = Notification(title=instance.title, message=instance.message,
                                             recipient=professional.id, is_system_generated=True)
             notification_obj.save()
+
+        ## Send Notification to all user via Firebase start
+        param = build_topic_message(instance.message)
+        messaging.send(param)
+        ## Send to Notification to all user via Firebase end
+
     elif len(userid.split(','))>1:
         pro_list = userid.split(',')
         for pro_id in pro_list:
@@ -80,6 +86,33 @@ def after_notification_save(sender, instance: Notification, *args, **kwargs):
                                             recipient=pro_id, is_system_generated=True)
             notification_obj.save()
 
+            ## Send Notification to some specific user via Firebase start
+            try:
+                messaging_obj = FcmCloudMessaging.objects.filter(user_id=pro_id)
+                for message in messaging_obj:
+                    try:
+                        param = build_single_message(message.fcm_token, instance.message)
+                        messaging.send(param)
+                    except:
+                        message.delete()
+            except FcmCloudMessaging.DoesNotExist:
+                pass
+            ## Send Notification to some specific user via Firebase end
+    else:
+        ## Send Notification to specific user via Firebase start
+        try:
+            messaging_obj = FcmCloudMessaging.objects.filter(user_id=userid)
+            for message in messaging_obj:
+                try:
+                    print(message.fcm_token)
+                    param = build_single_message(message.fcm_token, 'hello rashed')
+                    messaging.send(param)
+                except:
+                    message.delete()
+
+        except FcmCloudMessaging.DoesNotExist:
+            pass
+        ## Send Notification to specific user via Firebase end
 
     from messaging.serializers import NotificationSerializer
     text = NotificationSerializer(instance, many=False).data
@@ -91,20 +124,6 @@ def after_notification_save(sender, instance: Notification, *args, **kwargs):
         "from": "",
         "to": instance.recipient
     })
-    # if userid == '*':
-    #     param = build_topic_message(message)
-    #     response = messaging.send(param)
-    # else:
-    #     try:
-    #         messaging_obj = FcmCloudMessaging.objects.filter(user_id=userid)
-    #         for message in messaging_obj:
-    #             try:
-    #                 param = build_single_message(message.fcm_token, message)
-    #                 response = messaging.send(param)
-    #             except:
-    #                 pass
-    #     except FcmCloudMessaging.DoesNotExist:
-    #         pass
 
     if userid == '*' or len(userid.split(','))>1:
         instance.delete()
