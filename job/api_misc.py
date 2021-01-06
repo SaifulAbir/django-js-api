@@ -241,7 +241,8 @@ class JobApplicationAPI(APIView):
                      queryset=Reference.objects.filter(is_archived=False).order_by('created_at'))
         )
         html = self.template.render({'data': queryset, 'SITE_URL': settings.SITE_URL,
-                                     'MEDIA_BUCKET_URL_PREFIX': settings.MEDIA_BUCKET_URL_PREFIX, 'STATIC_URL': settings.STATIC_URL})
+                                     'MEDIA_BUCKET_URL_PREFIX': settings.MEDIA_BUCKET_URL_PREFIX,
+                                     'STATIC_URL': settings.STATIC_URL, 'STATIC_BASE_URL_PREFIX': settings.STATIC_BASE_URL_PREFIX })
         options = {
             'page-size': "A4",
             'encoding': "UTF-8",
