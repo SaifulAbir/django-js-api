@@ -1,7 +1,11 @@
+from io import BytesIO
+
 from ckeditor.fields import RichTextField
+from django.core.files.base import ContentFile
 from django.db import models
 from django.db.models.signals import pre_save
-
+from django.conf import settings
+from PIL import Image
 from p7.models import P7Model, populate_time_info
 from resources import strings_job
 
@@ -23,4 +27,31 @@ class CareerAdvice(P7Model):
     def __str__(self):
         return self.title
 
+def resized_image(sender, instance: CareerAdvice, *args, **kwargs):
+
+    ## Thumbnail image resize start
+    im = instance.thumbnail_image
+    im = Image.open(im)
+    ratio = im.width/im.height
+    thumbnail_resized_width = settings.CEREAR_ADVICE_THUMBNAIL_DEFAULT_IMAGE_WIDTH
+    resized_im = im.resize((thumbnail_resized_width, round(thumbnail_resized_width/ratio)))
+    img_io = BytesIO()
+    resized_im.save(img_io, format='JPEG', quality=100)
+    img_content = ContentFile(img_io.getvalue(), 'career_advice_thumbnail.jpg')
+    instance.thumbnail_image = img_content
+    ## Thumbnail image resize end
+
+    ## Featured image resize start
+    im = instance.featured_image
+    im = Image.open(im)
+    ratio = im.width/im.height
+    thumbnail_resized_width = settings.CEREAR_ADVICE_FEATURED_DEFAULT_IMAGE_WIDTH
+    resized_im = im.resize((thumbnail_resized_width, round(thumbnail_resized_width/ratio)))
+    img_io = BytesIO()
+    resized_im.save(img_io, format='JPEG', quality=100)
+    img_content = ContentFile(img_io.getvalue(), 'career_advice_featured.jpg')
+    instance.featured_image = img_content
+    ## Thumbnail image resize end
+
 pre_save.connect(populate_time_info, sender=CareerAdvice)
+pre_save.connect(resized_image, sender=CareerAdvice)
