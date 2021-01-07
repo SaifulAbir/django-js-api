@@ -8,5 +8,6 @@ class SettingsSerializer(serializers.ModelSerializer):
                   'logo_url', 'address', 'phone', 'zoom', 'job_min_salary', 'job_max_salary','latitude','longitude',
                   'minimum_profile_completeness','regular_member_apply_limit_per_day','regular_member_apply_limit_per_month',
                   'standard_member_apply_limit_per_day','standard_member_apply_limit_per_month', 'admin_email', 'support_email',
-                  'standard_member_payable_amount_per_month', 'standard_member_payable_amount_per_year']
+                  'standard_member_payable_amount_per_month', 'standard_member_payable_amount_per_year', 'android_app_latest_version',
+                  'android_force_update_app_latest_version', 'ios_app_latest_version', 'ios_force_update_app_latest_version']
 
