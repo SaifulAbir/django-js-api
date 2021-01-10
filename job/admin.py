@@ -139,45 +139,52 @@ class JobAdmin(P7Admin):
 
     def created_by_name(self, obj):
         try:
-            return User.objects.get(id = obj.created_by).get_full_name()
+            user = User.objects.get(id=obj.created_by)
+            return f"{user.get_full_name()} ({user.username})"
         except:
             return ""
 
 
     def modified_by_name(self, obj):
         try:
-            return User.objects.get(id = obj.modified_by).get_full_name()
+            user = User.objects.get(id=obj.modified_by)
+            return f"{user.get_full_name()} ({user.username})"
         except:
             return ""
 
     def archived_by_name(self, obj):
         try:
-            return User.objects.get(id = obj.archived_by).get_full_name()
+            user = User.objects.get(id=obj.archived_by)
+            return f"{user.get_full_name()} ({user.username})"
         except:
             return ""
 
     def posted_by_name(self, obj):
         try:
-            return User.objects.get(id = obj.posted_by).get_full_name()
+            user = User.objects.get(id=obj.posted_by)
+            return f"{user.get_full_name()} ({user.username})"
         except:
             return ""
 
     def reviewed_by_name(self, obj):
         try:
-            return User.objects.get(id = obj.reviewed_by).get_full_name()
+            user = User.objects.get(id=obj.reviewed_by)
+            return f"{user.get_full_name()} ({user.username})"
         except:
             return ""
 
     def approved_by_name(self, obj):
         try:
-            return User.objects.get(id = obj.approved_by).get_full_name()
+            user = User.objects.get(id=obj.approved_by)
+            return f"{user.get_full_name()} ({user.username})"
         except:
             return ""
 
 
     def published_by_name(self, obj):
         try:
-            return User.objects.get(id = obj.published_by).get_full_name()
+            user = User.objects.get(id=obj.published_by)
+            return f"{user.get_full_name()} ({user.username})"
         except:
             return ""
 
@@ -252,19 +259,22 @@ class CompanyAdmin(P7Admin):
 
     def created_by_name(self, obj):
         try:
-            return User.objects.get(id = obj.created_by).get_full_name()
+            user = User.objects.get(id = obj.created_by)
+            return f"{user.get_full_name()} ({user.username})"
         except:
             return ""
 
     def modified_by_name(self, obj):
         try:
-            return User.objects.get(id = obj.modified_by).get_full_name()
+            user = User.objects.get(id=obj.modified_by)
+            return f"{user.get_full_name()} ({user.username})"
         except:
             return ""
 
     def archived_by_name(self, obj):
         try:
-            return User.objects.get(id = obj.archived_by).get_full_name()
+            user = User.objects.get(id=obj.archived_by)
+            return f"{user.get_full_name()} ({user.username})"
         except:
             return ""
 
