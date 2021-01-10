@@ -92,3 +92,22 @@ def save_recent_activity(request, user_id, activity_type,releted_professional = 
 
 def invoice_id_generator(pro_id):
     return str(pro_id)+"-"+datetime.datetime.now().strftime('%d%m%y-%H%M%S')
+
+
+def subscription_expiration_check(pro_obj):
+    today = datetime.datetime.today()
+    print(pro_obj.membership_type)
+    try:
+        if pro_obj.last_subscription_expire_date >= today:
+            if pro_obj.membership_type == 'Regular':
+                pro_obj.membership_type = 'Standard'
+                pro_obj.save()
+            return True
+        else:
+            if pro_obj.membership_type == 'Standard':
+                pro_obj.membership_type = 'Regular'
+                pro_obj.save()
+            return False
+    except TypeError:
+        return False
+

@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.status import (
     HTTP_401_UNAUTHORIZED,
     HTTP_200_OK,
-    HTTP_404_NOT_FOUND
+    HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
 )
 from rest_framework.utils import json
 from rest_framework.views import APIView
@@ -150,25 +150,6 @@ class GoogleSigninCompanyApi(APIView):
         data['company'] = CompanySerializer(company, many=False).data
         data['token_lifetime'] = settings.SIMPLE_JWT
         return Response(data)
-
-
-
-
-class IpnAPI(APIView):
-    permission_classes = []
-    def post(self, request, *args, **kwargs):
-        data = request.data
-        response = str(request.data)
-        logging.warning(logging.INFO, 'ipn response')
-        logging.warning(logging.INFO, response)
-        # status = data['status']
-        # amount = data['amount']
-        # store_amount = data['store_amount']
-        # tran_date = data['tran_date']
-        # tran_histories = TransactionHistory(**data)
-        # tran_histories.save()
-
-        return Response(request.data)
 
 
 @api_view(["GET"])
