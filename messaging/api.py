@@ -37,7 +37,7 @@ class MarkNotificationUpdateView(generics.UpdateAPIView):
     def get_queryset(self):
         user = self.request.user
         queryset = Notification.objects.filter(
-            recipient = user.id
+            Q(recipient=user.id)| Q(recipient='*')
         )
         return queryset
 
