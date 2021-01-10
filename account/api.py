@@ -1,5 +1,3 @@
-import logging
-
 import requests
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
@@ -25,37 +23,35 @@ class IpnAPI(APIView):
             card_sub_brand = data['card_sub_brand']
             payload = {'val_id': val_id,'store_id': store_id,
                        'store_passwd': current_settings.PAYMENT_GATEWAY_STORE_PASSWORD}
-            resp = requests.get('https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php',
-                                params= payload)
-            logging.warning(resp)
-
-            if resp['status'] == 'VALID':
-                amount = resp['amount']
-                bank_tran_id = resp['bank_tran_id']
-                card_brand = resp['card_brand']
-                card_issuer = resp['card_issuer']
-                card_issuer_country = resp['card_issuer_country']
-                card_issuer_country_code = resp['card_issuer_country_code']
-                card_no = resp['card_no']
-                card_type = resp['card_type']
-                currency = resp['currency']
-                currency_amount = resp['currency_amount']
-                currency_type = resp['currency_type']
-                risk_level = resp['risk_level']
-                risk_title = resp['risk_title']
-                status = resp['status']
-                store_amount = resp['store_amount']
-                tran_date = resp['tran_date']
-                tran_id = resp['tran_id']
-                emi_installment = resp['emi_installment']
-                emi_amount = resp['emi_amount']
-                discount_amount = resp['discount_amount']
-                discount_percentage = resp['discount_percentage']
-                discount_remarks = resp['discount_remarks']
-                value_a = resp['value_a']
-                value_b = resp['value_b']
-                value_c = resp['value_c']
-                value_d = resp['value_d']
+            resp = requests.get(current_settings.PAYMENT_VALIDATE_URL, params= payload)
+            resp_data = resp.json()
+            if resp_data['status'] == 'VALIDATED':
+                amount = resp_data['amount']
+                bank_tran_id = resp_data['bank_tran_id']
+                card_brand = resp_data['card_brand']
+                card_issuer = resp_data['card_issuer']
+                card_issuer_country = resp_data['card_issuer_country']
+                card_issuer_country_code = resp_data['card_issuer_country_code']
+                card_no = resp_data['card_no']
+                card_type = resp_data['card_type']
+                currency = resp_data['currency']
+                currency_amount = resp_data['currency_amount']
+                currency_type = resp_data['currency_type']
+                risk_level = resp_data['risk_level']
+                risk_title = resp_data['risk_title']
+                status = resp_data['status']
+                store_amount = resp_data['store_amount']
+                tran_date = resp_data['tran_date']
+                tran_id = resp_data['tran_id']
+                emi_instalment = resp_data['emi_instalment']
+                emi_amount = resp_data['emi_amount']
+                discount_amount = resp_data['discount_amount']
+                discount_percentage = resp_data['discount_percentage']
+                discount_remarks = resp_data['discount_remarks']
+                value_a = resp_data['value_a']
+                value_b = resp_data['value_b']
+                value_c = resp_data['value_c']
+                value_d = resp_data['value_d']
                 tran_histories = TransactionHistory()
                 if bank_tran_id:
                     tran_histories.bank_tran_id = bank_tran_id
@@ -129,14 +125,14 @@ class IpnAPI(APIView):
                 tran_histories.value_b = value_b
                 tran_histories.value_c = value_c
                 tran_histories.value_d = value_d
-                tran_histories.emi_instalment = emi_installment
+                tran_histories.emi_instalment = emi_instalment
                 tran_histories.emi_amount = emi_amount
                 tran_histories.discount_amount = discount_amount
                 tran_histories.discount_remarks = discount_remarks
                 tran_histories.discount_percentage = discount_percentage
                 tran_histories.save()
                 subscription_info_save(tran_histories)
-                return Response(resp)
+                return Response(resp_data)
             else:
                 return Response(status=HTTP_400_BAD_REQUEST)
         else:

@@ -336,6 +336,7 @@ ADMIN_REORDER = (
 MEDIA_SOURCE = 'Local'
 dev_mode = True
 PAYMENT_GATEWAY_URL = 'https://sandbox.sslcommerz.com/gwprocess/v4/api.php'
+PAYMENT_VALIDATE_URL = 'https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php'
 PAYMENT_GATEWAY_STORE_ID = 'jobxp5fcdcfa69d176'
 PAYMENT_GATEWAY_STORE_PASSWORD = 'jobxp5fcdcfa69d176@ssl'
 IS_SANDBOX = True
