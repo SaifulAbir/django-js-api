@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
+from messaging.serializers import CompanySerializer
 from pro.models import Institute
 from .models import Company, Job, Industry, JobType, Experience, Qualification, Gender, Currency, TrendingKeywords, \
     Skill, JobSource, JobCategory, JobGender, JobApplication, ApplicationStatus, City, JobRecommendation, \
@@ -47,7 +48,7 @@ class JobListCompanySerializer(serializers.ModelSerializer):
         return response
 
 
-class CompanySerializer(serializers.ModelSerializer):
+class qqCompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
         fields = '__all__'

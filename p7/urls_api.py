@@ -20,6 +20,7 @@ urlpatterns = [
     path('api/', include('settings.urls_api')),
     path('api/', include('career_advice.urls_api')),
     path('api/', include('feedback.urls_api')),
+    path('api/', include('account.urls_api')),
 
     path('api/send_email_to_admin_contact_us/', send_email_to_admin_contact_us), # Public API
     path('log/', isLoggedIn), # Public API
@@ -34,7 +35,6 @@ urlpatterns = [
 
     path('api/pro/google/signin/', GoogleSigninProApi.as_view(), name='google_token_verify'),
     path('api/company/google/signin/', GoogleSigninCompanyApi.as_view(), name='google_token_verify'),
-    path('api/ipn/', IpnAPI.as_view(), name='ipn-api'),
     path('api/captcha', get_captcha),
     path('api/resolve-captcha/', resolve_captcha),
 
