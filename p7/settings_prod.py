@@ -56,7 +56,7 @@ SIMPLE_JWT = {
 dev_mode = False
 
 PAYMENT_GATEWAY_URL = 'https://securepay.sslcommerz.com/gwprocess/v4/api.php'
-PAYMENT_VALIDATE_URL = 'https://securepay.sslcommerz.comvalidator/api/validationserverAPI.php'
+PAYMENT_VALIDATE_URL = 'https://securepay.sslcommerz.com/validator/api/validationserverAPI.php'
 PAYMENT_GATEWAY_STORE_ID = ''
 PAYMENT_GATEWAY_STORE_PASSWORD = ''
 IS_SANDBOX = False
