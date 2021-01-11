@@ -46,33 +46,24 @@ class PaymentSession(APIView):
         settings = {'store_id': current_settings.PAYMENT_GATEWAY_STORE_ID, 'store_pass': current_settings.PAYMENT_GATEWAY_STORE_PASSWORD, 'issandbox': current_settings.IS_SANDBOX}
         sslcommez = SSLCOMMERZ(settings)
         post_body = {}
-        post_body['total_amount'] = total_amount
-        post_body['currency'] = "BDT"
-        post_body['tran_id'] = cart_info.invoice_id
-        post_body['success_url'] = "https://jobxprss.com/success"
-        post_body['fail_url'] = "https://jobxprss.com/failed"
-        post_body['cancel_url'] = "https://jobxprss.com/cancel"
-        post_body['emi_option'] = 0
-        post_body['cus_name'] = cart_info.professional.full_name
-        post_body['cus_email'] = cart_info.professional.email
-        post_body['cus_phone'] = cart_info.professional.phone
-        post_body['cus_add1'] = cart_info.professional.address
-        post_body['cus_city'] = cart_info.professional.current_location
-        post_body['cus_country'] = "Bangladesh"
-        post_body['shipping_method'] = "NO"
+        post_body['total_amount'] = total_amount ## Required
+        post_body['currency'] = "BDT"  ## Required
+        post_body['tran_id'] = cart_info.invoice_id  ## Required
+        post_body['success_url'] = "https://jobxprss.com/success"  ## Required
+        post_body['fail_url'] = "https://jobxprss.com/failed"  ## Required
+        post_body['cancel_url'] = "https://jobxprss.com/cancel"  ## Required
+        post_body['emi_option'] = 0  ## Required [Value must be 1/0. Here, 1 means customer will get EMI facility for this transaction]
+        post_body['cus_name'] = cart_info.professional.full_name ## Required
+        post_body['cus_email'] = cart_info.professional.email  ## Required
+        post_body['cus_phone'] = cart_info.professional.phone  ## Required
+        post_body['cus_add1'] = cart_info.professional.address  ## Required
+        post_body['cus_city'] = cart_info.professional.current_location  ## Required
+        post_body['cus_country'] = "Bangladesh"  ## Required
+        post_body['shipping_method'] = "NO" ## Required [Example: YES or NO or Courier]
         post_body['multi_card_name'] = ""
-        post_body['num_of_item'] = 1
-        post_body['product_name'] = "Test"
-        post_body['product_category'] = "Test Category"
-        post_body['product_profile'] = "general"
+        post_body['num_of_item'] = cart_info.subscription_duration ## Required [Example: 1 or 2 or etc]
+        post_body['product_name'] ="JobXprss Yearly Subscription" if cart_info.subscription_duration_type =='YEARLY' else "JobXprss Monthly Subscription" ## Required [Mention the product name by coma separate. Example: Computer,Speaker]
+        post_body['product_category'] = "JobXprss Subscription"  ## Required
+        post_body['product_profile'] = "non-physical-goods"  ## Required [Please use the below keys: general,physical-goods,non-physical-goods,airline-tickets,]
         response = sslcommez.createSession(post_body)
-        return Response(response['GatewayPageURL'])
-
-
-class TransactionCreate(generics.CreateAPIView):
-    permission_classes = []
-    serializer_class = TransactionCreateSerializer
-
-    def post(self, request, *args, **kwargs):
-        print(request.data)
-        return super(TransactionCreate, self).post(request, *args, **kwargs)
+        return Response(response)

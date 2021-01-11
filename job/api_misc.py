@@ -17,12 +17,13 @@ from p7.models import populate_user_info, is_professional, populate_user_info_re
 from p7.pagination import P7Pagination
 from django.conf import settings
 from p7.permissions import ProfessionalPermission
+from p7.settings_dev import SITE_URL
 from p7.utils import upload_to_s3
 from pro.api_pro_core import profile_create_with_user_create, profile_completeness
 from pro.models import Professional, ProfessionalSkill, ProfessionalEducation, WorkExperience, Portfolio, Membership, \
     Certification, Reference
 from pro.serializers import ProfessionalSerializer, JobApplicantSerializer
-from pro.utils import save_recent_activity
+from pro.utils import save_recent_activity, subscription_expiration_check
 from .models import FavouriteJob
 from settings.models import Settings
 from .serializers import *
@@ -147,12 +148,11 @@ class JobApplicationAPI(APIView):
         user_profile_completeness = resp.data['percent_of_profile_completeness']
         settings_minimum_profile_completeness = Settings.objects.values('minimum_profile_completeness')[0][
             'minimum_profile_completeness']
-        print(pro_obj.membership_type)
 
+        is_subscription_available = subscription_expiration_check(pro_obj)
         remaining_application_message = ''
-        if pro_obj.membership_type == "Regular":
+        if is_subscription_available == False:
             regular_member_apply_limit_per_month = Settings.objects.values('regular_member_apply_limit_per_month')[0]['regular_member_apply_limit_per_month']
-            print('ok')
             if regular_member_apply_limit_per_month:
                 monthly_apply_count = JobApplication.objects.filter(pro = pro_obj, created_at__gte=timezone.now()
                         .replace(day=1, hour=0, minute=0, second=0, microsecond=0)).count()
@@ -183,7 +183,7 @@ class JobApplicationAPI(APIView):
                         remaining_application_message = 'As a Free Member, you can apply for %d more job(s) today' \
                                                         % ((regular_member_apply_limit_per_day - daily_apply_count))
 
-        if pro_obj.membership_type == "Standard":
+        if is_subscription_available == True:
             standard_member_apply_limit_per_month = Settings.objects.values('standard_member_apply_limit_per_month')[0]['standard_member_apply_limit_per_month']
             if standard_member_apply_limit_per_month:
                 monthly_apply_count = JobApplication.objects.filter(pro = pro_obj, created_at__gte=timezone.now()
@@ -240,9 +240,7 @@ class JobApplicationAPI(APIView):
             Prefetch('references',
                      queryset=Reference.objects.filter(is_archived=False).order_by('created_at'))
         )
-        html = self.template.render({'data': queryset, 'SITE_URL': settings.SITE_URL,
-                                     'MEDIA_BUCKET_URL_PREFIX': settings.MEDIA_BUCKET_URL_PREFIX,
-                                     'STATIC_URL': settings.STATIC_URL, 'STATIC_BASE_URL_PREFIX': settings.STATIC_BASE_URL_PREFIX })
+        html = self.template.render({'data': queryset, 'SITE_URL': settings.SITE_URL})
         options = {
             'page-size': "A4",
             'encoding': "UTF-8",
