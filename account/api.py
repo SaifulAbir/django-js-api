@@ -59,59 +59,73 @@ class IpnAPI(APIView):
                 if bank_tran_id:
                     tran_histories.bank_tran_id = bank_tran_id
                 else:
-                    return Response(status=HTTP_400_BAD_REQUEST)
+                    return Response({'details': 'Status Not Valid.1'},
+                                    status=HTTP_400_BAD_REQUEST)
                 if card_brand:
                     tran_histories.card_brand = card_brand
                 else:
-                    return Response(status=HTTP_400_BAD_REQUEST)
+                    return Response({'details': 'Status Not Valid.2'},
+                                    status=HTTP_400_BAD_REQUEST)
                 if card_issuer:
                     tran_histories.card_issuer = card_issuer
                 else:
-                    return Response(status=HTTP_400_BAD_REQUEST)
+                    return Response({'details': 'Status Not Valid.3'},
+                                    status=HTTP_400_BAD_REQUEST)
                 if card_issuer_country:
                     tran_histories.card_issuer_country = card_issuer_country
                 else:
-                    return Response(status=HTTP_400_BAD_REQUEST)
+                    return Response({'details': 'Status Not Valid.4'},
+                                    status=HTTP_400_BAD_REQUEST)
                 if card_issuer_country_code:
                     tran_histories.card_issuer_country_code = card_issuer_country_code
                 else:
-                    return Response(status=HTTP_400_BAD_REQUEST)
+                    return Response({'details': 'Status Not Valid.5'},
+                                    status=HTTP_400_BAD_REQUEST)
                 if currency:
                     tran_histories.currency = currency
                 else:
-                    return Response(status=HTTP_400_BAD_REQUEST)
+                    return Response({'details': 'Status Not Valid.6'},
+                                    status=HTTP_400_BAD_REQUEST)
                 if currency_rate:
                     tran_histories.currency_rate = currency_rate
                 else:
-                    return Response(status=HTTP_400_BAD_REQUEST)
+                    return Response({'details': 'Status Not Valid.7'},
+                                    status=HTTP_400_BAD_REQUEST)
                 if currency_type:
                     tran_histories.currency_type = currency_type
                 else:
-                    return Response(status=HTTP_400_BAD_REQUEST)
+                    return Response({'details': 'Status Not Valid.8'},
+                                    status=HTTP_400_BAD_REQUEST)
                 if status:
                     tran_histories.status = status
                 else:
-                    return Response(status=HTTP_400_BAD_REQUEST)
+                    return Response({'details': 'Status Not Valid.9'},
+                                    status=HTTP_400_BAD_REQUEST)
                 if store_id:
                     tran_histories.store_id = store_id
                 else:
-                    return Response(status=HTTP_400_BAD_REQUEST)
+                    return Response({'details': 'Status Not Valid.10'},
+                                    status=HTTP_400_BAD_REQUEST)
                 if tran_id:
                     tran_histories.tran_id = tran_id
                 else:
-                    return Response(status=HTTP_400_BAD_REQUEST)
+                    return Response({'details': 'Status Not Valid.11'},
+                                    status=HTTP_400_BAD_REQUEST)
                 if val_id:
                     tran_histories.val_id = val_id
                 else:
-                    return Response(status=HTTP_400_BAD_REQUEST)
+                    return Response({'details': 'Status Not Valid.12'},
+                                    status=HTTP_400_BAD_REQUEST)
                 if verify_sign:
                     tran_histories.verify_sign = verify_sign
                 else:
-                    return Response(status=HTTP_400_BAD_REQUEST)
+                    return Response({'details': 'Status Not Valid.13'},
+                                    status=HTTP_400_BAD_REQUEST)
                 if verify_sign_sha2:
                     tran_histories.verify_sign_sha2 = verify_sign_sha2
                 else:
-                    return Response(status=HTTP_400_BAD_REQUEST)
+                    return Response({'details': 'Status Not Valid.14'},
+                                    status=HTTP_400_BAD_REQUEST)
 
                 tran_histories.amount = amount
                 tran_histories.base_fair = base_fair
@@ -137,6 +151,8 @@ class IpnAPI(APIView):
                 subscription_info_save(tran_histories)
                 return Response(resp_data)
             else:
-                return Response(status=HTTP_400_BAD_REQUEST)
+                return Response({'details': 'Status Not Validated.'},
+                                status=HTTP_400_BAD_REQUEST)
         else:
-            return Response(status=HTTP_400_BAD_REQUEST)
+            return Response({'details': 'Status Not Valid.'},
+                            status=HTTP_400_BAD_REQUEST)
