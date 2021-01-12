@@ -36,7 +36,7 @@ urlpatterns = [
     ## ToDo Need to optimize. No Pegination here
     path('admin/professional/list/', MlProfessionalList.as_view()),
     ## ToDo Need to optimize.
-    ##path('admin/job_recommendation/create/', JobRecommendationBulkCreateView.as_view()),
+    path('admin/job_recommendation/create/', JobRecommendationBulkCreateView.as_view()),
     path('send/app_link/', SendAppLinkAPI.as_view()),
 
     path('professional/profile_update/<str:pk>/', ProfessionalUpdateView.as_view()),

@@ -1,3 +1,5 @@
+import logging
+
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from sslcommerz_lib import SSLCOMMERZ
@@ -42,7 +44,7 @@ class PaymentSession(APIView):
             subscription_fee = Settings.objects.values('standard_member_payable_amount_per_year')[0][
                 'standard_member_payable_amount_per_year']
         total_amount = cart_info.subscription_duration * subscription_fee
-
+        logging.warning(current_settings.PAYMENT_GATEWAY_STORE_ID)
         settings = {'store_id': current_settings.PAYMENT_GATEWAY_STORE_ID, 'store_pass': current_settings.PAYMENT_GATEWAY_STORE_PASSWORD, 'issandbox': current_settings.IS_SANDBOX}
         sslcommez = SSLCOMMERZ(settings)
         post_body = {}

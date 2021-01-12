@@ -20,6 +20,7 @@ class IpnAPI(APIView):
     def post(self, request, *args, **kwargs):
         logging.warning('calling ipn response')
         data = request.data
+        logging.warning('calling ipn response')
         if data['status'] == 'VALID':
             val_id = data['val_id']
             store_id = data['store_id']
