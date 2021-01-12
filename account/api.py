@@ -1,5 +1,3 @@
-import logging
-
 import requests
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
@@ -8,19 +6,12 @@ from account.models import TransactionHistory
 from account.utils import subscription_info_save
 from django.conf import settings as current_settings
 
-# class IpnAPI(APIView):
-#     permission_classes = []
-#     def post(self, request, *args, **kwargs):
-#         response = str(request.data)
-#         logging.warning('ipn response')
-#         return Response(request.data)
+
 
 class IpnAPI(APIView):
     permission_classes = []
     def post(self, request, *args, **kwargs):
-        logging.warning('calling ipn response')
         data = request.data
-        logging.warning('calling ipn response')
         if data['status'] == 'VALID':
             val_id = data['val_id']
             store_id = data['store_id']
