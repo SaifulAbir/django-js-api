@@ -32,7 +32,7 @@ class IpnAPI(APIView):
             logging.warning('starting')
             logging.warning(resp_data)
             logging.warning(resp_data['status'])
-            if resp_data['status'] == 'VALIDATED':
+            if resp_data['status'] == 'VALID':
                 amount = resp_data['amount']
                 bank_tran_id = resp_data['bank_tran_id']
                 card_brand = resp_data['card_brand']
