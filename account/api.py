@@ -1,3 +1,5 @@
+import logging
+
 import requests
 from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
@@ -12,6 +14,7 @@ class IpnAPI(APIView):
     permission_classes = []
     def post(self, request, *args, **kwargs):
         data = request.data
+        logging.warning('calling ipn response')
         if data['status'] == 'VALID':
             val_id = data['val_id']
             store_id = data['store_id']
