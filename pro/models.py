@@ -139,6 +139,8 @@ class Professional(P7Model):
     current_location = models.CharField(max_length=255, null=True, blank=True)
     current_company = models.CharField(max_length=255, null=True, blank=True)
     current_designation = models.CharField(max_length=255, null=True, blank=True)
+    current_city = models.CharField(max_length=255, null=True, blank=True)
+    current_country = models.CharField(max_length=255, null=True, blank=True)
     job_search_preference = models.CharField(max_length=30, null=False, blank=False,
                                              choices=strings_pro.SEARCH_PREFERENCE_OPTION,
                                              default=strings_pro.DEFAULT_SEARCH_PREFERENCE_OPTION)
