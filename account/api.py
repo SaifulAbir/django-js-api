@@ -34,7 +34,7 @@ class IpnAPI(APIView):
                        'store_passwd': current_settings.PAYMENT_GATEWAY_STORE_PASSWORD}
             resp = requests.get(current_settings.PAYMENT_VALIDATE_URL, params= payload)
             resp_data = resp.json()
-            if resp_data['status'] == 'VALIDATED':
+            if resp_data['status'] == 'VALID':
                 amount = resp_data['amount']
                 bank_tran_id = resp_data['bank_tran_id']
                 card_brand = resp_data['card_brand']
