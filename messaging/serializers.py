@@ -19,7 +19,7 @@ class NotificationReadSerializer(serializers.ModelSerializer):
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
-        fields = ['name', 'profile_picture']
+        fields = ['name', 'profile_picture', 'featured_image']
 
 
 class ProfessionalSerializer(serializers.ModelSerializer):
