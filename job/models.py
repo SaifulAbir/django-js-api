@@ -1,5 +1,6 @@
 import uuid
-
+from io import BytesIO
+from PIL import Image
 from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -8,11 +9,12 @@ from django.db import models
 from django.db.models import Max, Min
 from django.db.models.signals import pre_save, post_save, post_delete
 from django.utils import timezone
-
+from django.conf import settings
 from job.utils import job_slug_generator, save_notification
 from p7.models import P7Model, populate_time_info
 from resources import strings_job
 from settings.models import Settings
+from django.core.files.base import ContentFile
 
 
 class Industry(P7Model):
@@ -471,7 +473,34 @@ def applied_job_counter(sender, instance:JobApplication, *args, **kwargs):
         job_obj.applied_count = total_application
         job_obj.save()
 
+def resized_image(sender, instance: Company, *args, **kwargs):
+    ## Company Logo image resize start
+    im = instance.profile_picture
+    im = Image.open(im)
+    ratio = im.width/im.height
+    profile_picuture_resized_width = settings.COMPANY_LOGOL_DEFAULT_IMAGE_WIDTH
+    resized_im = im.resize((profile_picuture_resized_width, round(profile_picuture_resized_width/ratio)))
+    img_io = BytesIO()
+    resized_im.save(img_io, format='JPEG', quality=100)
+    img_content = ContentFile(img_io.getvalue(), 'company_logo.jpg')
+    instance.profile_picture = img_content
+    ## Company Logo image resize end
 
+    ## Company Featured Image resize start
+    im = instance.featured_image
+    im = Image.open(im)
+    ratio = im.width / im.height
+    featured_image_resized_width = settings.COMPANY_FEATURED_IMAGE_DEFAULT_IMAGE_WIDTH
+    resized_im = im.resize((featured_image_resized_width, round(featured_image_resized_width / ratio)))
+    img_io = BytesIO()
+    resized_im.save(img_io, format='JPEG', quality=100)
+    img_content = ContentFile(img_io.getvalue(), 'company_featured_image.jpg')
+    instance.featured_image = img_content
+
+    ## Company Featured Image resize end
+
+
+pre_save.connect(resized_image, sender=Company)
 pre_save.connect(populate_time_info, sender=Company)
 pre_save.connect(populate_time_info, sender=Industry)
 pre_save.connect(populate_time_info, sender=JobType)
