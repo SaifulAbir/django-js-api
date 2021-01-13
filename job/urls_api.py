@@ -31,13 +31,13 @@ urlpatterns = [
     path('job/get/<slug:slug>/', JobAPI.as_view()), # Public API
     path('company/job/get/<slug:slug>/', CompanyJobAPI.as_view()),
 
-    path('job-source/list/', JobSourceList.as_view()), # Public API
-    path('job-category/list/', JobCategoryList.as_view()), # Public API
-    path('job-gender/list/', JobGenderList.as_view()), # Public API
-    path('job-site/list/', get_job_site_list),
-    path('job-nature/list/', get_job_nature_list),
+    path('job-source/list/', JobSourceList.as_view()), # Public API also used by ML Team
+    path('job-category/list/', JobCategoryList.as_view()), # Public API also used by ML Team
+    path('job-gender/list/', JobGenderList.as_view()), # Public API also used by ML Team
+    path('job-site/list/', get_job_site_list), # ML API
+    path('job-nature/list/', get_job_nature_list), # ML API
     path('job-type/list/', get_job_type_list),
-    path('job-status/list/', get_job_status_list),
+    path('job-status/list/', get_job_status_list), # ML API
     path('job-creator-type/list', get_job_creator_type_list),
     path('city/list/', CityList.as_view()), # Public API
     path('city/search/', CitySearch.as_view()),
@@ -59,10 +59,10 @@ urlpatterns = [
     path('company/request_for_access/', request_for_access), # Public API
 
     path('industry/list', IndustryList.as_view()), # Public API
-    path('job_type/list', JobTypeList.as_view()), # Public API
+    path('job_type/list', JobTypeList.as_view()), # Public API also used by ML Team
     path('experience/list', ExperienceList.as_view()), # Public API
-    path('currency/list', CurrencyList.as_view()), # Public API
-    path('qualification/list', QualificationList.as_view()), # Public API
+    path('currency/list', CurrencyList.as_view()), # Public API also used by ML Team
+    path('qualification/list', QualificationList.as_view()), # Public API also used by ML Team
     path('gender/list', GenderList.as_view()), # Public API
 
     path('job/apply/', apply_online),
@@ -74,7 +74,7 @@ urlpatterns = [
     path('job/top-companies/', TopCompanyList.as_view()), # Public API
     path('job/trending_keywords/', TrendingKeywordList.as_view()), # Public API
     ## ToDO need to optimize
-    path('skill/list/', SkillList.as_view()), # Public API
+    path('skill/list/', SkillList.as_view()), # Public API Also Used by ML Team
     path('skill/search/', SkillSearch.as_view()), # Public API
     path('job/salary-range/', get_salary_range), # Public API
 
@@ -83,7 +83,7 @@ urlpatterns = [
     path('job/update/publish/<str:pk>/', CompanyJobPublishAPI.as_view()),
     path('job/update/post/<str:pk>/', CompanyJobPostAPI.as_view()),
     path('job/create/', CompanyJobCreateAPI.as_view()),
-    #path('job/trending_keywords/save/', save_trending_keywords), # Public API
+    path('job/trending_keywords/save/', save_trending_keywords), # Public API
     path('vital_stats/get/', get_vital_stats), # Public API
     # TODO: will be removed later
     path('apply/', JobApply.as_view()),  # Public API
