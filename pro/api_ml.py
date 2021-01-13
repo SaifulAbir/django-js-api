@@ -1,3 +1,5 @@
+import logging
+
 from django.db import IntegrityError
 from django.db.models import Prefetch
 from rest_framework import status
@@ -21,6 +23,7 @@ class MlProfessionalList(ListAPIView):
     serializer_class = ProfessionalSerializerAdmin
 
     def get_queryset(self):
+        logging.warning('Calling from ml team. Endpoint [admin/professional/list/]')
         request = self.request
         job_search_preference = request.GET.get('job_search_preference')
         not_job_search_preference = request.GET.get('not_job_search_preference')
@@ -47,6 +50,7 @@ class JobRecommendationBulkCreateView(APIView):
         recommendation_list = json.loads(request.body)
         if len(recommendation_list)>0:
             for job_recommendation in recommendation_list:
+                logging.warning('Calling from ml team with every loop. Endpoint [admin/job_recommendation/create/]')
                 job_recommendation_obj = JobRecommendation.objects.filter(job = job_recommendation["job_id"], professional = job_recommendation["professional_id"])
                 if not job_recommendation_obj.exists():
                     populate_user_info_querydict(request, job_recommendation, False, False)

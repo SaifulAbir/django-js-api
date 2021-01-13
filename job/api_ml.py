@@ -29,6 +29,7 @@ class MlJobAPI(RetrieveAPIView):
     serializer_class = JobSerializerAllField
 
     def get_object(self):
+        logging.warning('Calling from ml team. Endpoint [admin/job/get/<str:id>/]')
         return get_object_or_404(
             Job.objects.filter(
                 job_id = self.kwargs['id']
@@ -159,6 +160,7 @@ class JobBulkCreateView(APIView):
     permission_classes = [StaffPermission]
     serializer_class = JobSerializerAdmin
     def post(self, request, *args, **kwargs):
+
         job_list = json.loads(request.body)
         if 20 >= len(job_list) > 0:
             success = []
@@ -167,7 +169,7 @@ class JobBulkCreateView(APIView):
 
             for j in job_list:
                 try:
-
+                    logging.warning('Calling from ml team with every loop. Endpoint [admin/job/create/]')
                     j_obj = Job.objects.filter(job_id = j["job_id"])
                     if j_obj.exists():
                         errors.append({"id":j["job_id"], "error" : "Exist"})

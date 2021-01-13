@@ -34,7 +34,7 @@ urlpatterns = [
     path('applicant/profile/<str:slug>/', ApplicantDetail.as_view()),
     path('pro/public-profile/<str:slug>/', ProfessionalPublicRetrieve.as_view()),  # Public API
     ## ToDo Need to optimize. No Pegination here
-    path('admin/professional/list/', MlProfessionalList.as_view()),
+    path('admin/professional/list/', MlProfessionalList.as_view()), # ML API
     ## ToDo Need to optimize.
     path('admin/job_recommendation/create/', JobRecommendationBulkCreateView.as_view()),
     path('send/app_link/', SendAppLinkAPI.as_view()),
