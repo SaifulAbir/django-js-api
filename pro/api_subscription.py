@@ -57,8 +57,8 @@ class PaymentSession(APIView):
         post_body['cus_email'] = cart_info.professional.email  ## Required
         post_body['cus_phone'] = cart_info.professional.phone  ## Required
         post_body['cus_add1'] = cart_info.professional.address  ## Required
-        post_body['cus_city'] = cart_info.professional.current_location  ## Required
-        post_body['cus_country'] = "Bangladesh"  ## Required
+        post_body['cus_city'] = cart_info.professional.current_city  ## Required
+        post_body['cus_country'] = cart_info.professional.current_country  ## Required
         post_body['shipping_method'] = "NO" ## Required [Example: YES or NO or Courier]
         post_body['multi_card_name'] = ""
         post_body['num_of_item'] = cart_info.subscription_duration ## Required [Example: 1 or 2 or etc]
