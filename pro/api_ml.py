@@ -54,8 +54,8 @@ class JobRecommendationBulkCreateView(APIView):
                 job_recommendation_obj = JobRecommendation.objects.filter(job = job_recommendation["job_id"], professional = job_recommendation["professional_id"])
                 if not job_recommendation_obj.exists():
                     populate_user_info_querydict(request, job_recommendation, False, False)
-                    if not job_recommendation["recommended_by"]:
-                        job_recommendation.recommended_by = 'skill'
+                    if 'recommended_by' not in job_recommendation or not job_recommendation["recommended_by"]:
+                        job_recommendation["recommended_by"] = 'skill'
                     JobRecommendation.objects.create(**job_recommendation)
             return Response(recommendation_list, status=status.HTTP_201_CREATED)
         else:
