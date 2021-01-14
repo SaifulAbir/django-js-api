@@ -22,6 +22,12 @@ class CompanySerializer(serializers.ModelSerializer):
         exclude = ['organization_head', 'organization_head_designation', 'organization_head_number']
 
 
+class CompanyUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = '__all__'
+
+
 class ProfessionalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Professional

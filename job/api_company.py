@@ -94,7 +94,7 @@ def list_company_by_name(request):
 class CompanyRetrieveView(generics.RetrieveAPIView):
     authentication_classes = [CompanyAuthentication]
     permission_classes = [CompanyPermission]
-    serializer_class = CompanySerializer
+    serializer_class = CompanyUpdateSerializer
     def get_object(self):
         user = self.request.user
         queryset = Company.objects.filter(
