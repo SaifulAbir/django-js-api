@@ -19,7 +19,7 @@ class NotificationReadSerializer(serializers.ModelSerializer):
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
-        fields = ['name', 'profile_picture', 'featured_image']
+        exclude = ['organization_head', 'organization_head_designation', 'organization_head_number']
 
 
 class ProfessionalSerializer(serializers.ModelSerializer):
