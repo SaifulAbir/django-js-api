@@ -32,6 +32,7 @@ def resized_image(sender, instance: CareerAdvice, *args, **kwargs):
     ## Thumbnail image resize start
     im = instance.thumbnail_image
     im = Image.open(im)
+    im = im.convert('RGB')
     ratio = im.width/im.height
     thumbnail_resized_width = settings.CEREAR_ADVICE_THUMBNAIL_DEFAULT_IMAGE_WIDTH
     resized_im = im.resize((thumbnail_resized_width, round(thumbnail_resized_width/ratio)))
@@ -44,6 +45,7 @@ def resized_image(sender, instance: CareerAdvice, *args, **kwargs):
     ## Featured image resize start
     im = instance.featured_image
     im = Image.open(im)
+    im = im.convert('RGB')
     ratio = im.width/im.height
     thumbnail_resized_width = settings.CEREAR_ADVICE_FEATURED_DEFAULT_IMAGE_WIDTH
     resized_im = im.resize((thumbnail_resized_width, round(thumbnail_resized_width/ratio)))
