@@ -17,8 +17,8 @@ from job.api_misc import apply_online, save_trending_keywords, \
     toggle_favourite, MarkShortlistUpdateView, JobApplicationQuickApply, get_all_applicants, get_shortlisted_applicants, \
     JobApply, JobApplicationAPI, DownloadAttachmentAPIView, DownloadResumeAPIView, JobQuestionCreateAPI, \
     JobQuestionListAPI, JobQuestionUpdate, request_for_access
-from job.api_ml import MlJobAPI, AdminJobList, JobBulkCreateView, MlJobUpdateView, SlugRegenerateAPI, JobPublisherList
-
+from job.api_ml import MlJobAPI, AdminJobList, JobBulkCreateView, MlJobUpdateView, SlugRegenerateAPI, JobPublisherList, \
+    MLJobApplicationListAPI
 
 urlpatterns = [
     path('job/search/', JobSearchAPI.as_view()), # Public API
@@ -91,6 +91,7 @@ urlpatterns = [
     path('slug/generate/', SlugRegenerateAPI.as_view()),
 
     path('admin/job/list/', AdminJobList.as_view()),
+    path('admin/job_application/list/', MLJobApplicationListAPI.as_view()),
     path('admin/company/list', AdminCompanyList.as_view()),
     path('admin/job/get/<str:id>/', MlJobAPI.as_view()),
     ##ToDo need to optimize

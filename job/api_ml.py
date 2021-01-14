@@ -8,9 +8,9 @@ from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, R
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from job.models import Job, Skill
+from job.models import Job, Skill, JobApplication
 from job.serializers import JobSerializer, JobSerializerAllField, JobUpdateSerializer, JobSerializerAdmin, \
-    UserSerializer
+    UserSerializer, JobApplicationListSerializer
 from p7.models import is_professional, populate_user_info_request, populate_user_info_querydict
 from p7.pagination import P7Pagination
 from p7.permissions import StaffPermission
@@ -21,6 +21,18 @@ class JobPublisherList(ListAPIView):
     required_privilege = 'job.add_job'
     queryset = User.objects.filter(groups__name='Publisher')
     serializer_class = UserSerializer
+
+
+class MLJobApplicationListAPI(ListAPIView):
+    permission_classes = [StaffPermission]
+    required_privilege = 'job.view_jobapplication'
+    serializer_class = JobApplicationListSerializer
+
+    def get_queryset(self):
+        request = self.request
+        dateCreated = request.GET.get('dateCreated')
+        queryset = JobApplication.objects.filter(created_at__gt=dateCreated)
+        return queryset
 
 
 class MlJobAPI(RetrieveAPIView):

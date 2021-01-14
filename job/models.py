@@ -369,6 +369,7 @@ class JobRecommendation(P7Model):
     professional = models.ForeignKey(Professional, on_delete=models.PROTECT)
     job = models.ForeignKey(Job, on_delete=models.PROTECT, db_column='job')
     score = models.DecimalField(max_digits=5, decimal_places=2)
+    recommended_by = models.CharField(max_length=255, blank=True, null=True)
     is_notified = models.BooleanField(default=False)
 
     class Meta:
