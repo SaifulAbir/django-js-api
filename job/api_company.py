@@ -1,4 +1,5 @@
 import base64
+import logging
 import uuid
 from urllib.parse import unquote
 from django.contrib.auth.models import User
@@ -36,6 +37,7 @@ class AdminCompanyList(generics.ListAPIView):
     serializer_class = CompanySerializer
 
     def get_queryset(self):
+        logging.warning('Calling from ml team. Endpoint [admin/company/list/]')
         request = self.request
         dateCreated = request.GET.get('dateCreated')
         modifiedAt = request.GET.get('modifiedAt')
